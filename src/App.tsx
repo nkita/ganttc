@@ -3,6 +3,10 @@ import { Task, ViewMode, Gantt } from "gantt-task-react";
 import { ViewSwitcher } from "./components/view-switcher";
 import { AddTask } from "./components/input-form";
 import { getStartEndDateForProject, initTasks } from "./helper";
+import { TaskListHeader } from "./components/task-list-header";
+import { TaskListColumn } from "./components/task-list-table";
+
+
 
 // Init
 const App = () => {
@@ -79,11 +83,12 @@ const App = () => {
         isChecked={isChecked}
       />
       <AddTask onAddTodoHandler={handleTaskAdd} />
-      <h3>Gantt With Unlimited Height</h3>
+      {/* <h3>Gantt With Unlimited Height</h3> */}
       {/* Todo onSelectLabel */}
-      <Gantt
+      {/* <Gantt
         tasks={tasks}
         viewMode={view}
+        TaskListHeader={TaskListHeader}
         onDateChange={handleTaskChange}
         onDelete={handleTaskDelete}
         onProgressChange={handleProgressChange}
@@ -92,11 +97,13 @@ const App = () => {
         onExpanderClick={handleExpanderClick}
         listCellWidth={isChecked ? "155px" : ""}
         columnWidth={columnWidth}
-      />
+      /> */}
       <h3>Gantt With Limited Height</h3>
       <Gantt
         tasks={tasks}
         viewMode={view}
+        TaskListHeader={TaskListHeader}
+        TaskListTable={TaskListColumn}
         onDateChange={handleTaskChange}
         onDelete={handleTaskDelete}
         onProgressChange={handleProgressChange}
