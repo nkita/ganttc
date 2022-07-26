@@ -3,8 +3,8 @@ import { Task, ViewMode, Gantt } from "gantt-task-react";
 import { ViewSwitcher } from "./components/view-switcher";
 import { AddTask } from "./components/input-form";
 import { getStartEndDateForProject, initTasks } from "./helper";
-import { TaskListHeader } from "./components/task-list-header";
-import { TaskListColumn } from "./components/task-list-table";
+import { TaskListHeader } from "./custom/task-list-header";
+import { TaskListColumn } from "./custom/task-list-table";
 
 
 
@@ -18,6 +18,13 @@ const App = () => {
     columnWidth = 300;
   } else if (view === ViewMode.Week) {
     columnWidth = 250;
+  }
+  const getWindowDimensions = () => {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height
+    };
   }
 
   const handleTaskChange = (task: Task) => {
@@ -74,6 +81,7 @@ const App = () => {
     setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
     console.log("On expander click Id:" + task.id);
   };
+  console.log(getWindowDimensions().height);
 
   return (
     <div>
@@ -106,13 +114,15 @@ const App = () => {
         TaskListTable={TaskListColumn}
         onDateChange={handleTaskChange}
         onDelete={handleTaskDelete}
-        onProgressChange={handleProgressChange}
+        // onProgressChange={handleProgressChange}
         onDoubleClick={handleDblClick}
         onSelect={handleSelect}
         onExpanderClick={handleExpanderClick}
         listCellWidth={isChecked ? "155px" : ""}
-        ganttHeight={300}
+        // ganttHeight={getWindowDimensions().height-220}
         columnWidth={columnWidth}
+        locale={"ja-JP"}
+        rowHeight={50}
       />
     </div>
   );

@@ -8,7 +8,8 @@ type addTaskProps = {
 };
 export const AddTask: React.FC<addTaskProps> = (props) => {
   const taskName = useRef<HTMLInputElement>(null);
-  const taskDateBegin = useRef<HTMLInputElement>(null);
+  const taskDateStart = useRef<HTMLInputElement>(null);
+  const taskDateEnd = useRef<HTMLInputElement>(null);
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -18,12 +19,13 @@ export const AddTask: React.FC<addTaskProps> = (props) => {
 
   const onAddTodoHandler = (event: React.FormEvent) => {
     const name = taskName.current!.value;
-    const dateBegin = new Date(taskDateBegin.current!.value);
+    const dateStart = new Date(taskDateStart.current!.value);
+    const dateEnd = new Date(taskDateEnd.current!.value);
     event.preventDefault();
 
     const task: Task = {
-      start: new Date(dateBegin.getFullYear(), dateBegin.getMonth(), dateBegin.getDate()),
-      end: new Date(dateBegin.getFullYear(), dateBegin.getMonth(), dateBegin.getDate() + 1),
+      start: new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate()),
+      end: new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate() + 1),
       name: name,
       id: Math.random().toString(),
       progress: 25,
@@ -39,8 +41,10 @@ export const AddTask: React.FC<addTaskProps> = (props) => {
       <label htmlFor="task-name">name</label>
       <input type="text" id="task-name" ref={taskName} />
 
-      <label htmlFor="task-date">date</label>
-      <input type="date" id="task-date-begin" defaultValue={currentFullDate} ref={taskDateBegin} ></input>
+      <label htmlFor="task-date">date start</label>
+      <input type="date" id="task-date-start" defaultValue={currentFullDate} ref={taskDateStart} ></input>
+      <label htmlFor="task-date">date to</label>
+      <input type="date" id="task-date-to" defaultValue={currentFullDate} ref={taskDateEnd} ></input>
       <button type="submit">追加</button>
     </form>
   );

@@ -12,6 +12,7 @@ export function initTasks() {
       type: "project",
       hideChildren: false,
       displayOrder: 1,
+      customCol:"custom_col",
     },
     {
       start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
