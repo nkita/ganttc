@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Task, ViewMode, Gantt } from "gantt-task-react";
 import { ViewSwitcher } from "./components/view-switcher";
 import { AddTask } from "./components/input-form";
 import { getStartEndDateForProject, initTasks } from "./helper";
 import { TaskListHeader } from "./custom/task-list-header";
 import { TaskListColumn } from "./custom/task-list-table";
-
+import { seedDates } from "./custom/date-helper";
 
 
 // Init
@@ -13,12 +13,28 @@ const App = () => {
   const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
   const [tasks, setTasks] = React.useState<Task[]>(initTasks());
   const [isChecked, setIsChecked] = React.useState(true);
+  // const [scrollX, setScrollX] = useState(-1);
   let columnWidth = 65;
   if (view === ViewMode.Month) {
     columnWidth = 300;
   } else if (view === ViewMode.Week) {
     columnWidth = 250;
   }
+
+  //  First process. *one-time-only
+  useEffect(() => {
+    console.log('useEffectが1回だけ実行されました');
+    // 当日にスクロールする
+    // const currentDate = new Date();
+    const test = seedDates(new Date(2022, 6, 30), new Date(2022, 7, 27), ViewMode.Day);
+    const retest = test.reverse();
+    console.log(retest, retest.length * columnWidth);
+    const ele = document.getElementsByClassName("_CZjuD")
+
+    // ele[0].scroll(retest.length * columnWidth, 0);
+    ele[0].scroll((retest.length - 5) * columnWidth, 0);
+  }, [])
+
   const getWindowDimensions = () => {
     const { innerWidth: width, innerHeight: height } = window;
     return {
