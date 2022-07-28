@@ -11,10 +11,6 @@ export const AddTask: React.FC<addTaskProps> = (props) => {
   const taskName = useRef<HTMLInputElement>(null);
   const taskDateStart = useRef<HTMLInputElement>(null);
   const taskDateEnd = useRef<HTMLInputElement>(null);
-
-
-
-
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;

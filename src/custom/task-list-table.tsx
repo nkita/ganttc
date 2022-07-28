@@ -15,7 +15,6 @@ const toLocaleDateStringFactory =
             return lds;
         };
 const dateTimeOptions: Intl.DateTimeFormatOptions = {
-    weekday: "short",
     year: "numeric",
     month: "long",
     day: "numeric",

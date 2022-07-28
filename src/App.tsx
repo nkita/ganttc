@@ -5,7 +5,7 @@ import { AddTask } from "./components/input-form";
 import { getStartEndDateForProject, initTasks } from "./helper";
 import { TaskListHeader } from "./custom/task-list-header";
 import { TaskListColumn } from "./custom/task-list-table";
-import { seedDates } from "./custom/date-helper";
+import { seedDates, ganttDateRange } from "./custom/date-helper";
 
 
 // Init
@@ -24,15 +24,14 @@ const App = () => {
   //  First process. *one-time-only
   useEffect(() => {
     console.log('useEffectが1回だけ実行されました');
-    // 当日にスクロールする
-    // const currentDate = new Date();
-    const test = seedDates(new Date(2022, 6, 30), new Date(2022, 7, 27), ViewMode.Day);
+    // 当日にスクロールする　Todo
+    const currentDate = new Date();
+    const [startDate, endDate] = ganttDateRange(tasks, view);
+    const test = seedDates(startDate, currentDate, view);
     const retest = test.reverse();
-    console.log(retest, retest.length * columnWidth);
-    const ele = document.getElementsByClassName("_CZjuD")
-
-    // ele[0].scroll(retest.length * columnWidth, 0);
-    ele[0].scroll((retest.length - 5) * columnWidth, 0);
+    const ele = document.getElementsByClassName("_2B2zv")
+    console.log(retest.length * columnWidth, retest.length, columnWidth);
+    ele[0].scrollLeft = retest.length * columnWidth;
   }, [])
 
   const getWindowDimensions = () => {
@@ -97,7 +96,6 @@ const App = () => {
     setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
     console.log("On expander click Id:" + task.id);
   };
-  console.log(getWindowDimensions().height);
 
   return (
     <div>
