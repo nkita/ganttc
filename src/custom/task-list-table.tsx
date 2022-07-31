@@ -20,6 +20,7 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
     day: "numeric",
 };
 
+
 export const TaskListColumn: React.FC<{
     rowHeight: number;
     rowWidth: string;
@@ -43,7 +44,6 @@ export const TaskListColumn: React.FC<{
             () => toLocaleDateStringFactory(locale),
             [locale]
         );
-
         return (
             <div
                 className={styles.taskListWrapper}
@@ -61,8 +61,7 @@ export const TaskListColumn: React.FC<{
                     }
 
                     return (
-                        <div
-                            className={styles.taskListTableRow}
+                        <div                            className={styles.taskListTableRow}
                             style={{ height: rowHeight }}
                             key={`${t.id}row`}
                         >
