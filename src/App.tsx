@@ -1,11 +1,14 @@
 import React, { useEffect } from "react";
 import { Task, ViewMode, Gantt } from "gantt-task-react";
-import { ViewSwitcher } from "./components/view-switcher";
+import { TaskListSwitcher } from "./components/task-list-switcher";
+import { PeriodSwitcher } from "./components/period-switcher";
 import { AddTask } from "./components/input-form";
+import { Footer } from "./components/footer";
 import { getStartEndDateForProject, initTasks } from "./helper";
 import { TaskListHeader } from "./custom/task-list-header";
 import { TaskListColumn } from "./custom/task-list-table";
 import { seedDates, ganttDateRange } from "./custom/date-helper";
+import Navbar from 'react-bootstrap/Navbar';
 
 
 // Init
@@ -30,7 +33,7 @@ const App = () => {
     const test = seedDates(startDate, currentDate, view);
     const retest = test.reverse();
     const ele = document.getElementsByClassName("_2B2zv")
-    console.log(retest.length * columnWidth, retest.length, columnWidth);
+    console.log(endDate, retest.length * columnWidth, retest.length, columnWidth);
     ele[0].scrollLeft = retest.length * columnWidth;
   }, [])
 
@@ -79,10 +82,10 @@ const App = () => {
     return conf;
   };
 
-  const handleProgressChange = async (task: Task) => {
-    setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-    console.log("On progress change Id:" + task.id);
-  };
+  // const handleProgressChange = async (task: Task) => {
+  //   setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
+  //   console.log("On progress change Id:" + task.id);
+  // };
 
   const handleDblClick = (task: Task) => {
     alert("On Double Click event Id:" + task.id);
@@ -98,48 +101,44 @@ const App = () => {
   };
 
   return (
-    <div>
-      <ViewSwitcher
-        onViewModeChange={(viewMode) => setView(viewMode)}
-        onViewListChange={setIsChecked}
-        isChecked={isChecked}
-      />
-      <AddTask onAddTodoHandler={handleTaskAdd} />
-      {/* <h3>Gantt With Unlimited Height</h3> */}
-      {/* Todo onSelectLabel */}
-      {/* <Gantt
-        tasks={tasks}
-        viewMode={view}
-        TaskListHeader={TaskListHeader}
-        onDateChange={handleTaskChange}
-        onDelete={handleTaskDelete}
-        onProgressChange={handleProgressChange}
-        onDoubleClick={handleDblClick}
-        onSelect={handleSelect}
-        onExpanderClick={handleExpanderClick}
-        listCellWidth={isChecked ? "155px" : ""}
-        columnWidth={columnWidth}
-      /> */}
-      <h3>Gantt With Limited Height</h3>
-      <Gantt
-        tasks={tasks}
-        viewMode={view}
-        TaskListHeader={TaskListHeader}
-        TaskListTable={TaskListColumn}
-        onDateChange={handleTaskChange}
-        onDelete={handleTaskDelete}
-        // onProgressChange={handleProgressChange}
-        onDoubleClick={handleDblClick}
-        onSelect={handleSelect}
-        onExpanderClick={handleExpanderClick}
-        listCellWidth={isChecked ? "155px" : ""}
-        // ganttHeight={getWindowDimensions().height-220}
-        columnWidth={columnWidth}
-        locale={"ja-JP"}
-        rowHeight={50}
-      />
-    </div>
+    <>
+      <Navbar bg="light" expand="lg">
+        <TaskListSwitcher
+          onViewListChange={setIsChecked}
+          isChecked={isChecked}
+        />
+        <Navbar.Brand href="#home">Gant chart</Navbar.Brand>
+        <PeriodSwitcher
+          onViewModeChange={(viewMode) => setView(viewMode)}
+          isViewMode={view}
+        />
+      </Navbar>
+
+      <div>
+        <AddTask onAddTodoHandler={handleTaskAdd} />
+        <Gantt
+          tasks={tasks}
+          viewMode={view}
+          TaskListHeader={TaskListHeader}
+          TaskListTable={TaskListColumn}
+          onDateChange={handleTaskChange}
+          onDelete={handleTaskDelete}
+          // onProgressChange={handleProgressChange}
+          onDoubleClick={handleDblClick}
+          onSelect={handleSelect}
+          onExpanderClick={handleExpanderClick}
+          listCellWidth={isChecked ? "155px" : ""}
+          ganttHeight={getWindowDimensions().height - 300}
+          columnWidth={columnWidth}
+          locale={"ja-JP"}
+          rowHeight={50}
+          fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
+        />
+      </div>
+      <Footer />
+    </>
   );
 };
+
 
 export default App;

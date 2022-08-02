@@ -1,8 +1,7 @@
-import React, { useRef,useEffect } from "react";
-import { Task,ViewMode } from "gantt-task-react";
+import React, { useRef } from "react";
+import { Task } from "gantt-task-react";
 import "./input-form.css";
-// import { DateConverter } from "../common/modules/date-module"
-import { seedDates } from "../custom/date-helper";
+
 
 type addTaskProps = {
   onAddTodoHandler: (task: Task) => void;
@@ -38,7 +37,7 @@ export const AddTask: React.FC<addTaskProps> = (props) => {
   };
 
   return (
-    <div>
+    <div className="inputFormWrapper">
       <form onSubmit={onAddTodoHandler}>
 
         <label htmlFor="task-name">name</label>
