@@ -9,16 +9,22 @@ const toLocaleDateStringFactory =
             const key = date.toString();
             let lds = localeDateStringCache[key];
             if (!lds) {
-                lds = date.toLocaleDateString(locale, dateTimeOptions);
+                //　多言語対応
+                // lds = date.toLocaleDateString(locale, dateTimeOptions);
+                // 日本語用
+                lds = date.getMonth() + "/" + date.getDate();
                 localeDateStringCache[key] = lds;
             }
             return lds;
         };
 const dateTimeOptions: Intl.DateTimeFormatOptions = {
-    year: "numeric",
     month: "long",
     day: "numeric",
 };
+
+// 日付の横幅
+const rowWidthShort = 100;
+const rowWidthLong = 200;
 
 export const TaskListColumn: React.FC<{
     rowHeight: number;
@@ -69,8 +75,8 @@ export const TaskListColumn: React.FC<{
                             <div
                                 className={styles.taskListCell}
                                 style={{
-                                    minWidth: rowWidth,
-                                    maxWidth: rowWidth,
+                                    minWidth: rowWidthLong,
+                                    maxWidth: rowWidthLong,
                                 }}
                                 title={t.name}
                             >
@@ -94,29 +100,23 @@ export const TaskListColumn: React.FC<{
                             <div
                                 className={styles.taskListCell}
                                 style={{
-                                    minWidth: rowWidth,
-                                    maxWidth: rowWidth,
+                                    minWidth: rowWidthShort,
+                                    maxWidth: rowWidthShort,
+                                    textAlign: "center",
                                 }}
                             >
-                                &nbsp;{toLocaleDateString(t.start, dateTimeOptions)}
+                                <span>{toLocaleDateString(t.start, dateTimeOptions)}</span>
+                                -
+                                <span>{toLocaleDateString(t.end, dateTimeOptions)}</span>
                             </div>
                             <div
                                 className={styles.taskListCell}
                                 style={{
-                                    minWidth: rowWidth,
-                                    maxWidth: rowWidth,
+                                    minWidth: rowWidthShort,
+                                    maxWidth: rowWidthShort,
+                                    textAlign: "center",
                                 }}
                             >
-                                &nbsp;{toLocaleDateString(t.end, dateTimeOptions)}
-                            </div>
-                            <div
-                                className={styles.taskListCell}
-                                style={{
-                                    minWidth: rowWidth,
-                                    maxWidth: rowWidth,
-                                }}
-                            >
-                                &nbsp;
                                 <select name="progress">
                                     <option defaultValue={0}>0%</option>
                                     <option defaultValue={25}>25%</option>

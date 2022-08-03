@@ -1,6 +1,10 @@
 import React from "react";
 import styles from "./task-list-header.module.css";
 
+// 日付の横幅
+const rowWidthShort = 100;
+const rowWidthLong = 200;
+
 interface ITaskListHeader {
     headerHeight: number;
     rowWidth: string;
@@ -31,10 +35,11 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                 <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
-                        minWidth: rowWidth,
+                        minWidth: rowWidthLong,
+                        textAlign:"center",
                     }}
                 >
-                    &nbsp;Name
+                    名前
                 </div>
                 <div
                     className={styles.ganttTable_HeaderSeparator}
@@ -46,43 +51,30 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                 <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
-                        minWidth: rowWidth,
+                        minWidth: rowWidthShort,
+                        textAlign: "center",
                     }}
                 >
-                    &nbsp;From
-                </div>
-                <div
-                    className={styles.ganttTable_HeaderSeparator}
-                    style={{
-                        height: headerHeight * 0.5,
-                        marginTop: headerHeight * 0.25,
-                    }}
-                />
-                <div
-                    className={styles.ganttTable_HeaderItem}
-                    style={{
-                        minWidth: rowWidth,
-                    }}
-                >
-                    &nbsp;To
-                </div>
-                <div
-                    className={styles.ganttTable_HeaderSeparator}
-                    style={{
-                        height: headerHeight * 0.5,
-                        marginTop: headerHeight * 0.25,
-                    }}
-                />
-                <div
-                    className={styles.ganttTable_HeaderItem}
-                    style={{
-                        minWidth: rowWidth,
-                    }}
-                >
-                    &nbsp;Progress
-                </div>
+                期間
+            </div>
+            <div
+                className={styles.ganttTable_HeaderSeparator}
+                style={{
+                    height: headerHeight * 0.5,
+                    marginTop: headerHeight * 0.25,
+                }}
+            />
+            <div
+                className={styles.ganttTable_HeaderItem}
+                style={{
+                    minWidth: rowWidthShort,
+                    textAlign: "center",
+                }}
+            >
+                進捗
             </div>
         </div>
+        </div >
     );
 };
 

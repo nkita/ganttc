@@ -9,6 +9,7 @@ import { TaskListHeader } from "./custom/task-list-header";
 import { TaskListColumn } from "./custom/task-list-table";
 import { seedDates, ganttDateRange } from "./custom/date-helper";
 import Navbar from 'react-bootstrap/Navbar';
+import styles from "./index.module.css";
 
 
 // Init
@@ -114,8 +115,8 @@ const App = () => {
         />
       </Navbar>
 
-      <div>
         <AddTask onAddTodoHandler={handleTaskAdd} />
+        <div className={styles.gantt}>
         <Gantt
           tasks={tasks}
           viewMode={view}
