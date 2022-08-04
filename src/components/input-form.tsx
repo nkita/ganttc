@@ -23,14 +23,17 @@ export const AddTask: React.FC<addTaskProps> = (props) => {
     const dateEnd = new Date(taskDateEnd.current!.value);
     event.preventDefault();
 
+    //　日付の差分取得
+    const diffDay = Math.floor((dateEnd.getTime() - dateStart.getTime()) / 86400000);
+    const type = (diffDay > 1) ? "task" : "milestone";
 
     const task: Task = {
       start: new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate()),
       end: new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate()),
       name: name,
       id: Math.random().toString(),
-      progress: 25,
-      type: "task",
+      progress: 0,
+      type: type,
       hideChildren: false,
     };
 
@@ -46,7 +49,7 @@ export const AddTask: React.FC<addTaskProps> = (props) => {
 
         <label htmlFor="task-date-start">date start</label>
         <input type="date" id="task-date-start" defaultValue={currentFullDate} ref={taskDateStart} ></input>
-        
+
         <label htmlFor="task-date-end">date to</label>
         <input type="date" id="task-date-end" defaultValue={currentFullDate} ref={taskDateEnd} ></input>
         <button type="submit">追加</button>
