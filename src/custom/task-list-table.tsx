@@ -12,7 +12,7 @@ const toLocaleDateStringFactory =
                 //　多言語対応
                 // lds = date.toLocaleDateString(locale, dateTimeOptions);
                 // 日本語用
-                lds = date.getMonth() + "/" + date.getDate();
+                lds = date.getMonth() + 1 + "/" + date.getDate();
                 localeDateStringCache[key] = lds;
             }
             return lds;

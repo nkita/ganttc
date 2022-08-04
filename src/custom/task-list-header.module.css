@@ -3,17 +3,17 @@
   border-bottom: #e6e4e4 1px solid;
   border-top: #e6e4e4 1px solid;
   border-left: #e6e4e4 1px solid;
+  border-right: #e6e4e4 1px solid;
   font-family: proxima-nova, "Helvetica Neue", Helvetica, Arial, sans-serif, 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-
 }
 
 .ganttTable_Header {
   display: table-row;
   list-style: none;
+
 }
 
 .ganttTable_HeaderSeparator {
-  border-right: 1px solid rgb(196, 196, 196);
   opacity: 1;
   margin-left: -2px;
 }

@@ -34,7 +34,6 @@ const App = () => {
     const test = seedDates(startDate, currentDate, view);
     const retest = test.reverse();
     const ele = document.getElementsByClassName("_2B2zv")
-    console.log(endDate, retest.length * columnWidth, retest.length, columnWidth);
     ele[0].scrollLeft = retest.length * columnWidth;
   }, [])
 
@@ -47,7 +46,6 @@ const App = () => {
   }
 
   const handleTaskChange = (task: Task) => {
-    console.log("On date change Id:" + task.id);
     let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
     if (task.project) {
       const [start, end] = getStartEndDateForProject(newTasks, task.project);
@@ -68,11 +66,10 @@ const App = () => {
 
   const handleTaskAdd = (task: Task) => {
     // setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-    setTasks((prevTasks) => [
-      ...prevTasks,
-      task,
-    ]);
-    console.log("[handleTaskAdd]", tasks);
+    const newTasks = [...tasks];
+    newTasks.push(task);
+    console.log(newTasks[9],newTasks);
+    setTasks(newTasks);
   };
 
   const handleTaskDelete = (task: Task) => {
@@ -99,6 +96,7 @@ const App = () => {
   const handleExpanderClick = (task: Task) => {
     setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
     console.log("On expander click Id:" + task.id);
+    console.log(tasks);
   };
 
   return (
@@ -115,8 +113,8 @@ const App = () => {
         />
       </Navbar>
 
-        <AddTask onAddTodoHandler={handleTaskAdd} />
-        <div className={styles.gantt}>
+      <AddTask onAddTodoHandler={handleTaskAdd} />
+      <div className={styles.gantt}>
         <Gantt
           tasks={tasks}
           viewMode={view}
@@ -129,7 +127,7 @@ const App = () => {
           onSelect={handleSelect}
           onExpanderClick={handleExpanderClick}
           listCellWidth={isChecked ? "155px" : ""}
-          ganttHeight={getWindowDimensions().height - 300}
+          ganttHeight={getWindowDimensions().height - 200}
           columnWidth={columnWidth}
           locale={"ja-JP"}
           rowHeight={50}

@@ -23,13 +23,14 @@ export const AddTask: React.FC<addTaskProps> = (props) => {
     const dateEnd = new Date(taskDateEnd.current!.value);
     event.preventDefault();
 
+
     const task: Task = {
       start: new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate()),
-      end: new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate() + 1),
+      end: new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate()),
       name: name,
       id: Math.random().toString(),
       progress: 25,
-      type: "milestone",
+      type: "task",
       hideChildren: false,
     };
 
@@ -43,10 +44,11 @@ export const AddTask: React.FC<addTaskProps> = (props) => {
         <label htmlFor="task-name">name</label>
         <input type="text" id="task-name" ref={taskName} />
 
-        <label htmlFor="task-date">date start</label>
+        <label htmlFor="task-date-start">date start</label>
         <input type="date" id="task-date-start" defaultValue={currentFullDate} ref={taskDateStart} ></input>
-        <label htmlFor="task-date">date to</label>
-        <input type="date" id="task-date-to" defaultValue={currentFullDate} ref={taskDateEnd} ></input>
+        
+        <label htmlFor="task-date-end">date to</label>
+        <input type="date" id="task-date-end" defaultValue={currentFullDate} ref={taskDateEnd} ></input>
         <button type="submit">追加</button>
       </form>
     </div>
