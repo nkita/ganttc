@@ -2,6 +2,10 @@
   display: table;
   border-bottom: #e6e4e4 1px solid;
   border-left: #e6e4e4 1px solid;
+  border-right: #e6e4e4 1px solid;
+  box-shadow: rgba(122, 122, 122, 0.0588235) 0px 0px 6px 3px;
+  -webkit-box-shadow: rgba(122, 122, 122, 0.0588235) 0px 0px 6px 3px;
+  -moz-box-shadow: rgba(122, 122, 122, 0.0588235) 0px 0px 6px 3px;
 }
 
 .taskListTableRow {
@@ -20,6 +24,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .taskListNameWrapper {
   display: flex;
 }
@@ -31,6 +36,7 @@
   user-select: none;
   cursor: pointer;
 }
+
 .taskListEmptyExpander {
   font-size: 0.6rem;
   padding-left: 1rem;
