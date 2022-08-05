@@ -68,7 +68,7 @@ const App = () => {
     // setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
     const newTasks = [...tasks];
     newTasks.push(task);
-    console.log(newTasks[9],newTasks);
+    console.log(newTasks[9], newTasks);
     setTasks(newTasks);
   };
 
@@ -130,6 +130,7 @@ const App = () => {
           columnWidth={columnWidth}
           locale={"ja-JP"}
           rowHeight={50}
+          timeStep={86400000}
           fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
         />
       </div>

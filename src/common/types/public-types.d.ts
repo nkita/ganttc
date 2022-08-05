@@ -30,7 +30,7 @@ export interface Task {
     dependencies?: string[];
     hideChildren?: boolean;
     displayOrder?: number;
-    customCol?:string;
+    customCol?: string;
 }
 export interface EventOption {
     /**
@@ -40,7 +40,7 @@ export interface EventOption {
     /**
      * Invokes on bar select on unselect.
      */
-    onSelect?: (task: Task, isSelected: boolean) => void;
+    onSelect?: (task: Task, isSelected: boolean, isLabel: boolean) => void;
     /**
      * Invokes on task label select
      */

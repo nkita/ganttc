@@ -42,3 +42,13 @@
   padding-left: 1rem;
   user-select: none;
 }
+
+.taskLabel{
+  font-size: 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  padding-bottom: 8px;
+  background-color: transparent;
+  z-index:10000
+}

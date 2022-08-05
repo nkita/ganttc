@@ -1,6 +1,8 @@
 import React, { useMemo } from "react";
 import styles from "./task-list-table.module.css";
 import { Task } from "../common/types/public-types"
+import Tooltip from 'react-bootstrap/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 const localeDateStringCache: { [key: string]: string } = {};
 const toLocaleDateStringFactory =
@@ -43,6 +45,7 @@ export const TaskListColumn: React.FC<{
     fontFamily,
     fontSize,
     locale,
+    setSelectedTask,
     onExpanderClick,
 }) => {
         const toLocaleDateString = useMemo(
@@ -91,10 +94,16 @@ export const TaskListColumn: React.FC<{
                                     >
                                         {expanderSymbol}
                                     </div>
-                                    <div>
-                                        {/* onClick={() => onSelectLabel(t.id)}> */}
-                                        {t.name}
+
+                                    <div
+                                        onClick={() => setSelectedTask(t.id)}>
+                                        <OverlayTrigger
+                                            placement="bottom"
+                                            overlay={<Tooltip >{t.name}</Tooltip>}
+                                        ><span>{t.name}</span>
+                                        </OverlayTrigger>
                                     </div>
+
                                 </div>
                             </div>
                             <div

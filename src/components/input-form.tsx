@@ -8,32 +8,22 @@ type addTaskProps = {
 };
 export const AddTask: React.FC<addTaskProps> = (props) => {
   const taskName = useRef<HTMLInputElement>(null);
-  const taskDateStart = useRef<HTMLInputElement>(null);
-  const taskDateEnd = useRef<HTMLInputElement>(null);
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth() + 1;
+  const currentMonth = currentDate.getMonth();
   const currentDay = currentDate.getDate();
-  const currentFullDate = `${currentYear}-${currentMonth.toString().padStart(2, "0")}-${currentDay.toString().padStart(2, "0")}`;
-
 
   const onAddTodoHandler = (event: React.FormEvent) => {
     const name = taskName.current!.value;
-    const dateStart = new Date(taskDateStart.current!.value);
-    const dateEnd = new Date(taskDateEnd.current!.value);
     event.preventDefault();
 
-    //　日付の差分取得
-    const diffDay = Math.floor((dateEnd.getTime() - dateStart.getTime()) / 86400000);
-    const type = (diffDay > 1) ? "task" : "milestone";
-
     const task: Task = {
-      start: new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate()),
-      end: new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate()),
+      start: new Date(currentYear, currentMonth, currentDay, 0, 0),
+      end: new Date(currentYear, currentMonth, currentDay, 23, 59),
       name: name,
       id: Math.random().toString(),
       progress: 0,
-      type: type,
+      type: "task",
       hideChildren: false,
     };
 
@@ -46,12 +36,6 @@ export const AddTask: React.FC<addTaskProps> = (props) => {
 
         <label htmlFor="task-name">name</label>
         <input type="text" id="task-name" ref={taskName} />
-
-        <label htmlFor="task-date-start">date start</label>
-        <input type="date" id="task-date-start" defaultValue={currentFullDate} ref={taskDateStart} ></input>
-
-        <label htmlFor="task-date-end">date to</label>
-        <input type="date" id="task-date-end" defaultValue={currentFullDate} ref={taskDateEnd} ></input>
         <button type="submit">追加</button>
       </form>
     </div>
