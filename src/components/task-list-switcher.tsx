@@ -1,5 +1,5 @@
 import React from 'react';
-import "gantt-task-react/dist/index.css";
+import { Toggle } from 'rsuite';
 
 type TaskListSwitcherProps = {
   isChecked: boolean;
@@ -11,18 +11,10 @@ export const TaskListSwitcher: React.FC<TaskListSwitcherProps> = ({
   isChecked,
 }) => {
   return (
-    <div className="ViewContainer">
-      <div className="Switch">
-        <label className="Switch_Toggle">
-          <input
-            type="checkbox"
-            defaultChecked={isChecked}
-            onClick={() => onViewListChange(!isChecked)}
-          />
-          <span className="Slider" />
-        </label>
-      </div>
-    </div>
+    <Toggle
+      defaultChecked={isChecked}
+      onClick={() => onViewListChange(!isChecked)}
+    />
   );
 };
 

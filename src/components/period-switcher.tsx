@@ -1,6 +1,6 @@
 import React from 'react';
 import "gantt-task-react/dist/index.css";
-import Dropdown from 'react-bootstrap/Dropdown';
+import { Dropdown } from 'rsuite';
 import { ViewMode } from "gantt-task-react";
 
 type PeriodSwitcherProps = {
@@ -13,17 +13,10 @@ export const PeriodSwitcher: React.FC<PeriodSwitcherProps> = ({
   isViewMode,
 }) => {
   return (
-    <div className="ViewContainer">
-      <Dropdown>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
-          {isViewMode}
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Day) }}>Day</Dropdown.Item>
-          <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Week) }}>Week</Dropdown.Item>
-          <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Month) }}>Month</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-    </div>
+    <Dropdown title={isViewMode}>
+      <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Day) }}>Day  D</Dropdown.Item>
+      <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Week) }}>Week  W</Dropdown.Item>
+      <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Month) }}>Month  M</Dropdown.Item>
+    </Dropdown>
   );
 };

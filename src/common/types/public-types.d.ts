@@ -31,6 +31,7 @@ export interface Task {
     hideChildren?: boolean;
     displayOrder?: number;
     customCol?: string;
+    clickOnLabel?:boolean;
 }
 export interface EventOption {
     /**

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { Task, ViewMode, Gantt } from "gantt-task-react";
+import { Task } from "./common/types/public-types";
+import { Gantt, ViewMode } from "gantt-task-react";
 import { TaskListSwitcher } from "./components/task-list-switcher";
 import { PeriodSwitcher } from "./components/period-switcher";
 import { AddTask } from "./components/input-form";
@@ -8,8 +9,9 @@ import { getStartEndDateForProject, initTasks } from "./helper";
 import { TaskListHeader } from "./custom/task-list-header";
 import { TaskListColumn } from "./custom/task-list-table";
 import { seedDates, ganttDateRange } from "./custom/date-helper";
-import Navbar from 'react-bootstrap/Navbar';
+import { Navbar, Nav, FlexboxGrid, Container, Content, Header } from 'rsuite';
 import styles from "./index.module.css";
+import 'rsuite/dist/rsuite.min.css';
 
 
 // Init
@@ -91,6 +93,12 @@ const App = () => {
 
   const handleSelect = (task: Task, isSelected: boolean) => {
     console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
+    let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
+    if (task.clickOnLabel) {
+      console.log("Click on Label");
+      task.clickOnLabel = false;
+    }
+    setTasks(newTasks);
   };
 
   const handleExpanderClick = (task: Task) => {
@@ -100,41 +108,56 @@ const App = () => {
 
   return (
     <>
-      <Navbar bg="light" expand="lg">
-        <TaskListSwitcher
-          onViewListChange={setIsChecked}
-          isChecked={isChecked}
-        />
-        <Navbar.Brand href="#home">Gant chart</Navbar.Brand>
-        <PeriodSwitcher
-          onViewModeChange={(viewMode) => setView(viewMode)}
-          isViewMode={view}
-        />
-      </Navbar>
-
-      <AddTask onAddTodoHandler={handleTaskAdd} />
-      <div className={styles.gantt}>
-        <Gantt
-          tasks={tasks}
-          viewMode={view}
-          TaskListHeader={TaskListHeader}
-          TaskListTable={TaskListColumn}
-          onDateChange={handleTaskChange}
-          onDelete={handleTaskDelete}
-          // onProgressChange={handleProgressChange}
-          onDoubleClick={handleDblClick}
-          onSelect={handleSelect}
-          onExpanderClick={handleExpanderClick}
-          listCellWidth={isChecked ? "155px" : ""}
-          ganttHeight={getWindowDimensions().height - 200}
-          columnWidth={columnWidth}
-          locale={"ja-JP"}
-          rowHeight={50}
-          timeStep={86400000}
-          fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
-        />
-      </div>
-      <Footer />
+      <Container>
+        <Navbar>
+          <Navbar.Brand >Gant chart</Navbar.Brand>
+          <Nav>
+            <Nav.Item>About us</Nav.Item>
+            <Nav.Item>terms</Nav.Item>
+          </Nav>
+        </Navbar>
+        <Content>
+          <FlexboxGrid align="bottom" justify="start">
+            <FlexboxGrid.Item colspan={2}>
+              <TaskListSwitcher
+                onViewListChange={setIsChecked}
+                isChecked={isChecked}
+              />
+            </FlexboxGrid.Item>
+            <FlexboxGrid.Item colspan={2}>
+            <PeriodSwitcher
+                onViewModeChange={(viewMode) => setView(viewMode)}
+                isViewMode={view}
+              />
+            </FlexboxGrid.Item>
+            <FlexboxGrid.Item colspan={20}>
+              <AddTask onAddTodoHandler={handleTaskAdd} />
+            </FlexboxGrid.Item>
+          </FlexboxGrid>
+          <div className={styles.gantt}>
+            <Gantt
+              tasks={tasks}
+              viewMode={view}
+              TaskListHeader={TaskListHeader}
+              TaskListTable={TaskListColumn}
+              onDateChange={handleTaskChange}
+              onDelete={handleTaskDelete}
+              // onProgressChange={handleProgressChange}
+              onDoubleClick={handleDblClick}
+              onSelect={handleSelect}
+              onExpanderClick={handleExpanderClick}
+              listCellWidth={isChecked ? "155px" : ""}
+              // ganttHeight={getWindowDimensions().height - 200}
+              columnWidth={columnWidth}
+              locale={"ja-JP"}
+              rowHeight={50}
+              timeStep={86400000}
+              fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
+            />
+          </div>
+          <Footer />
+        </Content>
+      </Container>
     </>
   );
 };

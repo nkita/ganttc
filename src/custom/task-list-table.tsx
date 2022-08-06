@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import styles from "./task-list-table.module.css";
 import { Task } from "../common/types/public-types"
-import Tooltip from 'react-bootstrap/Tooltip'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import { Popover, Whisper, Button, Form } from 'rsuite';
+import 'rsuite/dist/rsuite.min.css';
 
 const localeDateStringCache: { [key: string]: string } = {};
 const toLocaleDateStringFactory =
@@ -27,6 +27,25 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 // 日付の横幅
 const rowWidthShort = 100;
 const rowWidthLong = 200;
+
+const speaker = (task: Task, setSelectedTask: Function) => (
+    <Popover title={task.name}>
+        <Form layout="inline" >
+            <Form.Group controlId="username-7">
+                <Form.ControlLabel>Username</Form.ControlLabel>
+                <Form.Control name="username" style={{ width: 160 }} />
+                <Form.HelpText tooltip>Required</Form.HelpText>
+            </Form.Group>
+
+            <Form.Group controlId="password-7">
+                <Form.ControlLabel>Password</Form.ControlLabel>
+                <Form.Control name="password" type="password" autoComplete="off" style={{ width: 160 }} />
+            </Form.Group>
+
+            <Button>Login</Button>
+        </Form>
+    </Popover>
+);
 
 export const TaskListColumn: React.FC<{
     rowHeight: number;
@@ -95,13 +114,10 @@ export const TaskListColumn: React.FC<{
                                         {expanderSymbol}
                                     </div>
 
-                                    <div
-                                        onClick={() => setSelectedTask(t.id)}>
-                                        <OverlayTrigger
-                                            placement="bottom"
-                                            overlay={<Tooltip >{t.name}</Tooltip>}
-                                        ><span>{t.name}</span>
-                                        </OverlayTrigger>
+                                    <div>
+                                        <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t, setSelectedTask)}>
+                                            <span>{t.name}</span>
+                                        </Whisper>
                                     </div>
 
                                 </div>
@@ -137,6 +153,6 @@ export const TaskListColumn: React.FC<{
                         </div>
                     );
                 })}
-            </div>
+            </div >
         );
     };

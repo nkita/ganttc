@@ -39,7 +39,7 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                         textAlign:"center",
                     }}
                 >
-                    名前
+                    Title
                 </div>
                 <div
                     className={styles.ganttTable_HeaderSeparator}
@@ -71,7 +71,7 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                     textAlign: "center",
                 }}
             >
-                進捗
+                %
             </div>
         </div>
         </div >
