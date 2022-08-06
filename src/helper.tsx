@@ -93,7 +93,7 @@ export function initTasks() {
       progress: 0,
       isDisabled: true,
       type: "task",
-    },
+    }
   ];
   return tasks;
 }

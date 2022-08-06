@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Task } from "./common/types/public-types";
 import { Gantt, ViewMode } from "gantt-task-react";
 import { TaskListSwitcher } from "./components/task-list-switcher";
@@ -14,11 +14,27 @@ import styles from "./index.module.css";
 import 'rsuite/dist/rsuite.min.css';
 
 
+const useWindowSize = (): number[] => {
+  const [size, setSize] = useState([0, 0]);
+  useLayoutEffect(() => {
+    const updateSize = (): void => {
+      setSize([window.innerWidth, window.innerHeight]);
+    };
+
+    window.addEventListener('resize', updateSize);
+    updateSize();
+
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+  return size;
+};
+
 // Init
 const App = () => {
   const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
   const [tasks, setTasks] = React.useState<Task[]>(initTasks());
   const [isChecked, setIsChecked] = React.useState(true);
+  const [width, height] = useWindowSize();
   // const [scrollX, setScrollX] = useState(-1);
   let columnWidth = 65;
   if (view === ViewMode.Month) {
@@ -38,14 +54,6 @@ const App = () => {
     const ele = document.getElementsByClassName("_2B2zv")
     ele[0].scrollLeft = retest.length * columnWidth;
   }, [])
-
-  const getWindowDimensions = () => {
-    const { innerWidth: width, innerHeight: height } = window;
-    return {
-      width,
-      height
-    };
-  }
 
   const handleTaskChange = (task: Task) => {
     let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
@@ -82,10 +90,10 @@ const App = () => {
     return conf;
   };
 
-  // const handleProgressChange = async (task: Task) => {
-  //   setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-  //   console.log("On progress change Id:" + task.id);
-  // };
+  const handleProgressChange = async (task: Task) => {
+    setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
+    console.log("On progress change Id:" + task.id);
+  };
 
   const handleDblClick = (task: Task) => {
     alert("On Double Click event Id:" + task.id);
@@ -125,7 +133,7 @@ const App = () => {
               />
             </FlexboxGrid.Item>
             <FlexboxGrid.Item colspan={2}>
-            <PeriodSwitcher
+              <PeriodSwitcher
                 onViewModeChange={(viewMode) => setView(viewMode)}
                 isViewMode={view}
               />
@@ -142,12 +150,12 @@ const App = () => {
               TaskListTable={TaskListColumn}
               onDateChange={handleTaskChange}
               onDelete={handleTaskDelete}
-              // onProgressChange={handleProgressChange}
+              onProgressChange={handleProgressChange}
               onDoubleClick={handleDblClick}
               onSelect={handleSelect}
               onExpanderClick={handleExpanderClick}
               listCellWidth={isChecked ? "155px" : ""}
-              // ganttHeight={getWindowDimensions().height - 200}
+              ganttHeight={height - 210}
               columnWidth={columnWidth}
               locale={"ja-JP"}
               rowHeight={50}

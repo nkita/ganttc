@@ -73,86 +73,88 @@ export const TaskListColumn: React.FC<{
         );
 
         return (
-            <div
-                className={styles.taskListWrapper}
-                style={{
-                    fontFamily: fontFamily,
-                    fontSize: fontSize,
-                }}
-            >
-                {tasks.map(t => {
-                    let expanderSymbol = "";
-                    if (t.hideChildren === false) {
-                        expanderSymbol = "▼";
-                    } else if (t.hideChildren === true) {
-                        expanderSymbol = "▶";
-                    }
+            <>
+                <div
+                    className={styles.taskListWrapper}
+                    style={{
+                        fontFamily: fontFamily,
+                        fontSize: fontSize,
+                    }}
+                >
+                    {tasks.map(t => {
+                        let expanderSymbol = "";
+                        if (t.hideChildren === false) {
+                            expanderSymbol = "▼";
+                        } else if (t.hideChildren === true) {
+                            expanderSymbol = "▶";
+                        }
 
-                    return (
-                        <div
-                            className={styles.taskListTableRow}
-                            style={{ height: rowHeight }}
-                            key={`${t.id}row`}
-                        >
+                        return (
                             <div
-                                className={styles.taskListCell}
-                                style={{
-                                    minWidth: rowWidthLong,
-                                    maxWidth: rowWidthLong,
-                                }}
-                                title={t.name}
+                                className={styles.taskListTableRow}
+                                style={{ height: rowHeight }}
+                                key={`${t.id}row`}
                             >
-                                <div className={styles.taskListNameWrapper}>
-                                    <div
-                                        className={
-                                            expanderSymbol
-                                                ? styles.taskListExpander
-                                                : styles.taskListEmptyExpander
-                                        }
-                                        onClick={() => onExpanderClick(t)}
-                                    >
-                                        {expanderSymbol}
-                                    </div>
+                                <div
+                                    className={styles.taskListCell}
+                                    style={{
+                                        minWidth: rowWidthLong,
+                                        maxWidth: rowWidthLong,
+                                    }}
+                                    title={t.name}
+                                >
+                                    <div className={styles.taskListNameWrapper}>
+                                        <div
+                                            className={
+                                                expanderSymbol
+                                                    ? styles.taskListExpander
+                                                    : styles.taskListEmptyExpander
+                                            }
+                                            onClick={() => onExpanderClick(t)}
+                                        >
+                                            {expanderSymbol}
+                                        </div>
 
-                                    <div>
-                                        <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t, setSelectedTask)}>
-                                            <span>{t.name}</span>
-                                        </Whisper>
-                                    </div>
+                                        <div>
+                                            <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t, setSelectedTask)}>
+                                                <span>{t.name}</span>
+                                            </Whisper>
+                                        </div>
 
+                                    </div>
+                                </div>
+                                <div
+                                    className={styles.taskListCell}
+                                    style={{
+                                        minWidth: rowWidthShort,
+                                        maxWidth: rowWidthShort,
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    <span>{toLocaleDateString(t.start, dateTimeOptions)}</span>
+                                    -
+                                    <span>{toLocaleDateString(t.end, dateTimeOptions)}</span>
+                                </div>
+                                <div
+                                    className={styles.taskListCell}
+                                    style={{
+                                        minWidth: rowWidthShort,
+                                        maxWidth: rowWidthShort,
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    <select name="progress">
+                                        <option defaultValue={0}>0%</option>
+                                        <option defaultValue={25}>25%</option>
+                                        <option defaultValue={50}>50%</option>
+                                        <option defaultValue={75}>75%</option>
+                                        <option defaultValue={100}>100%</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div
-                                className={styles.taskListCell}
-                                style={{
-                                    minWidth: rowWidthShort,
-                                    maxWidth: rowWidthShort,
-                                    textAlign: "center",
-                                }}
-                            >
-                                <span>{toLocaleDateString(t.start, dateTimeOptions)}</span>
-                                -
-                                <span>{toLocaleDateString(t.end, dateTimeOptions)}</span>
-                            </div>
-                            <div
-                                className={styles.taskListCell}
-                                style={{
-                                    minWidth: rowWidthShort,
-                                    maxWidth: rowWidthShort,
-                                    textAlign: "center",
-                                }}
-                            >
-                                <select name="progress">
-                                    <option defaultValue={0}>0%</option>
-                                    <option defaultValue={25}>25%</option>
-                                    <option defaultValue={50}>50%</option>
-                                    <option defaultValue={75}>75%</option>
-                                    <option defaultValue={100}>100%</option>
-                                </select>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div >
+                        );
+                    })}
+                </div >
+            </>
         );
     };
