@@ -1,7 +1,11 @@
 import React, { useMemo } from "react";
 import styles from "./task-list-table.module.css";
 import { Task } from "../common/types/public-types"
-import { Popover, Whisper, Button, Form } from 'rsuite';
+import { Popover, Whisper, Button, Form, IconButton } from 'rsuite';
+import Edit from '@rsuite/icons/Edit';
+import Trash from '@rsuite/icons/Trash';
+import Tree from '@rsuite/icons/Tree';
+import Page from '@rsuite/icons/Page';
 import 'rsuite/dist/rsuite.min.css';
 
 const localeDateStringCache: { [key: string]: string } = {};
@@ -25,7 +29,6 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 };
 
 // 日付の横幅
-const rowWidthShort = 100;
 const rowWidthLong = 200;
 
 const speaker = (task: Task, setSelectedTask: Function) => (
@@ -88,6 +91,7 @@ export const TaskListColumn: React.FC<{
                         } else if (t.hideChildren === true) {
                             expanderSymbol = "▶";
                         }
+                        console.log(t.hideChildren === undefined);
 
                         return (
                             <div
@@ -116,18 +120,36 @@ export const TaskListColumn: React.FC<{
                                         </div>
 
                                         <div>
-                                            <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t, setSelectedTask)}>
-                                                <span>{t.name}</span>
-                                            </Whisper>
+                                            {(t.hideChildren === undefined) ? <Page /> : <Tree />}
+                                            <span style={{ paddingRight: 10 }} />
+                                            <span>{t.name}</span>
                                         </div>
-
                                     </div>
                                 </div>
                                 <div
                                     className={styles.taskListCell}
                                     style={{
-                                        minWidth: rowWidthShort,
-                                        maxWidth: rowWidthShort,
+                                        minWidth: 50,
+                                        maxWidth: 50,
+                                    }}
+                                >
+                                    <div className={styles.taskListNameWrapper}>
+                                        <div>
+                                            <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t, setSelectedTask)}>
+                                                <Edit style={{ fontSize: "1em", cursor: "pointer" }} />
+                                            </Whisper>
+                                            <span style={{ paddingRight: 10 }}></span>
+                                            <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t, setSelectedTask)}>
+                                                <Trash style={{ fontSize: "1em", color: "red", cursor: "pointer" }} />
+                                            </Whisper>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    className={styles.taskListCell}
+                                    style={{
+                                        minWidth: rowWidth,
+                                        maxWidth: rowWidth,
                                         textAlign: "center",
                                     }}
                                 >
@@ -138,8 +160,8 @@ export const TaskListColumn: React.FC<{
                                 <div
                                     className={styles.taskListCell}
                                     style={{
-                                        minWidth: rowWidthShort,
-                                        maxWidth: rowWidthShort,
+                                        minWidth: rowWidth,
+                                        maxWidth: rowWidth,
                                         textAlign: "center",
                                     }}
                                 >

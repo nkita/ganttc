@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Task } from "./common/types/public-types";
 import { Gantt, ViewMode } from "gantt-task-react";
 import { TaskListSwitcher } from "./components/task-list-switcher";
@@ -9,7 +9,9 @@ import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper"
 import { TaskListHeader } from "./custom/task-list-header";
 import { TaskListColumn } from "./custom/task-list-table";
 import { seedDates, ganttDateRange } from "./custom/date-helper";
-import { Navbar, Nav, FlexboxGrid, Container, Content } from 'rsuite';
+import { Navbar, Nav, FlexboxGrid, Container, Content, IconButton, ButtonToolbar, Popover, Form, Button, Whisper } from 'rsuite';
+import Tree from '@rsuite/icons/Tree';
+import Page from '@rsuite/icons/Page';
 import styles from "./index.module.css";
 import 'rsuite/dist/rsuite.min.css';
 
@@ -20,7 +22,7 @@ const App = () => {
   const [isChecked, setIsChecked] = useState(true);
   const windowHeight = useWindowHeight();
   const rowHeight = 40;
-  const headerHeight = 200;
+  const headerHeight = 250;
 
   // const [scrollX, setScrollX] = useState(-1);
   let columnWidth = 35;
@@ -69,6 +71,12 @@ const App = () => {
     setTasks(newTasks);
   };
 
+  const speaker = (kind: string) => (
+    <Popover title={`${kind}を追加`}>
+      <AddTask onAddTodoHandler={handleTaskAdd} />
+    </Popover>
+  );
+
   const handleTaskDelete = (task: Task) => {
     const conf = window.confirm("Are you sure about " + task.name + " ?");
     if (conf) {
@@ -112,23 +120,27 @@ const App = () => {
           </Nav>
         </Navbar>
         <Content>
-          <FlexboxGrid align="bottom" justify="start">
-            <FlexboxGrid.Item colspan={2}>
+          <div className={styles.buttonArea}>
+            <h3>プロジェクト名</h3>
+          </div>
+          <div className={styles.buttonArea}>
+            <ButtonToolbar>
               <TaskListSwitcher
                 onViewListChange={setIsChecked}
                 isChecked={isChecked}
               />
-            </FlexboxGrid.Item>
-            <FlexboxGrid.Item colspan={2}>
+              <Whisper placement="bottomStart" trigger="click" controlId="control-id-click" speaker={speaker("プロジェクト")}>
+                <IconButton size="sm" icon={<Tree />}>追加</IconButton>
+              </Whisper>
+              <Whisper placement="bottomStart" trigger="click" controlId="control-id-click" speaker={speaker("タスク")}>
+                <IconButton size="sm" icon={<Page />}>追加</IconButton>
+              </Whisper>
               <PeriodSwitcher
                 onViewModeChange={(viewMode) => setView(viewMode)}
                 isViewMode={view}
               />
-            </FlexboxGrid.Item>
-            <FlexboxGrid.Item colspan={20}>
-              <AddTask onAddTodoHandler={handleTaskAdd} />
-            </FlexboxGrid.Item>
-          </FlexboxGrid>
+            </ButtonToolbar>
+          </div>
           <div className={styles.gantt} >
             <Gantt
               tasks={tasks}
@@ -141,8 +153,8 @@ const App = () => {
               onDoubleClick={handleDblClick}
               onSelect={handleSelect}
               onExpanderClick={handleExpanderClick}
-              listCellWidth={isChecked ? "155px" : ""}
-              ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - 210) : 0}
+              listCellWidth={isChecked ? "100px" : "0px"}
+              ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
               columnWidth={columnWidth}
               locale={"ja-JP"}
               rowHeight={rowHeight}

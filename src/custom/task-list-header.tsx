@@ -2,8 +2,7 @@ import React from "react";
 import styles from "./task-list-header.module.css";
 
 // 日付の横幅
-const rowWidthShort = 100;
-const rowWidthLong = 200;
+const rowWidthLong = 250;
 
 interface ITaskListHeader {
     headerHeight: number;
@@ -36,44 +35,33 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                     className={styles.ganttTable_HeaderItem}
                     style={{
                         minWidth: rowWidthLong,
-                        textAlign:"center",
+                        textAlign: "center",
                     }}
                 >
                     Title
                 </div>
                 <div
-                    className={styles.ganttTable_HeaderSeparator}
-                    style={{
-                        height: headerHeight * 0.5,
-                        marginTop: headerHeight * 0.2,
-                    }}
-                />
-                <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
-                        minWidth: rowWidthShort,
+                        minWidth: rowWidth,
+                        maxWidth: rowWidth,
                         textAlign: "center",
                     }}
                 >
-                期間
+                    期間
+                </div>
+
+                <div
+                    className={styles.ganttTable_HeaderItem}
+                    style={{
+                        minWidth: rowWidth,
+                        maxWidth: rowWidth,
+                        textAlign: "center",
+                    }}
+                >
+                    %
+                </div>
             </div>
-            <div
-                className={styles.ganttTable_HeaderSeparator}
-                style={{
-                    height: headerHeight * 0.5,
-                    marginTop: headerHeight * 0.25,
-                }}
-            />
-            <div
-                className={styles.ganttTable_HeaderItem}
-                style={{
-                    minWidth: rowWidthShort,
-                    textAlign: "center",
-                }}
-            >
-                %
-            </div>
-        </div>
         </div >
     );
 };
