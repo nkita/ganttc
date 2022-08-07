@@ -1,3 +1,4 @@
+import { RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Task } from "./common/types/public-types";
 
 export function initTasks() {
@@ -12,7 +13,7 @@ export function initTasks() {
       type: "project",
       hideChildren: false,
       displayOrder: 1,
-      customCol:"custom_col",
+      customCol: "custom_col",
     },
     {
       start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
@@ -114,3 +115,43 @@ export function getStartEndDateForProject(tasks: Task[], projectId: string) {
   }
   return [start, end];
 }
+
+// 引数のtargetProperty をDOMRectのもつPropertyに限定する
+type DOMRectProperty = keyof Omit<DOMRect, 'toJSON'>;
+
+// RefObjectの型は div, span, p, input などのさまざまなHTML要素に対応できるようにextendsで制限をかけつつ抽象化
+export const useGetElementProperty = <T extends HTMLElement>(
+  elementRef: RefObject<T>
+) => {
+  const getElementProperty = useCallback(
+    (targetProperty: DOMRectProperty): number => {
+      const clientRect = elementRef.current?.getBoundingClientRect();
+      if (clientRect) {
+        return clientRect[targetProperty];
+      }
+
+      // clientRect が undefined のときはデフォルトで0を返すようにする
+      return 0;
+    },
+    [elementRef]
+  );
+
+  return {
+    getElementProperty,
+  };
+};
+
+export const useWindowHeight = (): number => {
+  const [height, setSize] = useState(0);
+  useLayoutEffect(() => {
+    const updateSize = (): void => {
+      setSize(window.innerHeight);
+    };
+
+    window.addEventListener('resize', updateSize);
+    updateSize();
+
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+  return height;
+};

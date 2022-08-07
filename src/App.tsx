@@ -1,48 +1,34 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Task } from "./common/types/public-types";
 import { Gantt, ViewMode } from "gantt-task-react";
 import { TaskListSwitcher } from "./components/task-list-switcher";
 import { PeriodSwitcher } from "./components/period-switcher";
 import { AddTask } from "./components/input-form";
 import { Footer } from "./components/footer";
-import { getStartEndDateForProject, initTasks } from "./helper";
+import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper";
 import { TaskListHeader } from "./custom/task-list-header";
 import { TaskListColumn } from "./custom/task-list-table";
 import { seedDates, ganttDateRange } from "./custom/date-helper";
-import { Navbar, Nav, FlexboxGrid, Container, Content, Header } from 'rsuite';
+import { Navbar, Nav, FlexboxGrid, Container, Content } from 'rsuite';
 import styles from "./index.module.css";
 import 'rsuite/dist/rsuite.min.css';
 
-
-const useWindowSize = (): number[] => {
-  const [size, setSize] = useState([0, 0]);
-  useLayoutEffect(() => {
-    const updateSize = (): void => {
-      setSize([window.innerWidth, window.innerHeight]);
-    };
-
-    window.addEventListener('resize', updateSize);
-    updateSize();
-
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
-  return size;
-};
-
 // Init
 const App = () => {
-  const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
-  const [tasks, setTasks] = React.useState<Task[]>(initTasks());
-  const [isChecked, setIsChecked] = React.useState(true);
-  const [width, height] = useWindowSize();
+  const [view, setView] = useState<ViewMode>(ViewMode.Day);
+  const [tasks, setTasks] = useState<Task[]>(initTasks());
+  const [isChecked, setIsChecked] = useState(true);
+  const windowHeight = useWindowHeight();
+  const rowHeight = 40;
+  const headerHeight = 200;
+
   // const [scrollX, setScrollX] = useState(-1);
-  let columnWidth = 65;
+  let columnWidth = 35;
   if (view === ViewMode.Month) {
     columnWidth = 300;
   } else if (view === ViewMode.Week) {
     columnWidth = 250;
   }
-
   //  First process. *one-time-only
   useEffect(() => {
     console.log('useEffectが1回だけ実行されました');
@@ -54,6 +40,7 @@ const App = () => {
     const ele = document.getElementsByClassName("_2B2zv")
     ele[0].scrollLeft = retest.length * columnWidth;
   }, [])
+
 
   const handleTaskChange = (task: Task) => {
     let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
@@ -142,7 +129,7 @@ const App = () => {
               <AddTask onAddTodoHandler={handleTaskAdd} />
             </FlexboxGrid.Item>
           </FlexboxGrid>
-          <div className={styles.gantt}>
+          <div className={styles.gantt} >
             <Gantt
               tasks={tasks}
               viewMode={view}
@@ -155,10 +142,10 @@ const App = () => {
               onSelect={handleSelect}
               onExpanderClick={handleExpanderClick}
               listCellWidth={isChecked ? "155px" : ""}
-              ganttHeight={height - 210}
+              ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - 210) : 0}
               columnWidth={columnWidth}
               locale={"ja-JP"}
-              rowHeight={50}
+              rowHeight={rowHeight}
               timeStep={86400000}
               fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
             />
