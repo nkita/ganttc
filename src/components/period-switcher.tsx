@@ -13,7 +13,7 @@ export const PeriodSwitcher: React.FC<PeriodSwitcherProps> = ({
   isViewMode,
 }) => {
   return (
-    <Dropdown title={isViewMode}>
+    <Dropdown size="sm" title={isViewMode}>
       <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Day) }}>Day  D</Dropdown.Item>
       <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Week) }}>Week  W</Dropdown.Item>
       <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Month) }}>Month  M</Dropdown.Item>

@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import styles from "./task-list-table.module.css";
 import { Task } from "../common/types/public-types"
-import { Popover, Whisper, Button, Form, IconButton } from 'rsuite';
+import { Popover, Whisper, Button, Form, InputNumber } from 'rsuite';
 import Edit from '@rsuite/icons/Edit';
 import Trash from '@rsuite/icons/Trash';
 import Tree from '@rsuite/icons/Tree';
@@ -31,25 +31,6 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 // 日付の横幅
 const rowWidthLong = 200;
 
-const speaker = (task: Task, setSelectedTask: Function) => (
-    <Popover title={task.name}>
-        <Form layout="inline" >
-            <Form.Group controlId="username-7">
-                <Form.ControlLabel>Username</Form.ControlLabel>
-                <Form.Control name="username" style={{ width: 160 }} />
-                <Form.HelpText tooltip>Required</Form.HelpText>
-            </Form.Group>
-
-            <Form.Group controlId="password-7">
-                <Form.ControlLabel>Password</Form.ControlLabel>
-                <Form.Control name="password" type="password" autoComplete="off" style={{ width: 160 }} />
-            </Form.Group>
-
-            <Button>Login</Button>
-        </Form>
-    </Popover>
-);
-
 export const TaskListColumn: React.FC<{
     rowHeight: number;
     rowWidth: string;
@@ -70,11 +51,44 @@ export const TaskListColumn: React.FC<{
     setSelectedTask,
     onExpanderClick,
 }) => {
+        const [taskId, setTaskId] = React.useState("");
+        const progressRef = React.useRef(null);
+        const taskName = React.useRef(null);
+        const handleTaskNameChange = (e: React.ChangeEvent<HTMLSelectElement>, t: Task) => {
+            t.progress = Number(e.target.value);
+            setSelectedTask(t.id);
+        }
+        const handleProgressChange = (e: React.ChangeEvent<HTMLSelectElement>, t: Task) => {
+            t.progress = Number(e.target.value);
+            setSelectedTask(t.id);
+        }
         const toLocaleDateString = useMemo(
             () => toLocaleDateStringFactory(locale),
             [locale]
         );
 
+        const modifyEvent = (event: React.FormEvent) => {
+            event.preventDefault();
+            console.log(event, taskId);
+
+        }
+
+        const speaker = (task: Task) => (
+            <Popover title={task.name}>
+                <Form layout="inline" onChange={
+                    value => {
+                        console.log(value, "aaaaaaaa");
+                        setTaskId(value.taskId)
+                    }
+                }>
+                    <Form.Group controlId="username-7">
+                        <Form.ControlLabel>taskid</Form.ControlLabel>
+                        <Form.Control name="taskId" style={{ width: 160 }} />
+                    </Form.Group>
+                    <Button onClick={modifyEvent} >登録</Button>
+                </Form>
+            </Popover>
+        );
         return (
             <>
                 <div
@@ -84,6 +98,7 @@ export const TaskListColumn: React.FC<{
                         fontSize: fontSize,
                     }}
                 >
+
                     {tasks.map(t => {
                         let expanderSymbol = "";
                         if (t.hideChildren === false) {
@@ -91,8 +106,6 @@ export const TaskListColumn: React.FC<{
                         } else if (t.hideChildren === true) {
                             expanderSymbol = "▶";
                         }
-                        console.log(t.hideChildren === undefined);
-
                         return (
                             <div
                                 className={styles.taskListTableRow}
@@ -122,7 +135,8 @@ export const TaskListColumn: React.FC<{
                                         <div>
                                             {(t.hideChildren === undefined) ? <Page /> : <Tree />}
                                             <span style={{ paddingRight: 10 }} />
-                                            <span>{t.name}</span>
+                                            <input type="text" onChange={e => console.log("onChange")} defaultValue={t.name} />
+
                                         </div>
                                     </div>
                                 </div>
@@ -135,11 +149,11 @@ export const TaskListColumn: React.FC<{
                                 >
                                     <div className={styles.taskListNameWrapper}>
                                         <div>
-                                            <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t, setSelectedTask)}>
+                                            <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t)}>
                                                 <Edit style={{ fontSize: "1em", cursor: "pointer" }} />
                                             </Whisper>
                                             <span style={{ paddingRight: 10 }}></span>
-                                            <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t, setSelectedTask)}>
+                                            <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t)}>
                                                 <Trash style={{ fontSize: "1em", color: "red", cursor: "pointer" }} />
                                             </Whisper>
                                         </div>
@@ -165,12 +179,13 @@ export const TaskListColumn: React.FC<{
                                         textAlign: "center",
                                     }}
                                 >
-                                    <select name="progress">
-                                        <option defaultValue={0}>0%</option>
-                                        <option defaultValue={25}>25%</option>
-                                        <option defaultValue={50}>50%</option>
-                                        <option defaultValue={75}>75%</option>
-                                        <option defaultValue={100}>100%</option>
+
+                                    <select name="progress" ref={progressRef} onChange={(e) => handleProgressChange(e, t)} value={t.progress}>
+                                        <option value={0}>0%</option>
+                                        <option value={25}>25%</option>
+                                        <option value={50}>50%</option>
+                                        <option value={75}>75%</option>
+                                        <option value={100}>100%</option>
                                     </select>
                                 </div>
                             </div>

@@ -35,12 +35,12 @@ const App = () => {
   useEffect(() => {
     console.log('useEffectが1回だけ実行されました');
     // 当日にスクロールする　Todo
-    const currentDate = new Date();
-    const [startDate, endDate] = ganttDateRange(tasks, view);
-    const test = seedDates(startDate, currentDate, view);
-    const retest = test.reverse();
-    const ele = document.getElementsByClassName("_2B2zv")
-    ele[0].scrollLeft = retest.length * columnWidth;
+    // const currentDate = new Date();
+    // const [startDate, endDate] = ganttDateRange(tasks, view);
+    // const test = seedDates(startDate, currentDate, view);
+    // const retest = test.reverse();
+    // const ele = document.getElementsByClassName("_2B2zv")
+    // ele[0].scrollLeft = retest.length * columnWidth;
   }, [])
 
 
@@ -101,6 +101,12 @@ const App = () => {
       console.log("Click on Label");
       task.clickOnLabel = false;
     }
+
+    if (task.clickOnProgress) {
+      console.log("Click on Progress");
+      task.clickOnProgress = false;
+    }
+
     setTasks(newTasks);
   };
 
@@ -142,6 +148,19 @@ const App = () => {
             </ButtonToolbar>
           </div>
           <div className={styles.gantt} >
+              {/* <Gantt
+                tasks={tasks}
+                viewMode={view}
+                onDateChange={handleTaskChange}
+                onDelete={handleTaskDelete}
+                onProgressChange={handleProgressChange}
+                onDoubleClick={handleDblClick}
+                onSelect={handleSelect}
+                onExpanderClick={handleExpanderClick}
+                listCellWidth={isChecked ? "155px" : ""}
+                ganttHeight={300}
+                columnWidth={columnWidth}
+              /> */}
             <Gantt
               tasks={tasks}
               viewMode={view}

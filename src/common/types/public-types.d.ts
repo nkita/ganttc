@@ -32,6 +32,7 @@ export interface Task {
     displayOrder?: number;
     customCol?: string;
     clickOnLabel?:boolean;
+    clickOnProgress?:boolean;
 }
 export interface EventOption {
     /**
