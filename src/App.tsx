@@ -8,8 +8,8 @@ import { Footer } from "./components/footer";
 import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper";
 import { TaskListHeader } from "./custom/task-list-header";
 import { TaskListColumn } from "./custom/task-list-table";
-import { seedDates, ganttDateRange } from "./custom/date-helper";
-import { Navbar, Nav, FlexboxGrid, Container, Content, IconButton, ButtonToolbar, Popover, Form, Button, Whisper } from 'rsuite';
+// import { seedDates, ganttDateRange } from "./custom/date-helper";
+import { Navbar, Nav,  Container, Content, IconButton, ButtonToolbar, Popover, Whisper } from 'rsuite';
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
 import styles from "./index.module.css";
@@ -25,7 +25,7 @@ const App = () => {
   const headerHeight = 250;
 
   // const [scrollX, setScrollX] = useState(-1);
-  let columnWidth = 35;
+  let columnWidth = 25;
   if (view === ViewMode.Month) {
     columnWidth = 300;
   } else if (view === ViewMode.Week) {
@@ -148,19 +148,6 @@ const App = () => {
             </ButtonToolbar>
           </div>
           <div className={styles.gantt} >
-              {/* <Gantt
-                tasks={tasks}
-                viewMode={view}
-                onDateChange={handleTaskChange}
-                onDelete={handleTaskDelete}
-                onProgressChange={handleProgressChange}
-                onDoubleClick={handleDblClick}
-                onSelect={handleSelect}
-                onExpanderClick={handleExpanderClick}
-                listCellWidth={isChecked ? "155px" : ""}
-                ganttHeight={300}
-                columnWidth={columnWidth}
-              /> */}
             <Gantt
               tasks={tasks}
               viewMode={view}

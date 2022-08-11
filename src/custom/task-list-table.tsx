@@ -1,8 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import styles from "./task-list-table.module.css";
 import { Task } from "../common/types/public-types"
-import { Popover, Whisper, Button, Form, InputNumber } from 'rsuite';
-import Edit from '@rsuite/icons/Edit';
 import Trash from '@rsuite/icons/Trash';
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
@@ -51,11 +49,10 @@ export const TaskListColumn: React.FC<{
     setSelectedTask,
     onExpanderClick,
 }) => {
-        const [taskId, setTaskId] = React.useState("");
         const progressRef = React.useRef(null);
-        const taskName = React.useRef(null);
-        const handleTaskNameChange = (e: React.ChangeEvent<HTMLSelectElement>, t: Task) => {
-            t.progress = Number(e.target.value);
+        const handleTaskNameChange = (e: React.ChangeEvent<HTMLInputElement>, t: Task) => {
+            e.preventDefault();
+            t.name = e.target.value;
             setSelectedTask(t.id);
         }
         const handleProgressChange = (e: React.ChangeEvent<HTMLSelectElement>, t: Task) => {
@@ -67,28 +64,6 @@ export const TaskListColumn: React.FC<{
             [locale]
         );
 
-        const modifyEvent = (event: React.FormEvent) => {
-            event.preventDefault();
-            console.log(event, taskId);
-
-        }
-
-        const speaker = (task: Task) => (
-            <Popover title={task.name}>
-                <Form layout="inline" onChange={
-                    value => {
-                        console.log(value, "aaaaaaaa");
-                        setTaskId(value.taskId)
-                    }
-                }>
-                    <Form.Group controlId="username-7">
-                        <Form.ControlLabel>taskid</Form.ControlLabel>
-                        <Form.Control name="taskId" style={{ width: 160 }} />
-                    </Form.Group>
-                    <Button onClick={modifyEvent} >登録</Button>
-                </Form>
-            </Popover>
-        );
         return (
             <>
                 <div
@@ -120,43 +95,45 @@ export const TaskListColumn: React.FC<{
                                     }}
                                     title={t.name}
                                 >
-                                    <div className={styles.taskListNameWrapper}>
-                                        <div
-                                            className={
-                                                expanderSymbol
-                                                    ? styles.taskListExpander
-                                                    : styles.taskListEmptyExpander
-                                            }
-                                            onClick={() => onExpanderClick(t)}
-                                        >
-                                            {expanderSymbol}
-                                        </div>
+                                    <div>
+                                        <div className={styles.taskListNameWrapper}>
+                                            <div
+                                                className={
+                                                    expanderSymbol
+                                                        ? styles.taskListExpander
+                                                        : styles.taskListEmptyExpander
+                                                }
+                                                onClick={() => onExpanderClick(t)}
+                                            >
+                                                {expanderSymbol}
+                                            </div>
 
-                                        <div>
-                                            {(t.hideChildren === undefined) ? <Page /> : <Tree />}
-                                            <span style={{ paddingRight: 10 }} />
-                                            <input type="text" onChange={e => console.log("onChange")} defaultValue={t.name} />
-
+                                            <div>
+                                                {(t.project === undefined) ? "" : <span className={styles.spacer} />}
+                                                {(t.hideChildren === undefined) ? <Page /> : <Tree />}
+                                                <span style={{ paddingRight: 10 }} />
+                                                <input className={styles.nameInput}
+                                                    type="text" name="taskName"
+                                                    onChange={e => handleTaskNameChange(e, t)}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter' || e.key === 'Escape') {
+                                                            e.currentTarget.blur();
+                                                        }
+                                                    }}
+                                                    defaultValue={t.name} />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div
-                                    className={styles.taskListCell}
+                                    className={styles.taskListCell + " " + styles.taskListIcon}
                                     style={{
-                                        minWidth: 50,
-                                        maxWidth: 50,
+                                        minWidth: 15,
+                                        maxWidth: 15,
                                     }}
                                 >
-                                    <div className={styles.taskListNameWrapper}>
-                                        <div>
-                                            <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t)}>
-                                                <Edit style={{ fontSize: "1em", cursor: "pointer" }} />
-                                            </Whisper>
-                                            <span style={{ paddingRight: 10 }}></span>
-                                            <Whisper placement="rightStart" trigger="click" controlId="control-id-click" speaker={speaker(t)}>
-                                                <Trash style={{ fontSize: "1em", color: "red", cursor: "pointer" }} />
-                                            </Whisper>
-                                        </div>
+                                    <div>
+                                        <Trash style={{ fontSize: "1em", color: "red", cursor: "pointer" }} />
                                     </div>
                                 </div>
                                 <div

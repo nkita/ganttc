@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./task-list-header.module.css";
 
 // 日付の横幅
-const rowWidthLong = 250;
+const rowWidthLong = 215;
 
 interface ITaskListHeader {
     headerHeight: number;

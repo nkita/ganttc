@@ -43,7 +43,7 @@
   user-select: none;
 }
 
-.taskLabel{
+.taskLabel {
   font-size: 16px;
   width: 100%;
   border: none;
@@ -51,3 +51,33 @@
   padding-bottom: 8px;
   background-color: transparent;
 }
+
+.taskLabel:hover {
+  font-size: 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  padding-bottom: 8px;
+  background-color: transparent;
+}
+
+.nameInput {
+  background-color: transparent;
+  border: none;
+  outline: 0;
+}
+
+.nameInput:focus {
+  border-bottom: 1px solid #d1d5db;
+}
+
+.taskListIcon {
+  opacity: 0;
+}
+
+.taskListCell:hover + .taskListIcon {
+  opacity: 1;
+}
+
+.spacer{padding-left:15px;}
+
