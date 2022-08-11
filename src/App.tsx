@@ -9,7 +9,7 @@ import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper"
 import { TaskListHeader } from "./custom/task-list-header";
 import { TaskListColumn } from "./custom/task-list-table";
 // import { seedDates, ganttDateRange } from "./custom/date-helper";
-import { Navbar, Nav,  Container, Content, IconButton, ButtonToolbar, Popover, Whisper } from 'rsuite';
+import { Navbar, Nav, Container, Content, IconButton, ButtonToolbar, Popover, Whisper } from 'rsuite';
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
 import styles from "./index.module.css";
@@ -79,16 +79,16 @@ const App = () => {
 
   const handleTaskDelete = (task: Task) => {
     const conf = window.confirm("Are you sure about " + task.name + " ?");
-    if (conf) {
-      setTasks(tasks.filter((t) => t.id !== task.id));
-    }
+    // Todo プロジェクトを消したときに配下のタスクも消すか確認
+    if (conf) setTasks(tasks.filter((t) => t.id !== task.id));
+
     return conf;
   };
 
-  const handleProgressChange = async (task: Task) => {
-    setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-    console.log("On progress change Id:" + task.id);
-  };
+  // const handleProgressChange = async (task: Task) => {
+  //   setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
+  //   console.log("On progress change Id:" + task.id);
+  // };
 
   const handleDblClick = (task: Task) => {
     alert("On Double Click event Id:" + task.id);
@@ -97,17 +97,12 @@ const App = () => {
   const handleSelect = (task: Task, isSelected: boolean) => {
     console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
     let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
-    if (task.clickOnLabel) {
-      console.log("Click on Label");
-      task.clickOnLabel = false;
+    if (task.clickOnDeleteButtom) {
+      task.clickOnDeleteButtom = false;
+      handleTaskDelete(task);
+    } else {
+      setTasks(newTasks);
     }
-
-    if (task.clickOnProgress) {
-      console.log("Click on Progress");
-      task.clickOnProgress = false;
-    }
-
-    setTasks(newTasks);
   };
 
   const handleExpanderClick = (task: Task) => {
@@ -155,7 +150,6 @@ const App = () => {
               TaskListTable={TaskListColumn}
               onDateChange={handleTaskChange}
               onDelete={handleTaskDelete}
-              onProgressChange={handleProgressChange}
               onDoubleClick={handleDblClick}
               onSelect={handleSelect}
               onExpanderClick={handleExpanderClick}

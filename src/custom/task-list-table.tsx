@@ -50,6 +50,10 @@ export const TaskListColumn: React.FC<{
     onExpanderClick,
 }) => {
         const progressRef = React.useRef(null);
+        const handleTaskDelete = (e: React.MouseEvent<HTMLElement>, t: Task) => {
+            t.clickOnDeleteButtom = true;
+            setSelectedTask(t.id);
+        }
         const handleTaskNameChange = (e: React.ChangeEvent<HTMLInputElement>, t: Task) => {
             e.preventDefault();
             t.name = e.target.value;
@@ -132,7 +136,7 @@ export const TaskListColumn: React.FC<{
                                         maxWidth: 15,
                                     }}
                                 >
-                                    <div>
+                                    <div onClick={e => handleTaskDelete(e, t)}>
                                         <Trash style={{ fontSize: "1em", color: "red", cursor: "pointer" }} />
                                     </div>
                                 </div>

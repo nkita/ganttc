@@ -78,6 +78,9 @@
 .taskListCell:hover + .taskListIcon {
   opacity: 1;
 }
+.taskListIcon:hover {
+  opacity: 1;
+}
 
 .spacer{padding-left:15px;}
 
