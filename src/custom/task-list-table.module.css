@@ -75,12 +75,14 @@
   opacity: 0;
 }
 
-.taskListCell:hover + .taskListIcon {
+.taskListCell:hover+.taskListIcon {
   opacity: 1;
 }
+
 .taskListIcon:hover {
   opacity: 1;
 }
 
-.spacer{padding-left:15px;}
-
+.spacer {
+  padding-left: 15px;
+}

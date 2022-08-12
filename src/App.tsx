@@ -71,9 +71,9 @@ const App = () => {
     setTasks(newTasks);
   };
 
-  const speaker = (kind: string) => (
-    <Popover title={`${kind}を追加`}>
-      <AddTask onAddTodoHandler={handleTaskAdd} />
+  const speaker = (title: string, isTask: boolean) => (
+    <Popover title={`${title}を追加`}>
+      <AddTask onAddTodoHandler={handleTaskAdd} isTask={isTask} tasks={tasks} />
     </Popover>
   );
 
@@ -130,10 +130,10 @@ const App = () => {
                 onViewListChange={setIsChecked}
                 isChecked={isChecked}
               />
-              <Whisper placement="bottomStart" trigger="click" controlId="control-id-click" speaker={speaker("プロジェクト")}>
+              <Whisper placement="bottomStart" trigger="click" controlId="control-id-click" speaker={speaker("プロジェクト", false)}>
                 <IconButton size="sm" icon={<Tree />}>追加</IconButton>
               </Whisper>
-              <Whisper placement="bottomStart" trigger="click" controlId="control-id-click" speaker={speaker("タスク")}>
+              <Whisper placement="bottomStart" trigger="click" controlId="control-id-click" speaker={speaker("タスク", true)}>
                 <IconButton size="sm" icon={<Page />}>追加</IconButton>
               </Whisper>
               <PeriodSwitcher
