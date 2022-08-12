@@ -21,6 +21,7 @@
     "postcss-preset-env": "file:../node_modules/postcss-preset-env",
     "react": "file:../node_modules/react",
     "react-dom": "file:../node_modules/react-dom",
+    "react-icons": "^4.4.0",
     "react-scripts": "file:../node_modules/react-scripts",
     "rsuite": "^5.16.4"
   },

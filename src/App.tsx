@@ -12,6 +12,9 @@ import { TaskListColumn } from "./custom/task-list-table";
 import { Navbar, Nav, Container, Content, IconButton, ButtonToolbar, Popover, Whisper } from 'rsuite';
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
+import ShareOutlineIcon from '@rsuite/icons/ShareOutline';
+import GearIcon from '@rsuite/icons/Gear';
+import { FaRegSave } from "react-icons/fa";
 import styles from "./index.module.css";
 import 'rsuite/dist/rsuite.min.css';
 
@@ -116,8 +119,13 @@ const App = () => {
         <Navbar>
           <Navbar.Brand >Gant chart</Navbar.Brand>
           <Nav>
-            <Nav.Item>About us</Nav.Item>
-            <Nav.Item>terms</Nav.Item>
+            <ButtonToolbar>
+              <IconButton size="sm" appearance="primary" icon={<ShareOutlineIcon />}>共有</IconButton>
+              <IconButton size="sm" appearance="primary" icon={<FaRegSave size="1em" style={{ verticalAlign: "middle" }} />}>保存</IconButton>
+              <GearIcon />
+
+              {/* <FontAwesomeIcon icon={regular('coffee')} /> */}
+            </ButtonToolbar>
           </Nav>
         </Navbar>
         <Content>
