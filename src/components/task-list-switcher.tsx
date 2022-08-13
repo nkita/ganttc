@@ -1,5 +1,8 @@
 import React from 'react';
-import { Toggle } from 'rsuite';
+// import { Toggle } from 'rsuite';
+import { IconButton } from 'rsuite';
+
+import MenuIcon from '@rsuite/icons/Menu';
 
 type TaskListSwitcherProps = {
   isChecked: boolean;
@@ -11,10 +14,11 @@ export const TaskListSwitcher: React.FC<TaskListSwitcherProps> = ({
   isChecked,
 }) => {
   return (
-    <Toggle
-      defaultChecked={isChecked}
+    <span
       onClick={() => onViewListChange(!isChecked)}
-    />
+    >
+      <IconButton icon={<MenuIcon />} circle size="md" appearance="subtle" />
+    </span>
   );
 };
 

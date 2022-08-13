@@ -1,7 +1,8 @@
 import React from 'react';
-import "gantt-task-react/dist/index.css";
 import { Dropdown } from 'rsuite';
 import { ViewMode } from "gantt-task-react";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import styles from "./input-form.module.css";
 
 type PeriodSwitcherProps = {
   isViewMode: ViewMode;
@@ -13,10 +14,10 @@ export const PeriodSwitcher: React.FC<PeriodSwitcherProps> = ({
   isViewMode,
 }) => {
   return (
-    <Dropdown size="sm" title={isViewMode}>
-      <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Day) }}>Day  D</Dropdown.Item>
-      <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Week) }}>Week  W</Dropdown.Item>
-      <Dropdown.Item onClick={() => { onViewModeChange(ViewMode.Month) }}>Month  M</Dropdown.Item>
+    <Dropdown size="sm" title="期間" icon={<FaRegCalendarAlt/>}>
+      <Dropdown.Item className={styles.dropItem} onClick={() => { onViewModeChange(ViewMode.Day) }}>日<span className={styles.space}/>D</Dropdown.Item>
+      <Dropdown.Item className={styles.dropItem} onClick={() => { onViewModeChange(ViewMode.Week) }}>週<span className={styles.space}/>W</Dropdown.Item>
+      <Dropdown.Item className={styles.dropItem} onClick={() => { onViewModeChange(ViewMode.Month) }}>月<span className={styles.space}/>M</Dropdown.Item>
     </Dropdown>
   );
 };

@@ -9,14 +9,13 @@ import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper"
 import { TaskListHeader } from "./custom/task-list-header";
 import { TaskListColumn } from "./custom/task-list-table";
 // import { seedDates, ganttDateRange } from "./custom/date-helper";
-import { Navbar, Nav, Container, Content, IconButton, ButtonToolbar, Popover, Whisper } from 'rsuite';
-import Tree from '@rsuite/icons/Tree';
-import Page from '@rsuite/icons/Page';
-import ShareOutlineIcon from '@rsuite/icons/ShareOutline';
-import GearIcon from '@rsuite/icons/Gear';
-import { FaRegSave } from "react-icons/fa";
+import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge } from 'rsuite';
+import ExportIcon from '@rsuite/icons/Export';
+import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import 'rsuite/dist/rsuite.min.css';
+import "gantt-task-react/dist/index.css";
+
 
 // Init
 const App = () => {
@@ -113,66 +112,70 @@ const App = () => {
     console.log("On expander click Id:" + task.id);
   };
 
+  // const selectData = ['Eugenia', 'Bryan', 'Linda', 'Nancy', 'Lloyd', 'Alice'].map(item => ({
+  //   label: item,
+  //   value: item
+  // }));
+
   return (
     <>
-      <Container>
-        <Navbar>
-          <Navbar.Brand >Gant chart</Navbar.Brand>
-          <Nav>
-            <ButtonToolbar>
-              <IconButton size="sm" appearance="primary" icon={<ShareOutlineIcon />}>共有</IconButton>
-              <IconButton size="sm" appearance="primary" icon={<FaRegSave size="1em" style={{ verticalAlign: "middle" }} />}>保存</IconButton>
-              <GearIcon />
-
-              {/* <FontAwesomeIcon icon={regular('coffee')} /> */}
-            </ButtonToolbar>
-          </Nav>
-        </Navbar>
-        <Content>
-          <div className={styles.buttonArea}>
-            <h3>プロジェクト名</h3>
-          </div>
-          <div className={styles.buttonArea}>
-            <ButtonToolbar>
+      <Navbar>
+        <Navbar.Brand ><span style={{ color: '#000', fontSize: "1.4em" }}>Gant chart</span></Navbar.Brand>
+        <Nav pullRight>
+          <PeriodSwitcher
+            onViewModeChange={(viewMode) => setView(viewMode)}
+            isViewMode={view}
+          />
+        </Nav>
+        <Nav pullRight>
+          <Nav.Item><Badge>お知らせ</Badge></Nav.Item>
+          <Nav.Item>規約</Nav.Item>
+        </Nav>
+      </Navbar>
+      <Grid fluid>
+        <Row className="show-grid">
+          <Col xs={12} className={styles.projectArea}>
+            <div>
               <TaskListSwitcher
                 onViewListChange={setIsChecked}
                 isChecked={isChecked}
               />
-              <Whisper placement="bottomStart" trigger="click" controlId="control-id-click" speaker={speaker("プロジェクト", false)}>
-                <IconButton size="sm" icon={<Tree />}>追加</IconButton>
-              </Whisper>
-              <Whisper placement="bottomStart" trigger="click" controlId="control-id-click" speaker={speaker("タスク", true)}>
-                <IconButton size="sm" icon={<Page />}>追加</IconButton>
-              </Whisper>
-              <PeriodSwitcher
-                onViewModeChange={(viewMode) => setView(viewMode)}
-                isViewMode={view}
-              />
-            </ButtonToolbar>
-          </div>
-          <div className={styles.gantt} >
-            <Gantt
-              tasks={tasks}
-              viewMode={view}
-              TaskListHeader={TaskListHeader}
-              TaskListTable={TaskListColumn}
-              onDateChange={handleTaskChange}
-              onDelete={handleTaskDelete}
-              onDoubleClick={handleDblClick}
-              onSelect={handleSelect}
-              onExpanderClick={handleExpanderClick}
-              listCellWidth={isChecked ? "100px" : "0px"}
-              ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
-              columnWidth={columnWidth}
-              locale={"ja-JP"}
-              rowHeight={rowHeight}
-              timeStep={86400000}
-              fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
-            />
-          </div>
-          <Footer />
-        </Content>
-      </Container>
+              <input type="text" className={styles.projectInput} defaultValue={"プロジェクト名がここに入ります"} />
+            </div>
+          </Col>
+
+          <Col xs={6} xsPush={6} className={styles.headerIcon}>
+            <Whisper placement="leftStart" trigger="click" controlId="control-id-click" speaker={speaker("プロジェクト", false)}>
+              <IconButton size="md"  appearance="ghost" icon={<AddOutlineIcon />}>追加</IconButton>
+            </Whisper>
+            <span style={{ paddingRight: "10px" }} />
+            <IconButton size="md" color="green" appearance="ghost" icon={<ExportIcon />}>保存</IconButton>
+          </Col>
+        </Row>
+      </Grid>
+      <div className={styles.gantt} >
+        <Gantt
+          tasks={tasks}
+          viewMode={view}
+          TaskListHeader={TaskListHeader}
+          TaskListTable={TaskListColumn}
+          onDateChange={handleTaskChange}
+          onDelete={handleTaskDelete}
+          onDoubleClick={handleDblClick}
+          onSelect={handleSelect}
+          onExpanderClick={handleExpanderClick}
+          listCellWidth={isChecked ? "100px" : "0px"}
+          ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
+          columnWidth={columnWidth}
+          locale={"ja-JP"}
+          rowHeight={rowHeight}
+          timeStep={86400000}
+          fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
+        />
+      </div>
+      <Footer />
+
+
     </>
   );
 };

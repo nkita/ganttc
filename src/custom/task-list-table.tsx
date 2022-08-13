@@ -4,6 +4,7 @@ import { Task } from "../common/types/public-types"
 import Trash from '@rsuite/icons/Trash';
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
+
 import 'rsuite/dist/rsuite.min.css';
 
 const localeDateStringCache: { [key: string]: string } = {};
@@ -160,7 +161,6 @@ export const TaskListColumn: React.FC<{
                                         textAlign: "center",
                                     }}
                                 >
-
                                     <select name="progress" ref={progressRef} onChange={(e) => handleProgressChange(e, t)} value={t.progress}>
                                         <option value={0}>0%</option>
                                         <option value={25}>25%</option>
