@@ -38,7 +38,7 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                         textAlign: "center",
                     }}
                 >
-                    Title
+                    名前
                 </div>
                 <div
                     className={styles.ganttTable_HeaderItem}

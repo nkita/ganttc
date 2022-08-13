@@ -73,9 +73,9 @@ const App = () => {
     setTasks(newTasks);
   };
 
-  const speaker = (title: string, isTask: boolean) => (
-    <Popover title={`${title}を追加`}>
-      <AddTask onAddTodoHandler={handleTaskAdd} isTask={isTask} tasks={tasks} />
+  const speaker = (
+    <Popover title={`チャートを追加`} style={{ width: "400px" }}>
+      <AddTask onAddTodoHandler={handleTaskAdd} tasks={tasks} />
     </Popover>
   );
 
@@ -129,12 +129,16 @@ const App = () => {
         </Nav>
         <Nav pullRight>
           <Nav.Item><Badge>お知らせ</Badge></Nav.Item>
-          <Nav.Item>規約</Nav.Item>
+          <Nav.Menu title="その他">
+            <Nav.Item>このサイトについて</Nav.Item>
+            <Nav.Item>規約</Nav.Item>
+            <Nav.Item>ライセンス</Nav.Item>
+          </Nav.Menu>
         </Nav>
       </Navbar>
       <Grid fluid>
         <Row className="show-grid">
-          <Col xs={12} className={styles.projectArea}>
+          <Col xs={14} className={styles.projectArea}>
             <div>
               <TaskListSwitcher
                 onViewListChange={setIsChecked}
@@ -144,9 +148,9 @@ const App = () => {
             </div>
           </Col>
 
-          <Col xs={6} xsPush={6} className={styles.headerIcon}>
-            <Whisper placement="leftStart" trigger="click" controlId="control-id-click" speaker={speaker("プロジェクト", false)}>
-              <IconButton size="md"  appearance="ghost" icon={<AddOutlineIcon />}>追加</IconButton>
+          <Col xs={8} xsPush={2} className={styles.headerIcon}>
+            <Whisper placement="leftStart" trigger="click" controlId="control-id-click" speaker={speaker}>
+              <IconButton size="md" appearance="ghost" icon={<AddOutlineIcon />}>追加</IconButton>
             </Whisper>
             <span style={{ paddingRight: "10px" }} />
             <IconButton size="md" color="green" appearance="ghost" icon={<ExportIcon />}>保存</IconButton>
