@@ -4,7 +4,7 @@ import { Task } from "../../common/types/public-types"
 import Trash from '@rsuite/icons/Trash';
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
-
+import commonStyles from "../../common/css/index.module.css";
 import 'rsuite/dist/rsuite.min.css';
 
 const localeDateStringCache: { [key: string]: string } = {};
@@ -27,9 +27,6 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
     day: "numeric",
 };
 
-// 日付の横幅
-const rowWidthLong = 200;
-
 export const TaskListColumn: React.FC<{
     rowHeight: number;
     rowWidth: string;
@@ -50,6 +47,9 @@ export const TaskListColumn: React.FC<{
     setSelectedTask,
     onExpanderClick,
 }) => {
+        const iconWidth = 30;
+        const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
+
         const progressRef = React.useRef(null);
         const handleTaskDelete = (e: React.MouseEvent<HTMLElement>, t: Task) => {
             t.clickOnDeleteButtom = true;
@@ -95,8 +95,8 @@ export const TaskListColumn: React.FC<{
                                 <div
                                     className={styles.taskListCell}
                                     style={{
-                                        minWidth: rowWidthLong,
-                                        maxWidth: rowWidthLong,
+                                        minWidth: `${rowWidthLong}px`,
+                                        maxWidth: `${rowWidthLong}px`,
                                     }}
                                     title={t.name}
                                 >
@@ -116,8 +116,8 @@ export const TaskListColumn: React.FC<{
                                             <div>
                                                 {(t.project === undefined) ? "" : <span className={styles.spacer} />}
                                                 {(t.hideChildren === undefined) ? <Page /> : <Tree />}
-                                                <span style={{ paddingRight: 10 }} />
-                                                <input className={styles.nameInput}
+                                                <span className={commonStyles.space} />
+                                                <input className={commonStyles.taskLabel}
                                                     type="text" name="taskName"
                                                     onChange={e => handleTaskNameChange(e, t)}
                                                     onKeyDown={(e) => {
@@ -133,8 +133,9 @@ export const TaskListColumn: React.FC<{
                                 <div
                                     className={styles.taskListCell + " " + styles.taskListIcon}
                                     style={{
-                                        minWidth: 15,
-                                        maxWidth: 15,
+                                        minWidth: `${iconWidth}px`,
+                                        maxWidth: `${iconWidth}px`,
+                                        paddingLeft: 10,
                                     }}
                                 >
                                     <div onClick={e => handleTaskDelete(e, t)}>
@@ -144,8 +145,8 @@ export const TaskListColumn: React.FC<{
                                 <div
                                     className={styles.taskListCell}
                                     style={{
-                                        minWidth: rowWidth,
-                                        maxWidth: rowWidth,
+                                        minWidth: `${rowWidth}px`,
+                                        maxWidth: `${rowWidth}px`,
                                         textAlign: "center",
                                     }}
                                 >
@@ -156,16 +157,12 @@ export const TaskListColumn: React.FC<{
                                 <div
                                     className={styles.taskListCell}
                                     style={{
-                                        minWidth: rowWidth,
-                                        maxWidth: rowWidth,
+                                        minWidth: `${rowWidth}px`,
+                                        maxWidth: `${rowWidth}px`,
                                         textAlign: "center",
                                     }}
                                 >
-                                    <select name="progress"
-                                        ref={progressRef}
-                                        onChange={(e) => handleProgressChange(e, t)}
-                                        value={t.progress}
-                                    >
+                                    <select name="progress" ref={progressRef} onChange={(e) => handleProgressChange(e, t)} value={t.progress} >
                                         <option value={0}>0%</option>
                                         <option value={25}>25%</option>
                                         <option value={50}>50%</option>

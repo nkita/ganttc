@@ -1,9 +1,5 @@
 import React from "react";
 import styles from "./index.module.css";
-
-// 日付の横幅
-const rowWidthLong = 215;
-
 interface ITaskListHeader {
     headerHeight: number;
     rowWidth: string;
@@ -17,6 +13,8 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
     fontSize,
     rowWidth
 }) => {
+    const iconWidth = 30;
+    const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 + iconWidth : 200 + iconWidth;
     return (
         <div
             className={styles.ganttTable}
@@ -34,7 +32,7 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                 <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
-                        minWidth: rowWidthLong,
+                        minWidth: `${rowWidthLong}px`,
                         textAlign: "center",
                     }}
                 >
@@ -43,8 +41,8 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                 <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
-                        minWidth: rowWidth,
-                        maxWidth: rowWidth,
+                        minWidth: `${rowWidth}px`,
+                        maxWidth: `${rowWidth}px`,
                         textAlign: "center",
                     }}
                 >
@@ -54,8 +52,8 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                 <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
-                        minWidth: rowWidth,
-                        maxWidth: rowWidth,
+                        minWidth: `${rowWidth}px`,
+                        maxWidth: `${rowWidth}px`,
                         textAlign: "center",
                     }}
                 >

@@ -25,7 +25,7 @@ const App = () => {
   const [isChecked, setIsChecked] = useState(true);
   const windowHeight = useWindowHeight();
   const rowHeight = 40;
-  const headerHeight = 250;
+  const headerHeight = 210;
 
   // const [scrollX, setScrollX] = useState(-1);
   let columnWidth = 25;
@@ -70,7 +70,6 @@ const App = () => {
     // setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
     const newTasks = [...tasks];
     newTasks.push(task);
-    console.log(newTasks[9], newTasks);
     setTasks(newTasks);
   };
 
@@ -141,7 +140,7 @@ const App = () => {
                   onViewListChange={setIsChecked}
                   isChecked={isChecked}
                 />
-                <input type="text" className={commonStyles.taskLabel} defaultValue={"プロジェクト名がここに入ります"} />
+                <input type="text" className={commonStyles.taskLabel} defaultValue={""} placeholder="タイトルを入力"/>
               </div>
             </Col>
 
@@ -164,7 +163,7 @@ const App = () => {
           onDoubleClick={handleDblClick}
           onSelect={handleSelect}
           onExpanderClick={handleExpanderClick}
-          listCellWidth={isChecked ? "100px" : "0px"}
+          listCellWidth={isChecked ? "100" : "0"}
           ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
           columnWidth={columnWidth}
           locale={"ja-JP"}

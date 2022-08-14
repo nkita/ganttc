@@ -5,7 +5,7 @@
 }
 
 .taskLabel:focus {
-  border-bottom: 1px solid #d1d5db;
+  /* border-bottom: 1px solid #d1d5db; */
 }
 
 .contents {
@@ -13,5 +13,8 @@
 }
 
 .icon {
+  padding-right: 10px;
+}
+.space {
   padding-right: 10px;
 }
