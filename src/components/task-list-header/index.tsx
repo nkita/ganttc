@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./task-list-header.module.css";
+import styles from "./index.module.css";
 
 // 日付の横幅
 const rowWidthLong = 215;

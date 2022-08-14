@@ -1,7 +1,7 @@
 import React from "react";
 import { Task } from "gantt-task-react";
 import { Form, Button, RadioGroup, Radio, Dropdown, ButtonToolbar } from 'rsuite';
-import styles from "./input-form.module.css";
+import styles from "./index.module.css";
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
 
@@ -10,7 +10,7 @@ type addTaskProps = {
   onAddTodoHandler: (task: Task) => void;
   tasks?: Task[];
 };
-export const AddTask: React.FC<addTaskProps> = (props) => {
+export const AddTaskForm: React.FC<addTaskProps> = (props) => {
   const [taskName, setTaskName] = React.useState("");
   // const [projectName, setPrjectName] = React.useState("");
   const currentDate = new Date();

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import styles from "./task-list-table.module.css";
-import { Task } from "../common/types/public-types"
+import styles from "./index.module.css";
+import { Task } from "../../common/types/public-types"
 import Trash from '@rsuite/icons/Trash';
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';

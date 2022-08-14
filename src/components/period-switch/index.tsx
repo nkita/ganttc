@@ -2,14 +2,14 @@ import React from 'react';
 import { Dropdown } from 'rsuite';
 import { ViewMode } from "gantt-task-react";
 import { FaRegCalendarAlt } from "react-icons/fa";
-import styles from "./input-form.module.css";
+import styles from "./index.module.css";
 
 type PeriodSwitcherProps = {
   isViewMode: ViewMode;
   onViewModeChange: (viewMode: ViewMode) => void;
 };
 
-export const PeriodSwitcher: React.FC<PeriodSwitcherProps> = ({
+export const PeriodSwitch: React.FC<PeriodSwitcherProps> = ({
   onViewModeChange,
   isViewMode,
 }) => {

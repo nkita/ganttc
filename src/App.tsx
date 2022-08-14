@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Task } from "./common/types/public-types";
 import { Gantt, ViewMode } from "gantt-task-react";
-import { TaskListSwitcher } from "./components/task-list-switcher";
-import { PeriodSwitcher } from "./components/period-switcher";
-import { AddTask } from "./components/input-form";
+import { LabelHideSwitch } from "./components/label-hide-switch";
+import { PeriodSwitch } from "./components/period-switch";
+import { AddTaskForm } from "./components/add-task-form";
 import { Footer } from "./components/footer";
 import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper";
-import { TaskListHeader } from "./custom/task-list-header";
-import { TaskListColumn } from "./custom/task-list-table";
-// import { seedDates, ganttDateRange } from "./custom/date-helper";
+import { TaskListHeader } from "./components/task-list-header";
+import { TaskListColumn } from "./components/task-list-table";
+// import { seedDates, ganttDateRange } from "./helpers/date-helper";
 import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge } from 'rsuite';
 import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
@@ -75,7 +75,7 @@ const App = () => {
 
   const speaker = (
     <Popover title={`チャートを追加`} style={{ width: "400px" }}>
-      <AddTask onAddTodoHandler={handleTaskAdd} tasks={tasks} />
+      <AddTaskForm onAddTodoHandler={handleTaskAdd} tasks={tasks} />
     </Popover>
   );
 
@@ -122,7 +122,7 @@ const App = () => {
       <Navbar>
         <Navbar.Brand ><span style={{ color: '#000', fontSize: "1.4em" }}>Gant chart</span></Navbar.Brand>
         <Nav pullRight>
-          <PeriodSwitcher
+          <PeriodSwitch
             onViewModeChange={(viewMode) => setView(viewMode)}
             isViewMode={view}
           />
@@ -140,7 +140,7 @@ const App = () => {
         <Row className="show-grid">
           <Col xs={14} className={styles.projectArea}>
             <div>
-              <TaskListSwitcher
+              <LabelHideSwitch
                 onViewListChange={setIsChecked}
                 isChecked={isChecked}
               />
