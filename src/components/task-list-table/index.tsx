@@ -161,7 +161,11 @@ export const TaskListColumn: React.FC<{
                                         textAlign: "center",
                                     }}
                                 >
-                                    <select name="progress" ref={progressRef} onChange={(e) => handleProgressChange(e, t)} value={t.progress}>
+                                    <select name="progress"
+                                        ref={progressRef}
+                                        onChange={(e) => handleProgressChange(e, t)}
+                                        value={t.progress}
+                                    >
                                         <option value={0}>0%</option>
                                         <option value={25}>25%</option>
                                         <option value={50}>50%</option>

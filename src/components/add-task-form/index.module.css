@@ -5,3 +5,11 @@
 .space {
     padding-left: 5px
 }
+
+.name {
+    width: 350px;
+}
+
+.register {
+    width: 100px;
+}

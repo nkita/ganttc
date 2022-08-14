@@ -60,12 +60,11 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
         </Form.Group>
         <Form.Group controlId="name">
           <Form.ControlLabel>名前</Form.ControlLabel>
-          <Form.Control name="taskName" style={{ width: "350px" }} />
+          <Form.Control name="taskName" className={styles.name} />
         </Form.Group>
         <Form.Group>
           <ButtonToolbar>
-            <Button appearance="ghost" color="red">キャンセル</Button>
-            <Button onClick={onAddTodoHandler} appearance="primary" style={{ width: "30%" }}>登録</Button>
+            <Button onClick={onAddTodoHandler} appearance="primary" className={styles.register}>登録</Button>
           </ButtonToolbar>
         </Form.Group>
       </Form>

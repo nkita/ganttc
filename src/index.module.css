@@ -1,42 +1,28 @@
-.gantt {
-  padding-left: 10px;
-}
-
-.buttonArea {
-  padding: 10px;
-}
-
-.icon {
-  margin-right: 3px;
-}
-
-.projectArea {
+.projectTitle {
   height: 70px;
   padding-top: 20px;
 }
 
-.projectArea input {
+.projectTitle input {
   font-size: 1.3em;
-}
-
-.projectInput {
-  background-color: transparent;
-  border: none;
-  outline: 0;
   font-weight: bold;
   width: 80%;
 }
 
 .projectInput:focus {
-  border-bottom: 1px solid #d1d5db;
   font-weight: normal;
   width: 80%;
 }
 
-.headerIcon {
+.buttonArea {
   height: 70px;
   padding-top: 25px;
-  padding-right:10px;
+  padding-right: 10px;
   /* border: 1px #000 solid; */
   text-align: right;
+}
+
+.logo {
+  color: '#000';
+  font-size: "1.4em";
 }

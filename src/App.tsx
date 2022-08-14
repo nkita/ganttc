@@ -13,6 +13,7 @@ import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge } from
 import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
+import commonStyles from "./common/css/index.module.css";
 import 'rsuite/dist/rsuite.min.css';
 import "gantt-task-react/dist/index.css";
 
@@ -112,15 +113,10 @@ const App = () => {
     console.log("On expander click Id:" + task.id);
   };
 
-  // const selectData = ['Eugenia', 'Bryan', 'Linda', 'Nancy', 'Lloyd', 'Alice'].map(item => ({
-  //   label: item,
-  //   value: item
-  // }));
-
   return (
     <>
       <Navbar>
-        <Navbar.Brand ><span style={{ color: '#000', fontSize: "1.4em" }}>Gant chart</span></Navbar.Brand>
+        <Navbar.Brand ><span className={styles.logo}>Gant chart</span></Navbar.Brand>
         <Nav pullRight>
           <PeriodSwitch
             onViewModeChange={(viewMode) => setView(viewMode)}
@@ -136,28 +132,28 @@ const App = () => {
           </Nav.Menu>
         </Nav>
       </Navbar>
-      <Grid fluid>
-        <Row className="show-grid">
-          <Col xs={14} className={styles.projectArea}>
-            <div>
-              <LabelHideSwitch
-                onViewListChange={setIsChecked}
-                isChecked={isChecked}
-              />
-              <input type="text" className={styles.projectInput} defaultValue={"プロジェクト名がここに入ります"} />
-            </div>
-          </Col>
+      <div className={commonStyles.contents} >
+        <Grid fluid>
+          <Row className="show-grid">
+            <Col xs={14} className={styles.projectTitle}>
+              <div>
+                <LabelHideSwitch
+                  onViewListChange={setIsChecked}
+                  isChecked={isChecked}
+                />
+                <input type="text" className={commonStyles.taskLabel} defaultValue={"プロジェクト名がここに入ります"} />
+              </div>
+            </Col>
 
-          <Col xs={8} xsPush={2} className={styles.headerIcon}>
-            <Whisper placement="leftStart" trigger="click" controlId="control-id-click" speaker={speaker}>
-              <IconButton size="md" appearance="ghost" icon={<AddOutlineIcon />}>追加</IconButton>
-            </Whisper>
-            <span style={{ paddingRight: "10px" }} />
-            <IconButton size="md" color="green" appearance="ghost" icon={<ExportIcon />}>保存</IconButton>
-          </Col>
-        </Row>
-      </Grid>
-      <div className={styles.gantt} >
+            <Col xs={8} xsPush={2} className={styles.buttonArea}>
+              <Whisper placement="leftStart" trigger="click" controlId="control-id-click" speaker={speaker}>
+                <IconButton size="md" appearance="ghost" icon={<AddOutlineIcon />}>追加</IconButton>
+              </Whisper>
+              <span className={commonStyles.icon} />
+              <IconButton size="md" color="green" appearance="ghost" icon={<ExportIcon />}>保存</IconButton>
+            </Col>
+          </Row>
+        </Grid>
         <Gantt
           tasks={tasks}
           viewMode={view}

@@ -1,0 +1,17 @@
+.taskLabel {
+  background-color: transparent;
+  border: none;
+  outline: 0;
+}
+
+.taskLabel:focus {
+  border-bottom: 1px solid #d1d5db;
+}
+
+.contents {
+  padding-left: 15px;
+}
+
+.icon {
+  padding-right: 10px;
+}
