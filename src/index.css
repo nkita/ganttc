@@ -1,0 +1,28 @@
+.projectTitle {
+  height: 70px;
+  padding-top: 20px;
+}
+
+.projectTitle input {
+  font-size: 1.3em;
+  font-weight: bold;
+  width: 80%;
+}
+
+.projectInput:focus {
+  font-weight: normal;
+  width: 80%;
+}
+
+.buttonArea {
+  height: 70px;
+  padding-top: 25px;
+  padding-right: 10px;
+  /* border: 1px #000 solid; */
+  text-align: right;
+}
+
+.logo {
+  color: '#000';
+  font-size: "1.4em";
+}

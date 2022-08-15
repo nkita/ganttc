@@ -26,13 +26,15 @@ const App = () => {
   const windowHeight = useWindowHeight();
   const rowHeight = 40;
   const headerHeight = 210;
+  const date = new Date();
+  const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDay());
 
   // const [scrollX, setScrollX] = useState(-1);
   let columnWidth = 25;
   if (view === ViewMode.Month) {
-    columnWidth = 300;
+    columnWidth = 200;
   } else if (view === ViewMode.Week) {
-    columnWidth = 250;
+    columnWidth = 150;
   }
   //  First process. *one-time-only
   useEffect(() => {
@@ -140,7 +142,7 @@ const App = () => {
                   onViewListChange={setIsChecked}
                   isChecked={isChecked}
                 />
-                <input type="text" className={commonStyles.taskLabel} defaultValue={""} placeholder="タイトルを入力"/>
+                <input type="text" className={commonStyles.taskLabel} defaultValue={""} placeholder="タイトルを入力" />
               </div>
             </Col>
 
@@ -163,6 +165,8 @@ const App = () => {
           onDoubleClick={handleDblClick}
           onSelect={handleSelect}
           onExpanderClick={handleExpanderClick}
+          preStepsCount={2}
+          viewDate={currentDate}
           listCellWidth={isChecked ? "100" : "0"}
           ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
           columnWidth={columnWidth}
