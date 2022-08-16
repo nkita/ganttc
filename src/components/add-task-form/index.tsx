@@ -1,8 +1,8 @@
 import React from "react";
 import { Task } from "gantt-task-react";
-import { Form, Button, RadioGroup, Radio, Dropdown, ButtonToolbar } from 'rsuite';
+// import { Form, Button, RadioGroup, Radio, Dropdown, ButtonToolbar, DateRangePicker } from 'rsuite';
+import { Form, Button, RadioGroup, Radio, Dropdown, ButtonToolbar, Schema } from 'rsuite';
 import styles from "./index.module.css";
-import commonStyles from "../../common/css/index.module.css";
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
 
@@ -15,15 +15,16 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
   const [taskName, setTaskName] = React.useState("");
   const [taskKind, setTaskKind] = React.useState("task");
   const [upperProject, setUpperProject] = React.useState("");
-  const [onCtrlKey, setOnCtrlKey] = React.useState(false);
-  const [onEnterKey, setOnEnterKey] = React.useState(false);
-  // const [projectName, setPrjectName] = React.useState("");
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
   const currentDay = currentDate.getDate();
 
+  const model = Schema.Model({
+    taskName: Schema.Types.StringType().isRequired('必須入力です。')
+  })
   const onAddTodoHandler = () => {
+    if (taskName === "") return;
     const task: Task = {
       start: new Date(currentYear, currentMonth, currentDay, 0, 0),
       end: new Date(currentYear, currentMonth, currentDay, 23, 59),
@@ -33,40 +34,19 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
       type: "task",
       hideChildren: false,
     };
+    setTaskName("");
     props.onAddTodoHandler(task);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Control') {
-      setOnCtrlKey(true)
-      if (onEnterKey) {
-        onAddTodoHandler();
-        setOnCtrlKey(false);
-        setOnEnterKey(false);
-      }
-    };
-    if (event.key === 'Enter') {
-      setOnEnterKey(true);
-      if (onCtrlKey) {
-        onAddTodoHandler();
-        setOnCtrlKey(false);
-        setOnEnterKey(false);
-      }
-    }
-  }
-  const handleKeyUp = (event: React.KeyboardEvent) => {
-    if (event.key === 'Control') setOnCtrlKey(false);
-    if (event.key === 'Enter') setOnEnterKey(false);
-  }
-
   return (
     <>
-      <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} >
+      <div>
         <Form onChange={
           value => {
             setTaskName(value.taskName);
             setTaskKind(value.kind);
           }}
+          model={model}
         >
           <Form.Group controlId="kind">
             <Form.ControlLabel>種類</Form.ControlLabel>
@@ -75,6 +55,10 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
               <Radio value="task"><Page /><span className={styles.space} />Task</Radio>
             </Form.Control>
           </Form.Group>
+          {/* <Form.Group controlId="date" >
+            <Form.ControlLabel>開始/終了</Form.ControlLabel>
+            <DateRangePicker />
+          </Form.Group> */}
           <Form.Group controlId="project">
             <Form.ControlLabel>プロジェクト</Form.ControlLabel>
             <Dropdown title={(upperProject === "") ? "プロジェクトを選択" : upperProject} disabled={(taskKind === "project") ? true : false}>
@@ -84,13 +68,13 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
             </Dropdown>
             <Form.HelpText tooltip>Taskの場合のみ選択可能</Form.HelpText>
           </Form.Group>
-          <Form.Group controlId="name">
+          <Form.Group controlId="taskName">
             <Form.ControlLabel>名前</Form.ControlLabel>
-            <Form.Control name="taskName" className={styles.name} />
+            <Form.Control name="taskName" className={styles.name} value={taskName} />
           </Form.Group>
           <Form.Group>
             <ButtonToolbar>
-              <Button onClick={onAddTodoHandler} appearance="primary" className={styles.register}>登録<span className={commonStyles.space} />Ctrl + Enter</Button>
+              <Button type="submit" onClick={onAddTodoHandler} appearance="primary" className={styles.register}>登録</Button>
             </ButtonToolbar>
           </Form.Group>
         </Form>
