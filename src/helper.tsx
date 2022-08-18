@@ -24,10 +24,10 @@ export function initTasks() {
         12,
         28
       ),
-      name: "Idea",
+      name: "IdeaProject",
       id: "Task 0",
       progress: 50,
-      type: "task",
+      type: "project",
       project: "ProjectSample",
       displayOrder: 2,
     },
@@ -39,7 +39,7 @@ export function initTasks() {
       progress: 25,
       dependencies: ["Task 0"],
       type: "task",
-      project: "ProjectSample",
+      project: "Task 0",
       displayOrder: 3,
     },
     {

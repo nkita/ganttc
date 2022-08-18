@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import styles from "./index.module.css";
 import { Task } from "../../common/types/public-types"
 import Trash from '@rsuite/icons/Trash';
@@ -50,7 +50,10 @@ export const TaskListColumn: React.FC<{
         const iconWidth = 30;
         const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
 
-        const progressRef = React.useRef(null);
+        const namesRef = React.useRef<HTMLInputElement>(null);
+        useEffect(() => {
+            // namesRef.current?.scrollIntoView();
+        }, [tasks])
         const handleTaskDelete = (e: React.MouseEvent<HTMLElement>, t: Task) => {
             t.clickOnDeleteButtom = true;
             setSelectedTask(t.id);
@@ -113,9 +116,9 @@ export const TaskListColumn: React.FC<{
                                                 {expanderSymbol}
                                             </div>
 
-                                            <div>
+                                            <div >
                                                 {(t.project === undefined) ? "" : <span className={styles.spacer} />}
-                                                {(t.hideChildren === undefined) ? <Page /> : <Tree />}
+                                                {(t.type === "task") ? <Page /> : <Tree />}
                                                 <span className={commonStyles.space} />
                                                 <input className={commonStyles.taskLabel}
                                                     type="text" name="taskName"
@@ -125,6 +128,7 @@ export const TaskListColumn: React.FC<{
                                                             e.currentTarget.blur();
                                                         }
                                                     }}
+                                                    ref={namesRef}
                                                     defaultValue={t.name} />
                                             </div>
                                         </div>
@@ -162,7 +166,7 @@ export const TaskListColumn: React.FC<{
                                         textAlign: "center",
                                     }}
                                 >
-                                    <select name="progress" ref={progressRef} onChange={(e) => handleProgressChange(e, t)} value={t.progress} >
+                                    <select name="progress" onChange={(e) => handleProgressChange(e, t)} value={t.progress} >
                                         <option value={0}>0%</option>
                                         <option value={25}>25%</option>
                                         <option value={50}>50%</option>

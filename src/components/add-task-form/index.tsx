@@ -19,22 +19,34 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
   const currentDay = currentDate.getDate();
+  const nameRef = React.useRef<HTMLDivElement>(null);
 
   const model = Schema.Model({
     taskName: Schema.Types.StringType().isRequired('必須入力です。')
   })
   const onAddTodoHandler = () => {
     if (taskName === "") return;
+
     const task: Task = {
       start: new Date(currentYear, currentMonth, currentDay, 0, 0),
       end: new Date(currentYear, currentMonth, currentDay, 23, 59),
       name: taskName,
       id: Math.random().toString(),
       progress: 0,
-      type: "task",
-      hideChildren: false,
+      type: (taskKind === "task") ? "task" : "project",
     };
+
+    if (taskKind === "project") {
+      task.hideChildren = false;
+    }
+    if (taskKind === "task" && upperProject) {
+      task.project = upperProject
+    }
     setTaskName("");
+    if (nameRef.current) {
+      const ele = nameRef.current!.childNodes[0] as HTMLInputElement;
+      ele.value = "";
+    }
     props.onAddTodoHandler(task);
   };
 
@@ -46,11 +58,14 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
             setTaskName(value.taskName);
             setTaskKind(value.kind);
           }}
+          formDefaultValue={
+            { kind: "task", taskName: "" }
+          }
           model={model}
         >
           <Form.Group controlId="kind">
             <Form.ControlLabel>種類</Form.ControlLabel>
-            <Form.Control name="kind" inline accepter={RadioGroup} defaultValue={taskKind}>
+            <Form.Control name="kind" inline accepter={RadioGroup}>
               <Radio value="project"><Tree /><span className={styles.space} />Project</Radio>
               <Radio value="task"><Page /><span className={styles.space} />Task</Radio>
             </Form.Control>
@@ -70,7 +85,7 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
           </Form.Group>
           <Form.Group controlId="taskName">
             <Form.ControlLabel>名前</Form.ControlLabel>
-            <Form.Control name="taskName" className={styles.name} value={taskName} />
+            <Form.Control name="taskName" className={styles.name} ref={nameRef} />
           </Form.Group>
           <Form.Group>
             <ButtonToolbar>

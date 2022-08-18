@@ -23,8 +23,11 @@ const App = () => {
   const [view, setView] = useState<ViewMode>(ViewMode.Day);
   const [tasks, setTasks] = useState<Task[]>(initTasks());
   const [isChecked, setIsChecked] = useState(true);
+
+  const [viewTask, setViewTask] = useState(0);
+
   const windowHeight = useWindowHeight();
-  const rowHeight = 40;
+  const rowHeight = 35;
   const headerHeight = 210;
   const date = new Date();
   const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDay());
@@ -48,7 +51,6 @@ const App = () => {
     // ele[0].scrollLeft = retest.length * columnWidth;
   }, [])
 
-
   const handleTaskChange = (task: Task) => {
     let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
     if (task.project) {
@@ -69,10 +71,13 @@ const App = () => {
   };
 
   const handleTaskAdd = (task: Task) => {
-    // setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
     const newTasks = [...tasks];
     newTasks.push(task);
     setTasks(newTasks);
+    setViewTask(viewTask + 1);
+    console.log();
+
+    // setNewTaskId(task.id);
   };
 
   const speaker = (
@@ -116,6 +121,7 @@ const App = () => {
 
   return (
     <>
+
       <Navbar>
         <Navbar.Brand ><span className={styles.logo}>Gant chart</span></Navbar.Brand>
         <Nav pullRight>
@@ -166,7 +172,9 @@ const App = () => {
           onSelect={handleSelect}
           onExpanderClick={handleExpanderClick}
           preStepsCount={2}
+          handleWidth={5}
           viewDate={currentDate}
+          // viewTask={12}
           listCellWidth={isChecked ? "100" : "0"}
           ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
           columnWidth={columnWidth}
