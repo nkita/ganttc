@@ -14,7 +14,7 @@ type addTaskProps = {
 export const AddTaskForm: React.FC<addTaskProps> = (props) => {
   const [taskName, setTaskName] = React.useState("");
   const [taskKind, setTaskKind] = React.useState("task");
-  const [upperProject, setUpperProject] = React.useState("");
+  const [upperProject, setUpperProject] = React.useState<Task>();
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
@@ -39,8 +39,8 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
     if (taskKind === "project") {
       task.hideChildren = false;
     }
-    if (taskKind === "task" && upperProject) {
-      task.project = upperProject
+    if (taskKind === "task" && upperProject !== undefined) {
+      task.project = upperProject?.type;
     }
     setTaskName("");
     if (nameRef.current) {
@@ -76,9 +76,9 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
           </Form.Group> */}
           <Form.Group controlId="project">
             <Form.ControlLabel>プロジェクト</Form.ControlLabel>
-            <Dropdown title={(upperProject === "") ? "プロジェクトを選択" : upperProject} disabled={(taskKind === "project") ? true : false}>
+            <Dropdown title={(upperProject === undefined) ? "プロジェクトを選択" : upperProject.name} disabled={(taskKind === "project") ? true : false}>
               {props.tasks?.map(task => {
-                return (task.type === "project") ? <Dropdown.Item key={task.id} eventKey={task.id} onSelect={(key) => { setUpperProject(key) }}>{task.name}</Dropdown.Item> : false;
+                return (task.type === "project") ? <Dropdown.Item key={task.id} eventKey={task} onSelect={(key) => { setUpperProject(key) }}>{task.name}</Dropdown.Item> : false;
               })}
             </Dropdown>
             <Form.HelpText tooltip>Taskの場合のみ選択可能</Form.HelpText>
