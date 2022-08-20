@@ -1,99 +1,77 @@
 import { useLayoutEffect, useState } from "react";
 import { Task } from "./common/types/public-types";
 
+const maxLayer = 5;
+const maxChild = 100; // １階層で保持できるタスク数
+
 export function initTasks() {
   const currentDate = new Date();
   const tasks: Task[] = [
     {
       start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
       end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 15),
-      name: "Some Project",
-      id: "ProjectSample",
-      progress: 25,
+      name: "設計",
+      id: "sekkei",
+      progress: 0,
       type: "project",
       hideChildren: false,
-      displayOrder: 1,
-      customCol: "custom_col",
-    },
-    {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
-      end: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        2,
-        12,
-        28
-      ),
-      name: "IdeaProject",
-      id: "Task 0",
-      progress: 50,
-      type: "project",
-      project: "ProjectSample",
-      displayOrder: 2,
+      displayOrder: 10000000000,
+      layer: 0
     },
     {
       start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 2),
       end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4, 0, 0),
       name: "Research",
-      id: "Task 1",
-      progress: 25,
-      dependencies: ["Task 0"],
+      id: "基本設計書作成",
+      progress: 0,
       type: "task",
-      project: "Task 0",
-      displayOrder: 3,
+      project: "sekkei",
+      displayOrder: 10100000000,
+      layer: 1,
     },
     {
       start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4),
       end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8, 0, 0),
-      name: "Discussion with team",
-      id: "Task 2",
-      progress: 25,
-      dependencies: ["Task 1"],
+      name: "基本設計書　レビュー",
+      id: "sekkei3",
+      progress: 0,
       type: "task",
-      project: "ProjectSample",
-      displayOrder: 4,
+      project: "sekkei",
+      displayOrder: 10200000000,
+      layer: 1
     },
     {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 10),
-      name: "Review",
-      id: "Task 4",
+      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4),
+      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8, 0, 0),
+      name: "基本設計書　完成",
+      id: "sekkei4",
+      progress: 0,
       type: "task",
-      progress: 75,
-      dependencies: ["Task 2"],
-      project: "ProjectSample",
-      displayOrder: 6,
+      project: "sekkei",
+      displayOrder: 10300000000,
+      layer: 1
     },
     {
       start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
       end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 15),
-      name: "Some Project2",
-      id: "ProjectSample2",
-      progress: 25,
+      name: "開発",
+      id: "dev",
+      progress: 0,
       type: "project",
       hideChildren: false,
-      displayOrder: 7,
-      customCol: "custom_col",
+      displayOrder: 20000000000,
+      layer: 0
     },
     {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 9, 0, 0),
-      name: "Developing",
-      id: "Task 3",
+      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4),
+      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8, 0, 0),
+      name: "○○コード",
+      id: "dev2",
       progress: 0,
-      dependencies: ["Task 2"],
       type: "task",
-      project: "ProjectSample2",
-      displayOrder: 8,
-    },
-    {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 18),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 19),
-      name: "Party Time",
-      id: "Task 9",
-      progress: 0,
-      isDisabled: true,
-      type: "task",
+      project: "dev",
+      displayOrder: 20100000000,
+      layer: 1
     }
   ];
   return tasks;
@@ -130,3 +108,30 @@ export const useWindowHeight = (): number => {
   }, []);
   return height;
 };
+
+/**
+ * 
+ * @param layer 取得したいレイヤー番号（0階層,1階層目...）
+ * @param displayOrder displayOrder
+ * @returns 指定したレイヤー番号のorder
+ */
+export function getLayerOrder(layer: number, displayOrder: number) {
+  const left = Math.floor(displayOrder / maxChild ** (maxLayer - layer));
+  const right = Math.floor(displayOrder / maxChild ** (maxLayer - layer + 1)) * maxChild;
+  return left - right;
+}
+
+/**
+ * 
+ * @param setLayer セットしたい階層
+ * @param setOrder セットしたいオーダー
+ * @param upperProjectDisplayOrder 上位プロジェクトのdisplayOrder
+ * @returns displayOrder
+ */
+export function getLayerOrderToDisplayOrder(
+  setLayer: number,
+  setOrder: number,
+  upperProjectDisplayOrder = 0,
+) {
+  return setOrder * (maxChild ** (maxLayer - setLayer)) + upperProjectDisplayOrder;
+}

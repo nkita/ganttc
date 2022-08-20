@@ -30,8 +30,9 @@ export interface Task {
     dependencies?: string[];
     hideChildren?: boolean;
     displayOrder?: number;
-    customCol?: string;
-    clickOnDeleteButtom?:boolean;
+    clickOnDeleteButtom?: boolean;
+    updateDate?: Date;
+    layer?: number;
 }
 export interface EventOption {
     /**

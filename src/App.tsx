@@ -39,6 +39,8 @@ const App = () => {
   } else if (view === ViewMode.Week) {
     columnWidth = 150;
   }
+  const childLimit = 100;
+
   //  First process. *one-time-only
   useEffect(() => {
     console.log('useEffectが1回だけ実行されました');
@@ -50,6 +52,24 @@ const App = () => {
     // const ele = document.getElementsByClassName("_2B2zv")
     // ele[0].scrollLeft = retest.length * columnWidth;
   }, [])
+
+  // layerとdisplayOrderからdisplayOrder再設定
+  useEffect(() => {
+    console.log(tasks);
+
+  }, [tasks])
+
+
+  // const escFunction = React.useCallback((event:any) => {
+  //   if (event.keyCode === 27) {
+  //     // キーコードを判定して何かする。
+  //     console.log("Esc Key is pressed!");
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   document.addEventListener("keydown", escFunction, false);
+  // }, []);
 
   const handleTaskChange = (task: Task) => {
     let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
@@ -75,14 +95,12 @@ const App = () => {
     newTasks.push(task);
     setTasks(newTasks);
     setViewTask(viewTask + 1);
-    console.log();
-
     // setNewTaskId(task.id);
   };
 
   const speaker = (
     <Popover title={`チャートを追加`} style={{ width: "400px" }}>
-      <AddTaskForm onAddTodoHandler={handleTaskAdd} tasks={tasks} />
+      <AddTaskForm onAddTodoHandler={handleTaskAdd} tasks={tasks} childLimit={childLimit} />
     </Popover>
   );
 
@@ -121,7 +139,6 @@ const App = () => {
 
   return (
     <>
-
       <Navbar>
         <Navbar.Brand ><span className={styles.logo}>Gant chart</span></Navbar.Brand>
         <Nav pullRight>
@@ -185,8 +202,6 @@ const App = () => {
         />
       </div>
       <Footer />
-
-
     </>
   );
 };

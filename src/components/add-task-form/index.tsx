@@ -1,7 +1,9 @@
 import React from "react";
-import { Task } from "gantt-task-react";
+import { Task } from "../../common/types/public-types";
 // import { Form, Button, RadioGroup, Radio, Dropdown, ButtonToolbar, DateRangePicker } from 'rsuite';
 import { Form, Button, RadioGroup, Radio, Dropdown, ButtonToolbar, Schema } from 'rsuite';
+import { getLayerOrder, getLayerOrderToDisplayOrder } from "../../helper";
+
 import styles from "./index.module.css";
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
@@ -10,6 +12,7 @@ import Page from '@rsuite/icons/Page';
 type addTaskProps = {
   onAddTodoHandler: (task: Task) => void;
   tasks?: Task[];
+  childLimit?: Number;
 };
 export const AddTaskForm: React.FC<addTaskProps> = (props) => {
   const [taskName, setTaskName] = React.useState("");
@@ -24,6 +27,29 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
   const model = Schema.Model({
     taskName: Schema.Types.StringType().isRequired('必須入力です。')
   })
+
+  // 各階層の最大値を取得
+
+  const getMaxLayerOrder = (upperProject: string = "") => {
+    let maxNumber = 1;
+    props.tasks?.map(task => {
+      console.log(upperProject, !upperProject);
+      if (!upperProject) {
+        if (task.project === undefined) {
+          maxNumber = (maxNumber < getLayerOrder(0, task.displayOrder!)) ? getLayerOrder(0, task.displayOrder!) : maxNumber;
+          // console.log("!upperProject getLayerOrder(0, task.displayOrder!)=", getLayerOrder(0, task.displayOrder!));
+        }
+      } else {
+        if (task.project === upperProject) {
+          maxNumber = (maxNumber < getLayerOrder(task.layer!, task.displayOrder!)) ? getLayerOrder(task.layer!, task.displayOrder!) : maxNumber;
+          // console.log("upperProject getLayerOrder(task.layer, task.displayOrder!)=", getLayerOrder(task.layer!, task.displayOrder!));
+        }
+      }
+      return null;
+    })
+    return maxNumber;
+  }
+
   const onAddTodoHandler = () => {
     if (taskName === "") return;
 
@@ -34,14 +60,36 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
       id: Math.random().toString(),
       progress: 0,
       type: (taskKind === "task") ? "task" : "project",
+
     };
 
     if (taskKind === "project") {
       task.hideChildren = false;
     }
-    if (taskKind === "task" && upperProject !== undefined) {
-      task.project = upperProject?.type;
+    if (upperProject !== undefined) {
+      task.project = upperProject.id;
+      task.layer = upperProject.layer! + 1;
+
+      //並び順セット
+      task.displayOrder = getLayerOrderToDisplayOrder(
+        task.layer,
+        getMaxLayerOrder(task.project) + 1,
+        upperProject.displayOrder
+      );
+
+    } else {
+      task.layer = 0;
+      //並び順セット
+      task.displayOrder = getLayerOrderToDisplayOrder(
+        task.layer,
+        getMaxLayerOrder() + 1,
+        0
+      );
     }
+
+
+
+    // 追加フォームのリセット
     setTaskName("");
     if (nameRef.current) {
       const ele = nameRef.current!.childNodes[0] as HTMLInputElement;
