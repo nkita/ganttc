@@ -5,6 +5,8 @@ import Trash from '@rsuite/icons/Trash';
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
 import commonStyles from "../../common/css/index.module.css";
+import { Whisper, Tooltip } from 'rsuite';
+
 import 'rsuite/dist/rsuite.min.css';
 
 const localeDateStringCache: { [key: string]: string } = {};
@@ -122,26 +124,31 @@ export const TaskListColumn: React.FC<{
                                                 }}>
                                                 </div>
                                             }
-                                            {(t.project === undefined && t.type === "task") && 
+                                            {(t.project === undefined && t.type === "task") &&
                                                 <div style={{
                                                     maxWidth: "21px",
                                                     minWidth: "21px"
                                                 }}>
                                                 </div>
                                             }
-                                            <div>
-                                                {(t.type === "task") ? <Page /> : <Tree />}
-                                                <input className={commonStyles.taskLabel}
-                                                    type="text" name="taskName"
-                                                    onChange={e => handleTaskNameChange(e, t)}
-                                                    onKeyDown={(e) => {
-                                                        if (e.key === 'Enter' || e.key === 'Escape') {
-                                                            e.currentTarget.blur();
-                                                        }
-                                                    }}
-                                                    ref={namesRef}
-                                                    defaultValue={t.name} />
-                                            </div>
+                                            <Whisper
+                                                placement="bottomStart" controlId="control-id-hover" trigger="hover"
+                                                speaker={
+                                                    <Tooltip>{t.name}</Tooltip>}>
+                                                <div>
+                                                    {(t.type === "task") ? <Page /> : <Tree />}
+                                                    <input className={commonStyles.taskLabel}
+                                                        type="text" name="taskName" title={t.name}
+                                                        onChange={e => handleTaskNameChange(e, t)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter' || e.key === 'Escape') {
+                                                                // e.currentTarget.blur();
+                                                            }
+                                                        }}
+                                                        ref={namesRef}
+                                                        defaultValue={t.name} />
+                                                </div>
+                                            </Whisper>
                                         </div>
                                     </div>
                                 </div>

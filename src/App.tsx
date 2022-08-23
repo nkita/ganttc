@@ -126,7 +126,7 @@ const App = () => {
     if (task.clickOnDeleteButtom) {
       let newTasks = tasks.filter((t) => t.id !== task.id);
       task.clickOnDeleteButtom = false;
-      console.log("newTasks=",newTasks);
+      console.log("newTasks=", newTasks);
       setTasks(newTasks);
 
       // handleTaskDelete(task);
@@ -184,31 +184,36 @@ const App = () => {
           </Row>
         </Grid>
         {tasks.length === 0 &&
-          <div>taskを追加してください</div>
+          <div style={{ height: (windowHeight - headerHeight) + "px" }} className={styles.taskEmptyArea}>
+            <div style={{ top: "50%", left: "50%", position: "absolute" }}>taskを追加してください</div>
+          </div>
         }
         {tasks.length !== 0 &&
-          <Gantt
-            tasks={tasks}
-            viewMode={view}
-            TaskListHeader={TaskListHeader}
-            TaskListTable={TaskListColumn}
-            onDateChange={handleTaskChange}
-            onDelete={handleTaskDelete}
-            onDoubleClick={handleDblClick}
-            onSelect={handleSelect}
-            onExpanderClick={handleExpanderClick}
-            preStepsCount={2}
-            handleWidth={5}
-            viewDate={currentDate}
-            // viewTask={12}
-            listCellWidth={isChecked ? "100" : "0"}
-            ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
-            columnWidth={columnWidth}
-            locale={"ja-JP"}
-            rowHeight={rowHeight}
-            timeStep={86400000}
-            fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
-          />}
+          <div className={styles.ganttArea} >
+            <Gantt
+              tasks={tasks}
+              viewMode={view}
+              TaskListHeader={TaskListHeader}
+              TaskListTable={TaskListColumn}
+              onDateChange={handleTaskChange}
+              onDelete={handleTaskDelete}
+              onDoubleClick={handleDblClick}
+              onSelect={handleSelect}
+              onExpanderClick={handleExpanderClick}
+              preStepsCount={2}
+              handleWidth={5}
+              viewDate={currentDate}
+              // viewTask={12}
+              listCellWidth={isChecked ? "100" : "0"}
+              ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
+              columnWidth={columnWidth}
+              locale={"ja-JP"}
+              rowHeight={rowHeight}
+              timeStep={86400000}
+              fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
+            />
+          </div>
+        }
       </div>
       <Footer />
     </>
