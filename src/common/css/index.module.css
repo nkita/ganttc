@@ -2,10 +2,16 @@
   background-color: transparent;
   border: none;
   outline: 0;
+  font-family: proxima-nova, "Helvetica Neue", Helvetica, Arial, sans-serif, 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size:10pt
 }
 
 .taskLabel:focus {
-  /* border-bottom: 1px solid #d1d5db; */
+  border: none;
+  outline: 0;
+  background-color: transparent;
+  font-family: proxima-nova, "Helvetica Neue", Helvetica, Arial, sans-serif, 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size:10pt
 }
 
 .contents {

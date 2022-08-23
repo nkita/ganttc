@@ -115,11 +115,22 @@ export const TaskListColumn: React.FC<{
                                             >
                                                 {expanderSymbol}
                                             </div>
-
-                                            <div >
-                                                {(t.project === undefined) ? "" : <span className={styles.spacer} />}
+                                            {(t.project !== undefined) &&
+                                                <div style={{
+                                                    maxWidth: "35px",
+                                                    minWidth: "35px"
+                                                }}>
+                                                </div>
+                                            }
+                                            {(t.project === undefined && t.type === "task") && 
+                                                <div style={{
+                                                    maxWidth: "21px",
+                                                    minWidth: "21px"
+                                                }}>
+                                                </div>
+                                            }
+                                            <div>
                                                 {(t.type === "task") ? <Page /> : <Tree />}
-                                                <span className={commonStyles.space} />
                                                 <input className={commonStyles.taskLabel}
                                                     type="text" name="taskName"
                                                     onChange={e => handleTaskNameChange(e, t)}

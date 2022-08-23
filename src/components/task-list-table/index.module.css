@@ -32,14 +32,14 @@
 .taskListExpander {
   color: rgb(86 86 86);
   font-size: 0.6rem;
-  padding: 0.15rem 0.2rem 0rem 0.2rem;
+  padding: 0.15rem 0.5rem 0rem 0.2rem;
   user-select: none;
   cursor: pointer;
 }
 
 .taskListEmptyExpander {
   font-size: 0.6rem;
-  padding-left: 1rem;
+  /* padding: 0.15rem 1rem 0rem 0.2rem; */
   user-select: none;
 }
 
@@ -52,14 +52,6 @@
   background-color: transparent;
 }
 
-.taskLabel:hover {
-  font-size: 16px;
-  width: 100%;
-  border: none;
-  outline: none;
-  padding-bottom: 8px;
-  background-color: transparent;
-}
 
 .nameInput {
   background-color: transparent;
@@ -83,6 +75,3 @@
   opacity: 1;
 }
 
-.spacer {
-  padding-left: 15px;
-}

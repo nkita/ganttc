@@ -5,74 +5,74 @@ const maxLayer = 5;
 const maxChild = 100; // １階層で保持できるタスク数
 
 export function initTasks() {
-  const currentDate = new Date();
+  // const currentDate = new Date();
   const tasks: Task[] = [
-    {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 15),
-      name: "設計",
-      id: "sekkei",
-      progress: 0,
-      type: "project",
-      hideChildren: false,
-      displayOrder: 10000000000,
-      layer: 0
-    },
-    {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 2),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4, 0, 0),
-      name: "Research",
-      id: "基本設計書作成",
-      progress: 0,
-      type: "task",
-      project: "sekkei",
-      displayOrder: 10100000000,
-      layer: 1,
-    },
-    {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8, 0, 0),
-      name: "基本設計書　レビュー",
-      id: "sekkei3",
-      progress: 0,
-      type: "task",
-      project: "sekkei",
-      displayOrder: 10200000000,
-      layer: 1
-    },
-    {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8, 0, 0),
-      name: "基本設計書　完成",
-      id: "sekkei4",
-      progress: 0,
-      type: "task",
-      project: "sekkei",
-      displayOrder: 10300000000,
-      layer: 1
-    },
-    {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 15),
-      name: "開発",
-      id: "dev",
-      progress: 0,
-      type: "project",
-      hideChildren: false,
-      displayOrder: 20000000000,
-      layer: 0
-    },
-    {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8, 0, 0),
-      name: "○○コード",
-      id: "dev2",
-      progress: 0,
-      type: "task",
-      project: "dev",
-      displayOrder: 20100000000,
-      layer: 1
-    }
+    // {
+    //   start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+    //   end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 15),
+    //   name: "設計",
+    //   id: "sekkei",
+    //   progress: 0,
+    //   type: "project",
+    //   hideChildren: false,
+    //   displayOrder: 10000000000,
+    //   layer: 0
+    // },
+    // {
+    //   start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 2),
+    //   end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4, 0, 0),
+    //   name: "Research",
+    //   id: "基本設計書作成",
+    //   progress: 0,
+    //   type: "task",
+    //   project: "sekkei",
+    //   displayOrder: 10100000000,
+    //   layer: 1,
+    // },
+    // {
+    //   start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4),
+    //   end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8, 0, 0),
+    //   name: "基本設計書　レビュー",
+    //   id: "sekkei3",
+    //   progress: 0,
+    //   type: "task",
+    //   project: "sekkei",
+    //   displayOrder: 10200000000,
+    //   layer: 1
+    // },
+    // {
+    //   start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4),
+    //   end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8, 0, 0),
+    //   name: "基本設計書　完成",
+    //   id: "sekkei4",
+    //   progress: 0,
+    //   type: "task",
+    //   project: "sekkei",
+    //   displayOrder: 10300000000,
+    //   layer: 1
+    // },
+    // {
+    //   start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+    //   end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 15),
+    //   name: "開発",
+    //   id: "dev",
+    //   progress: 0,
+    //   type: "project",
+    //   hideChildren: false,
+    //   displayOrder: 20000000000,
+    //   layer: 0
+    // },
+    // {
+    //   start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 4),
+    //   end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 8, 0, 0),
+    //   name: "○○コード",
+    //   id: "dev2",
+    //   progress: 0,
+    //   type: "task",
+    //   project: "dev",
+    //   displayOrder: 20100000000,
+    //   layer: 1
+    // }
   ];
   return tasks;
 }

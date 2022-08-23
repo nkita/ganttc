@@ -86,9 +86,6 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
         0
       );
     }
-
-
-
     // 追加フォームのリセット
     setTaskName("");
     if (nameRef.current) {
@@ -97,6 +94,7 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
     }
     props.onAddTodoHandler(task);
   };
+
 
   return (
     <>
@@ -113,15 +111,15 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
         >
           <Form.Group controlId="kind">
             <Form.ControlLabel>種類</Form.ControlLabel>
-            <Form.Control name="kind" inline accepter={RadioGroup}>
+            <Form.Control name="kind" inline accepter={RadioGroup} onChange={
+              (e: any) => {
+                setUpperProject(undefined);
+              }
+            } >
               <Radio value="project"><Tree /><span className={styles.space} />Project</Radio>
               <Radio value="task"><Page /><span className={styles.space} />Task</Radio>
             </Form.Control>
           </Form.Group>
-          {/* <Form.Group controlId="date" >
-            <Form.ControlLabel>開始/終了</Form.ControlLabel>
-            <DateRangePicker />
-          </Form.Group> */}
           <Form.Group controlId="project">
             <Form.ControlLabel>プロジェクト</Form.ControlLabel>
             <Dropdown title={(upperProject === undefined) ? "プロジェクトを選択" : upperProject.name} disabled={(taskKind === "project") ? true : false}>

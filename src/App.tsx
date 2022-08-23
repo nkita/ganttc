@@ -122,12 +122,17 @@ const App = () => {
   };
 
   const handleSelect = (task: Task, isSelected: boolean) => {
-    console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
-    let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
+    // console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
     if (task.clickOnDeleteButtom) {
+      let newTasks = tasks.filter((t) => t.id !== task.id);
       task.clickOnDeleteButtom = false;
-      handleTaskDelete(task);
+      console.log("newTasks=",newTasks);
+      setTasks(newTasks);
+
+      // handleTaskDelete(task);
     } else {
+      let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
+
       setTasks(newTasks);
     }
   };
@@ -178,28 +183,32 @@ const App = () => {
             </Col>
           </Row>
         </Grid>
-        <Gantt
-          tasks={tasks}
-          viewMode={view}
-          TaskListHeader={TaskListHeader}
-          TaskListTable={TaskListColumn}
-          onDateChange={handleTaskChange}
-          onDelete={handleTaskDelete}
-          onDoubleClick={handleDblClick}
-          onSelect={handleSelect}
-          onExpanderClick={handleExpanderClick}
-          preStepsCount={2}
-          handleWidth={5}
-          viewDate={currentDate}
-          // viewTask={12}
-          listCellWidth={isChecked ? "100" : "0"}
-          ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
-          columnWidth={columnWidth}
-          locale={"ja-JP"}
-          rowHeight={rowHeight}
-          timeStep={86400000}
-          fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
-        />
+        {tasks.length === 0 &&
+          <div>taskを追加してください</div>
+        }
+        {tasks.length !== 0 &&
+          <Gantt
+            tasks={tasks}
+            viewMode={view}
+            TaskListHeader={TaskListHeader}
+            TaskListTable={TaskListColumn}
+            onDateChange={handleTaskChange}
+            onDelete={handleTaskDelete}
+            onDoubleClick={handleDblClick}
+            onSelect={handleSelect}
+            onExpanderClick={handleExpanderClick}
+            preStepsCount={2}
+            handleWidth={5}
+            viewDate={currentDate}
+            // viewTask={12}
+            listCellWidth={isChecked ? "100" : "0"}
+            ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
+            columnWidth={columnWidth}
+            locale={"ja-JP"}
+            rowHeight={rowHeight}
+            timeStep={86400000}
+            fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
+          />}
       </div>
       <Footer />
     </>
