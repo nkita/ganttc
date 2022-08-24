@@ -185,7 +185,7 @@ const App = () => {
         </Grid>
         {tasks.length === 0 &&
           <div style={{ height: (windowHeight - headerHeight) + "px" }} className={styles.taskEmptyArea}>
-            <div style={{ top: "50%", left: "50%", position: "absolute" }}>taskを追加してください</div>
+            <div style={{ top: "50%", left: "45%", position: "absolute" }}>taskを追加してください</div>
           </div>
         }
         {tasks.length !== 0 &&
@@ -215,6 +215,7 @@ const App = () => {
           </div>
         }
       </div>
+
       <Footer />
     </>
   );
