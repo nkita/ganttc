@@ -55,7 +55,7 @@ const App = () => {
 
   // layerとdisplayOrderからdisplayOrder再設定
   useEffect(() => {
-    console.log(tasks);
+    // console.log(tasks);
 
   }, [tasks])
 
@@ -139,7 +139,7 @@ const App = () => {
 
   const handleExpanderClick = (task: Task) => {
     setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-    console.log("On expander click Id:" + task.id);
+    // console.log("On expander click Id:" + task.id);
   };
 
   return (

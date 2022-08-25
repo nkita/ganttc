@@ -16,7 +16,6 @@ import type {
 } from "@hello-pangea/dnd";
 import 'rsuite/dist/rsuite.min.css';
 
-
 // ドラッグ&ドロップした要素を入れ替える
 const reorder = (
     list: Task[],
@@ -30,17 +29,20 @@ const reorder = (
     return result;
 };
 
-// ドラッグ&ドロップの質問のスタイル
 const getItemStyle = (
     isDragging: boolean,
     draggableStyle: DraggingStyle | NotDraggingStyle | undefined
 ) => ({
-    background: isDragging ? "#757ce8" : "white",
+    background: isDragging ? "#e6f2ff" : "",
+    border: isDragging ? "1px solid #1675e0" : "",
+    borderRadius: isDragging ? "3px" : "",
+    fontWeight: isDragging ? "bold" : "",
+    paddingTop: isDragging ? "5px" : "",
     ...draggableStyle
 });
 // ドラッグ&ドロップのリストのスタイル
 const getListStyle = (isDraggingOver: boolean) => ({
-    background: isDraggingOver ? "#1769aa" : "lightgrey",
+    background: isDraggingOver ? "white" : "white",
 });
 
 export const TaskListColumn: React.FC<{
@@ -63,10 +65,9 @@ export const TaskListColumn: React.FC<{
     setSelectedTask,
     onExpanderClick,
 }) => {
-
         const [tasks2, setTasks] = useState(tasks);
         const onDragEnd = (result: DropResult) => {
-            // ドロップ先がない
+            // ドロップ先がないi
             if (!result.destination) {
                 return;
             }
@@ -95,7 +96,6 @@ export const TaskListColumn: React.FC<{
             t.progress = Number(e.target.value);
             setSelectedTask(t.id);
         }
-
         return (
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable">
@@ -130,48 +130,49 @@ export const TaskListColumn: React.FC<{
                                                 snapshot: DraggableStateSnapshot
                                             ) => (
                                                 <div
+                                                    className={styles.taskListTableRow}
+                                                    key={`${t.id}row`}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    style={getItemStyle(
-                                                        snapshot.isDragging,
-                                                        provided.draggableProps.style
-                                                    )}>
-                                                    <div
-                                                        className={styles.taskListTableRow}
-                                                        style={{ height: rowHeight }}
-                                                        key={`${t.id}row`}
-                                                    >
-                                                        <Name
-                                                            task={t}
-                                                            rowWidthLong={rowWidthLong}
-                                                            expanderSymbol={expanderSymbol}
-                                                            iconWidth={iconWidth}
-                                                            handleTaskNameChange={handleTaskNameChange}
-                                                            handleTaskDelete={handleTaskDelete}
-                                                            onExpanderClick={onExpanderClick}
-                                                        />
-                                                        <Period
-                                                            task={t}
-                                                            rowWidth={rowWidth}
-                                                            locale={locale}
-                                                        />
-                                                        <Progress
-                                                            task={t}
-                                                            rowWidth={rowWidth}
-                                                            handleProgressChange={handleProgressChange}
-                                                        />
-                                                    </div>
+                                                    style={
+                                                        Object.assign(
+                                                            getItemStyle(
+                                                                snapshot.isDragging,
+                                                                provided.draggableProps.style
+                                                            ), { height: rowHeight })
+                                                    }
+                                                >
+                                                    <Name
+                                                        task={t}
+                                                        rowWidth={rowWidthLong}
+                                                        expanderSymbol={expanderSymbol}
+                                                        iconWidth={iconWidth}
+                                                        handleTaskNameChange={handleTaskNameChange}
+                                                        handleTaskDelete={handleTaskDelete}
+                                                        onExpanderClick={onExpanderClick}
+                                                    />
+                                                    <Period
+                                                        task={t}
+                                                        rowWidth={rowWidth}
+                                                        locale={locale}
+                                                    />
+                                                    <Progress
+                                                        task={t}
+                                                        rowWidth={rowWidth}
+                                                        handleProgressChange={handleProgressChange}
+                                                    />
                                                 </div>
-                                            )}
+                                            )
+                                            }
                                         </Draggable>
                                     );
                                 })}
+                                {provided.placeholder}
                             </div >
-                            {provided.placeholder}
                         </div>
                     )}
                 </Droppable>
-            </DragDropContext>
+            </DragDropContext >
         );
     };

@@ -11,7 +11,7 @@ import 'rsuite/dist/rsuite.min.css';
 
 export const Name: React.FC<{
     task: Task;
-    rowWidthLong: number;
+    rowWidth: number;
     expanderSymbol: string;
     iconWidth: number;
     handleTaskNameChange: (e: React.ChangeEvent<HTMLInputElement>, task: Task) => void;
@@ -19,7 +19,7 @@ export const Name: React.FC<{
     onExpanderClick: (task: Task) => void;
 }> = ({
     task,
-    rowWidthLong,
+    rowWidth,
     expanderSymbol,
     iconWidth,
     handleTaskNameChange,
@@ -31,8 +31,8 @@ export const Name: React.FC<{
                 <div
                     className={styles.taskListCell}
                     style={{
-                        minWidth: `${rowWidthLong}px`,
-                        maxWidth: `${rowWidthLong}px`,
+                        minWidth: `${rowWidth}px`,
+                        maxWidth: `${rowWidth}px`,
                     }}
                     title={task.name}
                 >
