@@ -16,20 +16,6 @@ import type {
 } from "@hello-pangea/dnd";
 import 'rsuite/dist/rsuite.min.css';
 
-// ドラッグ&ドロップした要素を入れ替える
-// const reorder = (
-//     list: Task[],
-//     startIndex: number,
-//     endIndex: number
-// ): Task[] => {
-//     const result = Array.from(list);
-//     const [removed] = result.splice(startIndex, 1);
-//     result.splice(endIndex, 0, removed);
-
-//     console.log("reorder=",list, startIndex, endIndex);
-//     return result;
-// };
-
 const getItemStyle = (
     isDragging: boolean,
     draggableStyle: DraggingStyle | NotDraggingStyle | undefined

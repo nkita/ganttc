@@ -42,12 +42,13 @@ export const useWindowHeight = (): number => {
 export const reOrder = (
   list: Task[],
   startIndex: number,
-  endIndex: number
+  endIndex: number,
+  moveCount:number,
 ): Task[] => {
   const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
+  const removed = result.splice(startIndex, moveCount);
+  result.splice(endIndex, 0, ...removed);
 
-  console.log("reorder=", list, startIndex, endIndex);
+  // console.log("reorder=", list, startIndex, endIndex);
   return result;
 };

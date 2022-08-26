@@ -14,7 +14,7 @@ import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import commonStyles from "./common/css/index.module.css";
-import {reOrder} from "./helper";
+import { reOrder } from "./helper";
 import 'rsuite/dist/rsuite.min.css';
 import "gantt-task-react/dist/index.css";
 
@@ -133,9 +133,17 @@ const App = () => {
       handleTaskDelete(task);
     }
     if (task.replace) {
-      console.log(task.replace);
-
-      setTasks(reOrder(tasks, task.replace.sourceIndex, task.replace.destinationIndex));
+      let count = 1;
+      tasks.forEach((t) => {
+        if (task.type === "project" && task.id === t.project) count++;
+      });
+      console.log(count);
+      setTasks(reOrder(
+        tasks,
+        task.replace.sourceIndex,
+        task.replace.destinationIndex,
+        count
+      ));
       delete task.replace;
     }
   };
