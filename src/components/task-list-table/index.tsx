@@ -67,43 +67,36 @@ export const TaskListColumn: React.FC<{
     onExpanderClick,
 }) => {
         // const [tasks2, setTasks] = useState(tasks);
-        const onDragEnd = (result: DropResult) => {
+        const taskOrderChange = (result: DropResult) => {
             // ドロップ先がないi
             if (!result.destination) return;
-            // // 配列の順序を入れ替える
-            // let movedItems = reorder(
-            //     tasks2, //　順序を入れ変えたい配列
-            //     result.source.index, // 元の配列の位置
-            //     result.destination.index // 移動先の配列の位置
-            // );
-            // setTasks(movedItems);
-            // setSelectedTask(tasks.id);
-            const sOrder = tasks[result.source.index];
-            const dOrder = tasks[result.destination.index];
-            sOrder.displayOrder = dOrder.displayOrder;
-            setSelectedTask(sOrder.id);
-
+            const task = tasks[result.source.index];
+            task.replace = {
+                sourceIndex: result.source.index,
+                destinationIndex: result.destination.index,
+            }
+            setSelectedTask(task.id);
         };
 
         const iconWidth = 30;
         const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
 
-        const handleTaskDelete = (e: React.MouseEvent<HTMLElement>, t: Task) => {
+        const taskDelete = (e: React.MouseEvent<HTMLElement>, t: Task) => {
             t.clickOnDeleteButtom = true;
             setSelectedTask(t.id);
         }
-        const handleTaskNameChange = (e: React.ChangeEvent<HTMLInputElement>, t: Task) => {
+        const taskNameChange = (e: React.ChangeEvent<HTMLInputElement>, t: Task) => {
             e.preventDefault();
             t.name = e.target.value;
             setSelectedTask(t.id);
         }
-        const handleProgressChange = (e: React.ChangeEvent<HTMLSelectElement>, t: Task) => {
+        const progressChange = (e: React.ChangeEvent<HTMLSelectElement>, t: Task) => {
             t.progress = Number(e.target.value);
             setSelectedTask(t.id);
         }
 
         return (
-            <DragDropContext onDragEnd={onDragEnd}>
+            <DragDropContext onDragEnd={taskOrderChange}>
                 <Droppable droppableId="droppable">
                     {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                         <div
@@ -154,8 +147,8 @@ export const TaskListColumn: React.FC<{
                                                         rowWidth={rowWidthLong}
                                                         expanderSymbol={expanderSymbol}
                                                         iconWidth={iconWidth}
-                                                        handleTaskNameChange={handleTaskNameChange}
-                                                        handleTaskDelete={handleTaskDelete}
+                                                        handleTaskNameChange={taskNameChange}
+                                                        handleTaskDelete={taskDelete}
                                                         onExpanderClick={onExpanderClick}
                                                     />
                                                     <Period
@@ -166,7 +159,7 @@ export const TaskListColumn: React.FC<{
                                                     <Progress
                                                         task={t}
                                                         rowWidth={rowWidth}
-                                                        handleProgressChange={handleProgressChange}
+                                                        handleProgressChange={progressChange}
                                                     />
                                                 </div>
                                             )

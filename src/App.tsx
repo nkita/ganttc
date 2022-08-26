@@ -14,6 +14,7 @@ import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import commonStyles from "./common/css/index.module.css";
+import {reOrder} from "./helper";
 import 'rsuite/dist/rsuite.min.css';
 import "gantt-task-react/dist/index.css";
 
@@ -52,12 +53,6 @@ const App = () => {
     // const ele = document.getElementsByClassName("_2B2zv")
     // ele[0].scrollLeft = retest.length * columnWidth;
   }, [])
-
-  // layerとdisplayOrderからdisplayOrder再設定
-  useEffect(() => {
-    // console.log(tasks);
-
-  }, [tasks])
 
 
   // const escFunction = React.useCallback((event:any) => {
@@ -134,8 +129,14 @@ const App = () => {
   const handleSelect = (task: Task, isSelected: boolean) => {
     // console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
     if (task.clickOnDeleteButtom) {
-      task.clickOnDeleteButtom = false;
+      delete task.clickOnDeleteButtom;
       handleTaskDelete(task);
+    }
+    if (task.replace) {
+      console.log(task.replace);
+
+      setTasks(reOrder(tasks, task.replace.sourceIndex, task.replace.destinationIndex));
+      delete task.replace;
     }
   };
 

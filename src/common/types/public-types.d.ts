@@ -29,11 +29,13 @@ export interface Task {
     project?: string;
     dependencies?: string[];
     hideChildren?: boolean;
-    isOrdered?: boolean;
     displayOrder?: number;
     clickOnDeleteButtom?: boolean;
+    replace?: {
+        sourceIndex: number;
+        destinationIndex: number;
+    };
     updateDate?: Date;
-    layer?: number;
 }
 export interface EventOption {
     /**
