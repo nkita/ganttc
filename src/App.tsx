@@ -92,7 +92,17 @@ const App = () => {
 
   const handleTaskAdd = (task: Task) => {
     const newTasks = [...tasks];
-    newTasks.push(task);
+    // 上位プロジェクトが存在する場合
+    if (task.project) {
+      let maxIndex = 0;
+      // プロジェクトの最終indexを取得
+      newTasks.forEach((t, index) => {
+        if (t.project === task.project || t.id === task.project) maxIndex = index;
+      });
+      newTasks.splice(maxIndex + 1, 0, task);
+    } else {
+      newTasks.push(task);
+    }
     setTasks(newTasks);
     setViewTask(viewTask + 1);
     // setNewTaskId(task.id);
