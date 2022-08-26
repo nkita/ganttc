@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { } from "react";
 import styles from "./index.module.css";
 import { Task } from "../../common/types/public-types"
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -17,17 +17,18 @@ import type {
 import 'rsuite/dist/rsuite.min.css';
 
 // ドラッグ&ドロップした要素を入れ替える
-const reorder = (
-    list: Task[],
-    startIndex: number,
-    endIndex: number
-): Task[] => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
+// const reorder = (
+//     list: Task[],
+//     startIndex: number,
+//     endIndex: number
+// ): Task[] => {
+//     const result = Array.from(list);
+//     const [removed] = result.splice(startIndex, 1);
+//     result.splice(endIndex, 0, removed);
 
-    return result;
-};
+//     console.log("reorder=",list, startIndex, endIndex);
+//     return result;
+// };
 
 const getItemStyle = (
     isDragging: boolean,
@@ -65,19 +66,23 @@ export const TaskListColumn: React.FC<{
     setSelectedTask,
     onExpanderClick,
 }) => {
-        const [tasks2, setTasks] = useState(tasks);
+        // const [tasks2, setTasks] = useState(tasks);
         const onDragEnd = (result: DropResult) => {
             // ドロップ先がないi
-            if (!result.destination) {
-                return;
-            }
-            // 配列の順序を入れ替える
-            let movedItems = reorder(
-                tasks2, //　順序を入れ変えたい配列
-                result.source.index, // 元の配列の位置
-                result.destination.index // 移動先の配列の位置
-            );
-            setTasks(movedItems);
+            if (!result.destination) return;
+            // // 配列の順序を入れ替える
+            // let movedItems = reorder(
+            //     tasks2, //　順序を入れ変えたい配列
+            //     result.source.index, // 元の配列の位置
+            //     result.destination.index // 移動先の配列の位置
+            // );
+            // setTasks(movedItems);
+            // setSelectedTask(tasks.id);
+            const sOrder = tasks[result.source.index];
+            const dOrder = tasks[result.destination.index];
+            sOrder.displayOrder = dOrder.displayOrder;
+            setSelectedTask(sOrder.id);
+
         };
 
         const iconWidth = 30;
@@ -96,6 +101,7 @@ export const TaskListColumn: React.FC<{
             t.progress = Number(e.target.value);
             setSelectedTask(t.id);
         }
+
         return (
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable">

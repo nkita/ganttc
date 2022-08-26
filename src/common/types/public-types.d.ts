@@ -29,6 +29,7 @@ export interface Task {
     project?: string;
     dependencies?: string[];
     hideChildren?: boolean;
+    isOrdered?: boolean;
     displayOrder?: number;
     clickOnDeleteButtom?: boolean;
     updateDate?: Date;

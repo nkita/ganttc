@@ -124,16 +124,8 @@ const App = () => {
   const handleSelect = (task: Task, isSelected: boolean) => {
     // console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
     if (task.clickOnDeleteButtom) {
-      let newTasks = tasks.filter((t) => t.id !== task.id);
       task.clickOnDeleteButtom = false;
-      console.log("newTasks=", newTasks);
-      setTasks(newTasks);
-
-      // handleTaskDelete(task);
-    } else {
-      let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
-
-      setTasks(newTasks);
+      handleTaskDelete(task);
     }
   };
 
