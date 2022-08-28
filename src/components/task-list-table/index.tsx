@@ -1,4 +1,4 @@
-import React, { } from "react";
+import React, { useState } from "react";
 import styles from "./index.module.css";
 import { Task } from "../../common/types/public-types"
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -52,17 +52,27 @@ export const TaskListColumn: React.FC<{
     setSelectedTask,
     onExpanderClick,
 }) => {
-        // const [tasks2, setTasks] = useState(tasks);
-        const taskOrderChange = (result: DropResult) => {
+        const [orgHideChildren, setOrgHideChildren] = useState(true);
+        const endDrag = (result: DropResult) => {
             // ドロップ先がないi
             if (!result.destination) return;
             const task = tasks[result.source.index];
+            // 子要素がいた場合表示・非表示の切り替えを行う
+            // changeHideChildren(task);
             task.replace = {
                 sourceIndex: result.source.index,
                 destinationIndex: result.destination.index,
             }
             setSelectedTask(task.id);
         };
+        const changeHideChildren = (task: Task, flg: null | boolean = null) => {
+            if (task.type === "project") {
+                task.replace = { hideChildren: flg ?? orgHideChildren };
+                // ドラッグ終わりに表示切り替えをもとに戻すために、子要素の表示・非表示フラグを取得する。
+                setOrgHideChildren(task.hideChildren || false);
+                setSelectedTask(task.id);
+            }
+        }
 
         const iconWidth = 30;
         const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
@@ -81,8 +91,15 @@ export const TaskListColumn: React.FC<{
             setSelectedTask(t.id);
         }
 
+        const mouseDown = (e: React.MouseEvent<HTMLDivElement>, t: Task) => {
+            changeHideChildren(t, true);
+        }
+        const mouseUp = (e: React.MouseEvent<HTMLDivElement>, t: Task) => {
+            changeHideChildren(t);
+        }
+
         return (
-            <DragDropContext onDragEnd={taskOrderChange}>
+            <DragDropContext onDragEnd={endDrag}>
                 <Droppable droppableId="droppable">
                     {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                         <div
@@ -118,6 +135,8 @@ export const TaskListColumn: React.FC<{
                                                     className={styles.taskListTableRow}
                                                     key={`${t.id}row`}
                                                     ref={provided.innerRef}
+                                                    onMouseDown={(e) => { mouseDown(e, t) }}
+                                                    onMouseUp={(e) => { mouseUp(e, t) }}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
                                                     style={

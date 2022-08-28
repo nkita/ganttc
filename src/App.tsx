@@ -132,19 +132,33 @@ const App = () => {
       delete task.clickOnDeleteButtom;
       handleTaskDelete(task);
     }
+
     if (task.replace) {
-      let count = 1;
-      tasks.forEach((t) => {
-        if (task.type === "project" && task.id === t.project) count++;
-      });
-      console.log(count);
-      setTasks(reOrder(
-        tasks,
-        task.replace.sourceIndex,
-        task.replace.destinationIndex,
-        count
-      ));
-      delete task.replace;
+      if (task.replace.hideChildren !== undefined) {
+        setTasks(
+          tasks.map((t) => {
+            if (t.id === task.id) t.hideChildren = task.replace!.hideChildren;
+            return t
+          })
+        )
+        delete task.replace.hideChildren;
+      }
+
+      if (task.replace.sourceIndex !== undefined && task.replace.destinationIndex !== undefined) {
+        let count = 1;
+
+        tasks.forEach((t) => {
+          if (task.type === "project" && task.id === t.project) count++;
+        });
+        setTasks(reOrder(
+          tasks,
+          task.replace.sourceIndex,
+          task.replace.destinationIndex,
+          count
+        ));
+        delete task.replace.sourceIndex;
+        delete task.replace.destinationIndex;
+      }
     }
   };
 
