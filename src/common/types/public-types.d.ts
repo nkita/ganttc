@@ -32,8 +32,8 @@ export interface Task {
     displayOrder?: number;
     clickOnDeleteButtom?: boolean;
     replace?: {
-        sourceIndex?: number;
-        destinationIndex?: number;
+        sourceTaskId?: string;
+        destinationTaskId?: string;
         hideChildren?: boolean;
     };
     updateDate?: Date;

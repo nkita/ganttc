@@ -134,6 +134,7 @@ const App = () => {
     }
 
     if (task.replace) {
+      console.log(tasks);
       if (task.replace.hideChildren !== undefined) {
         setTasks(
           tasks.map((t) => {
@@ -144,20 +145,44 @@ const App = () => {
         delete task.replace.hideChildren;
       }
 
-      if (task.replace.sourceIndex !== undefined && task.replace.destinationIndex !== undefined) {
-        let count = 1;
-
-        tasks.forEach((t) => {
-          if (task.type === "project" && task.id === t.project) count++;
+      if (task.replace.destinationTaskId !== undefined) {
+        let indexs: number[] = [];
+        tasks.forEach((t, i) => {
+          if (t.id === task.id) indexs[0] = i;
+          if (t.id === task.replace!.destinationTaskId) indexs[1] = i;
         });
-        setTasks(reOrder(
+        let reOrderTasks = reOrder(
           tasks,
-          task.replace.sourceIndex,
-          task.replace.destinationIndex,
-          count
-        ));
-        delete task.replace.sourceIndex;
-        delete task.replace.destinationIndex;
+          indexs[0],
+          indexs[1],
+        );
+
+        // プロジェクトだった場合配下の要素を持ってくる
+        if (task.type === "project") {
+          // 該当タスクを抽出
+          let childTask: Task[] = [];
+          let tmpTasks = reOrderTasks.filter(t => {
+            if (t.project === task.id) {
+              childTask.push(t);
+              return false;
+            } else {
+              return true;
+            }
+          });
+          // 該当のタスク分入れ替えを行う
+          let index = 0;
+          tmpTasks.forEach((t, v) => {
+            // 移動したプロジェクトのindex取得
+            if (task.id === t.id) {
+              index = v;
+            }
+          });
+          tmpTasks.splice(index + 1, 0, ...childTask)
+          reOrderTasks = tmpTasks;
+        }
+
+        setTasks(reOrderTasks);
+        delete task.replace.destinationTaskId;
       }
     }
   };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { } from "react";
 import styles from "./index.module.css";
 import { Task } from "../../common/types/public-types"
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -52,27 +52,30 @@ export const TaskListColumn: React.FC<{
     setSelectedTask,
     onExpanderClick,
 }) => {
-        const [orgHideChildren, setOrgHideChildren] = useState(true);
+        // const [orgHideChildren, setOrgHideChildren] = useState(true);
         const endDrag = (result: DropResult) => {
             // ドロップ先がないi
             if (!result.destination) return;
             const task = tasks[result.source.index];
+            const dTask = tasks[result.destination.index];
             // 子要素がいた場合表示・非表示の切り替えを行う
             // changeHideChildren(task);
+            console.log(result.source.index);
             task.replace = {
-                sourceIndex: result.source.index,
-                destinationIndex: result.destination.index,
+                destinationTaskId: dTask.id,
             }
             setSelectedTask(task.id);
+            // changeHideChildren(task);
         };
-        const changeHideChildren = (task: Task, flg: null | boolean = null) => {
-            if (task.type === "project") {
-                task.replace = { hideChildren: flg ?? orgHideChildren };
-                // ドラッグ終わりに表示切り替えをもとに戻すために、子要素の表示・非表示フラグを取得する。
-                setOrgHideChildren(task.hideChildren || false);
-                setSelectedTask(task.id);
-            }
-        }
+
+        // const changeHideChildren = (task: Task, flg: null | boolean = null) => {
+        //     if (task.type === "project") {
+        //         task.replace = { hideChildren: flg ?? orgHideChildren };
+        //         // ドラッグ終わりに表示切り替えをもとに戻すために、子要素の表示・非表示フラグを取得する。
+        //         setOrgHideChildren(task.hideChildren || false);
+        //         // setSelectedTask(task.id);
+        //     }
+        // }
 
         const iconWidth = 30;
         const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
@@ -92,10 +95,12 @@ export const TaskListColumn: React.FC<{
         }
 
         const mouseDown = (e: React.MouseEvent<HTMLDivElement>, t: Task) => {
-            changeHideChildren(t, true);
+            // changeHideChildren(t, true);
+            console.log("DOWN");
         }
         const mouseUp = (e: React.MouseEvent<HTMLDivElement>, t: Task) => {
-            changeHideChildren(t);
+            // console.log("UP");
+            // changeHideChildren(t);
         }
 
         return (
