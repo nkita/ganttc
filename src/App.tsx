@@ -274,7 +274,7 @@ const App = () => {
               viewDate={currentDate}
               // viewTask={12}
               listCellWidth={isChecked ? "100" : "0"}
-              ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
+              // ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
               columnWidth={columnWidth}
               locale={"ja-JP"}
               rowHeight={rowHeight}

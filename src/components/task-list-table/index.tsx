@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { Name } from "./name";
 import { Period } from "./period";
 import { Progress } from "./progress";
+import { Edit } from "./edit";
 import type {
     DropResult,
     DraggingStyle,
@@ -77,18 +78,18 @@ export const TaskListColumn: React.FC<{
             }
         }
 
-        const iconWidth = 30;
+        // const iconWidth = 30;
         const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
 
         const taskDelete = (e: React.MouseEvent<HTMLElement>, t: Task) => {
             t.clickOnDeleteButtom = true;
             setSelectedTask(t.id);
         }
-        const taskNameChange = (e: React.ChangeEvent<HTMLInputElement>, t: Task) => {
-            e.preventDefault();
-            t.name = e.target.value;
-            setSelectedTask(t.id);
-        }
+        // const taskNameChange = (e: React.ChangeEvent<HTMLInputElement>, t: Task) => {
+        //     e.preventDefault();
+        //     t.name = e.target.value;
+        //     setSelectedTask(t.id);
+        // }
         const progressChange = (e: React.ChangeEvent<HTMLSelectElement>, t: Task) => {
             t.progress = Number(e.target.value);
             setSelectedTask(t.id);
@@ -156,10 +157,11 @@ export const TaskListColumn: React.FC<{
                                                         task={t}
                                                         rowWidth={rowWidthLong}
                                                         expanderSymbol={expanderSymbol}
-                                                        iconWidth={iconWidth}
-                                                        handleTaskNameChange={taskNameChange}
-                                                        handleTaskDelete={taskDelete}
                                                         onExpanderClick={onExpanderClick}
+                                                    />
+                                                    <Edit
+                                                        task={t}
+                                                        handleEditTask={taskDelete}
                                                     />
                                                     <Period
                                                         task={t}

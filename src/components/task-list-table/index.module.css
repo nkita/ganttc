@@ -75,14 +75,14 @@
   opacity: 1;
 }
 
-.select{
-  border:0px;
-  border-bottom:0.5px solid #d1d5db;
+.select {
+  border: 0px;
+  border-bottom: 0.5px solid #d1d5db;
   cursor: pointer;
   background-color: transparent;
 }
 
-.select option{
+.select option {
   font-weight: normal;
   display: block;
   white-space: nowrap;
