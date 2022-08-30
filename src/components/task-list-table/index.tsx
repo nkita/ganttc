@@ -129,7 +129,7 @@ export const TaskListColumn: React.FC<{
                                     return (
                                         <Draggable
                                             key={t.id}
-                                            draggableId={"q-" + t.id}
+                                            draggableId={"DraggableId:" + t.id}
                                             index={index}
                                         >
                                             {(

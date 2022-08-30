@@ -3,7 +3,9 @@
   border: none;
   outline: 0;
   font-family: proxima-nova, "Helvetica Neue", Helvetica, Arial, sans-serif, 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size:10pt
+  font-size: 10pt;
+  padding-left: 10px;
+  cursor:grab;
 }
 
 .taskLabel:focus {
@@ -11,7 +13,7 @@
   outline: 0;
   background-color: transparent;
   font-family: proxima-nova, "Helvetica Neue", Helvetica, Arial, sans-serif, 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size:10pt
+  font-size: 10pt
 }
 
 .contents {
@@ -21,6 +23,7 @@
 .icon {
   padding-right: 10px;
 }
+
 .space {
   padding-right: 10px;
 }

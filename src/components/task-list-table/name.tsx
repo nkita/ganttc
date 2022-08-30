@@ -62,23 +62,17 @@ export const Name: React.FC<{
                                 }}>
                                 </div>
                             }
-                            <Whisper
-                                placement="bottomStart" controlId="control-id-hover" trigger="hover"
-                                speaker={
-                                    <Tooltip>{task.name}</Tooltip>}>
-                                <div>
-                                    {(task.type === "task") ? <Page /> : <Tree />}
-                                    <input className={commonStyles.taskLabel}
-                                        type="text" name="taskName" title={task.name}
-                                        onChange={e => handleTaskNameChange(e, task)}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter' || e.key === 'Escape') {
-                                                // e.currentTarget.blur();
-                                            }
-                                        }}
-                                        defaultValue={task.name} />
-                                </div>
-                            </Whisper>
+
+                            <div>
+                                {(task.type === "task") ? <Page /> : <Tree />}
+                                <Whisper
+                                    placement="bottomStart" controlId="control-id-hover" trigger="hover"
+                                    speaker={<Tooltip>{task.name}</Tooltip>}>
+                                    <label className={commonStyles.taskLabel}>
+                                        {task.name}
+                                    </label>
+                                </Whisper>
+                            </div>
                         </div>
                     </div>
                 </div>
