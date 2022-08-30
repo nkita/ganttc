@@ -126,15 +126,17 @@ const App = () => {
     alert("On Double Click event Id:" + task.id);
   };
 
+  // タスクの削除、入れ替え処理をこの関数で行う。
   const handleSelect = (task: Task, isSelected: boolean) => {
     // console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
+
+
     if (task.clickOnDeleteButtom) {
       delete task.clickOnDeleteButtom;
       handleTaskDelete(task);
     }
 
     if (task.replace) {
-      console.log(tasks);
       if (task.replace.hideChildren !== undefined) {
         setTasks(
           tasks.map((t) => {
@@ -147,19 +149,40 @@ const App = () => {
 
       if (task.replace.destinationTaskId !== undefined) {
         let indexs: number[] = [];
+        // 移動元、移動先のインデックスをIDから取得
+        let destinationTask: Task;
+        // let destinationNextTask: Task;
+        // let destinationPrevTask: Task;
         tasks.forEach((t, i) => {
           if (t.id === task.id) indexs[0] = i;
-          if (t.id === task.replace!.destinationTaskId) indexs[1] = i;
+          if (t.id === task.replace!.destinationTaskId) {
+            indexs[1] = i;
+            destinationTask = t;
+          };
         });
+        // 入れ替え先の前後のタスクを取得
+        // destinationNextTask = tasks[indexs[1] + 1];
+        // destinationPrevTask = tasks[indexs[1] - 1];
+
+        if (task.type === "task") {
+          //移動した先がプロジェクトもしくは上位プロジェクトが存在する場合、上位プロジェクトを設定する
+          if (destinationTask!.type === "project") {
+            tasks[indexs[0]].project = destinationTask!.id;
+          }
+          if (destinationTask!.project) {
+            tasks[indexs[0]].project = destinationTask!.project;
+          }
+        }
+
+        // 順番入れ替え
         let reOrderTasks = reOrder(
           tasks,
           indexs[0],
           indexs[1],
         );
-
-        // プロジェクトだった場合配下の要素を持ってくる
+        // プロジェクトだった場合配下の要素をプロジェクト配下に持ってくる
         if (task.type === "project") {
-          // 該当タスクを抽出
+          // 子要素を抽出した配列と抽出された後の配列で分ける
           let childTask: Task[] = [];
           let tmpTasks = reOrderTasks.filter(t => {
             if (t.project === task.id) {
@@ -169,14 +192,10 @@ const App = () => {
               return true;
             }
           });
-          // 該当のタスク分入れ替えを行う
+          // 抽出した要素を正しい位置に挿入
           let index = 0;
-          tmpTasks.forEach((t, v) => {
-            // 移動したプロジェクトのindex取得
-            if (task.id === t.id) {
-              index = v;
-            }
-          });
+          // 移動したプロジェクトのindex取得　※抽出した箇所によってはインデックスが変わっている可能性があるため再度取得
+          tmpTasks.forEach((t, v) => { if (task.id === t.id) index = v });
           tmpTasks.splice(index + 1, 0, ...childTask)
           reOrderTasks = tmpTasks;
         }
