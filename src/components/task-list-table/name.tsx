@@ -11,13 +11,9 @@ import 'rsuite/dist/rsuite.min.css';
 export const Name: React.FC<{
     task: Task;
     rowWidth: number;
-    expanderSymbol: string;
-    onExpanderClick: (task: Task) => void;
 }> = ({
     task,
     rowWidth,
-    expanderSymbol,
-    onExpanderClick,
 }) => {
         return (
             <>
@@ -29,42 +25,24 @@ export const Name: React.FC<{
                     }}
                     title={task.name}
                 >
-                    <div>
-                        <div className={styles.taskListNameWrapper}>
-                            <div
-                                className={
-                                    expanderSymbol
-                                        ? styles.taskListExpander
-                                        : styles.taskListEmptyExpander
-                                }
-                                onClick={() => onExpanderClick(task)}
-                            >
-                                {expanderSymbol}
+                    <div className={styles.taskListNameWrapper}>
+                        {/* 上位プロジェクトが存在する場合はインデントを大きく下げる */}
+                        {(task.project !== undefined) &&
+                            <div style={{
+                                maxWidth: "35px",
+                                minWidth: "35px"
+                            }}>
                             </div>
-                            {(task.project !== undefined) &&
-                                <div style={{
-                                    maxWidth: "35px",
-                                    minWidth: "35px"
-                                }}>
-                                </div>
-                            }
-                            {(task.project === undefined && task.type === "task") &&
-                                <div style={{
-                                    maxWidth: "21px",
-                                    minWidth: "21px"
-                                }}>
-                                </div>
-                            }
-                            <div>
-                                {(task.type === "task") ? <Page /> : <Tree />}
-                                <Whisper
-                                    placement="bottomStart" controlId="control-id-hover" trigger="hover"
-                                    speaker={<Tooltip>{task.name}</Tooltip>}>
-                                    <label className={commonStyles.taskLabel}>
-                                        {task.name}
-                                    </label>
-                                </Whisper>
-                            </div>
+                        }
+                        <div>
+                            {(task.type === "task") ? <Page /> : <Tree />}
+                            <Whisper
+                                placement="bottomStart" controlId="control-id-hover" trigger="hover"
+                                speaker={<Tooltip>{task.name}</Tooltip>}>
+                                <label className={commonStyles.taskLabel}>
+                                    {task.name}
+                                </label>
+                            </Whisper>
                         </div>
                     </div>
                 </div>

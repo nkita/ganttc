@@ -29,11 +29,20 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                     height: headerHeight - 2,
                 }}
             >
+                {/* Expander Area */}
+                <div
+                    className={styles.ganttTable_HeaderItem}
+                    style={{
+                        minWidth: `${iconWidth}px`,
+                        textAlign: "center",
+                    }}
+                >
+                </div>
                 <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
                         minWidth: `${rowWidthLong}px`,
-                        textAlign: "center",
+                        textAlign: "left",
                     }}
                 >
                     名前

@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import styles from "./index.module.css";
 import { Task } from "../../common/types/public-types"
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -6,6 +6,7 @@ import { Name } from "./name";
 import { Period } from "./period";
 import { Progress } from "./progress";
 import { Edit } from "./edit";
+import { Expander } from "./expander";
 import type {
     DropResult,
     DraggingStyle,
@@ -78,7 +79,7 @@ export const TaskListColumn: React.FC<{
             }
         }
 
-        // const iconWidth = 30;
+        const iconWidth = 30;
         const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
 
         const taskDelete = (e: React.MouseEvent<HTMLElement>, t: Task) => {
@@ -121,12 +122,6 @@ export const TaskListColumn: React.FC<{
                                 }}
                             >
                                 {tasks.map((t, index) => {
-                                    let expanderSymbol = "";
-                                    if (t.hideChildren === false) {
-                                        expanderSymbol = "▼";
-                                    } else if (t.hideChildren === true) {
-                                        expanderSymbol = "▶";
-                                    }
                                     return (
                                         <Draggable
                                             key={t.id}
@@ -153,14 +148,18 @@ export const TaskListColumn: React.FC<{
                                                             ), { height: rowHeight })
                                                     }
                                                 >
+                                                    <Expander
+                                                        task={t}
+                                                        rowWidth={iconWidth}
+                                                        onExpanderClick={onExpanderClick}
+                                                    />
                                                     <Name
                                                         task={t}
                                                         rowWidth={rowWidthLong}
-                                                        expanderSymbol={expanderSymbol}
-                                                        onExpanderClick={onExpanderClick}
                                                     />
                                                     <Edit
                                                         task={t}
+                                                        rowWidth={iconWidth}
                                                         handleEditTask={taskDelete}
                                                     />
                                                     <Period

@@ -4,12 +4,13 @@ import { Task } from "../../common/types/public-types"
 import Trash from '@rsuite/icons/Trash';
 import 'rsuite/dist/rsuite.min.css';
 
-
 export const Edit: React.FC<{
     task: Task;
+    rowWidth: number;
     handleEditTask: (e: React.MouseEvent<HTMLElement>, task: Task) => void;
 }> = ({
     task,
+    rowWidth,
     handleEditTask,
 }) => {
         return (
@@ -17,8 +18,8 @@ export const Edit: React.FC<{
                 <div
                     className={styles.taskListCell + " " + styles.taskListIcon}
                     style={{
-                        minWidth: "30px",
-                        maxWidth: "30px",
+                        minWidth: `${rowWidth}px`,
+                        maxWidth: `${rowWidth}px`,
                         paddingLeft: 10,
                     }}
                 >
