@@ -171,6 +171,8 @@ const App = () => {
           }
           if (destinationTask!.project) {
             tasks[indexs[0]].project = destinationTask!.project;
+          } else {
+            delete tasks[indexs[0]].project;
           }
         }
 

@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./index.module.css";
 import { Task } from "../../common/types/public-types"
-import CollaspedOutlineIcon from '@rsuite/icons/CollaspedOutline';
-import ExpandOutlineIcon from '@rsuite/icons/ExpandOutline';
+
 import 'rsuite/dist/rsuite.min.css';
 
 export const Expander: React.FC<{
@@ -15,7 +14,7 @@ export const Expander: React.FC<{
     onExpanderClick,
 }) => {
         let expanderSymbol;
-        if (task.type === "project") expanderSymbol = (task.hideChildren) ? <ExpandOutlineIcon /> : <CollaspedOutlineIcon />;
+        if (task.type === "project") expanderSymbol = (task.hideChildren) ? "+" : "−";
 
         return (
             <>
@@ -27,16 +26,14 @@ export const Expander: React.FC<{
                     }}
                     title={task.name}
                 >
-                    <div
-                        className={
-                            expanderSymbol
-                                ? styles.taskListExpander
-                                : styles.taskListEmptyExpander
-                        }
-                        onClick={() => onExpanderClick(task)}
-                    >
-                        {expanderSymbol}
-                    </div>
+                    {expanderSymbol &&
+                        <button
+                            className={styles.taskListExpander}
+                            onClick={() => onExpanderClick(task)}
+                        >
+                            {expanderSymbol}
+                        </button>
+                    }
                 </div>
             </>
         );

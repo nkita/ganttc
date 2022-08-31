@@ -29,8 +29,8 @@ export const Name: React.FC<{
                         {/* 上位プロジェクトが存在する場合はインデントを大きく下げる */}
                         {(task.project !== undefined) &&
                             <div style={{
-                                maxWidth: "35px",
-                                minWidth: "35px"
+                                maxWidth: "15px",
+                                minWidth: "15px"
                             }}>
                             </div>
                         }

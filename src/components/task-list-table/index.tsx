@@ -96,14 +96,10 @@ export const TaskListColumn: React.FC<{
             setSelectedTask(t.id);
         }
 
-        const mouseDown = (e: React.MouseEvent<HTMLDivElement>, t: Task) => {
-            changeHideChildren(t, true);
-            console.log("DOWN");
-        }
-        const mouseUp = (e: React.MouseEvent<HTMLDivElement>, t: Task) => {
-            // console.log("UP");
-            // changeHideChildren(t);
-        }
+        // const mouseDown = (t: Task) => {
+        //     changeHideChildren(t, true);
+        //     console.log("DOWN");
+        // }
 
         return (
             <DragDropContext onDragEnd={endDrag}>
@@ -136,8 +132,6 @@ export const TaskListColumn: React.FC<{
                                                     className={styles.taskListTableRow}
                                                     key={`${t.id}row`}
                                                     ref={provided.innerRef}
-                                                    onMouseDown={(e) => { mouseDown(e, t) }}
-                                                    onMouseUp={(e) => { mouseUp(e, t) }}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
                                                     style={
