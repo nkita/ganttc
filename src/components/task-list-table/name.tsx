@@ -11,9 +11,13 @@ import 'rsuite/dist/rsuite.min.css';
 export const Name: React.FC<{
     task: Task;
     rowWidth: number;
+    onMouseDown: (task: Task) => void;
+    onMouseUp: (task: Task) => void;
 }> = ({
     task,
     rowWidth,
+    onMouseDown,
+    onMouseUp,
 }) => {
         return (
             <>
@@ -24,6 +28,8 @@ export const Name: React.FC<{
                         maxWidth: `${rowWidth}px`,
                     }}
                     title={task.name}
+                    onMouseDown={() => onMouseDown(task)}
+                    onMouseUp={()=>onMouseUp(task)}
                 >
                     <div className={styles.taskListNameWrapper}>
                         {/* 上位プロジェクトが存在する場合はインデントを大きく下げる */}

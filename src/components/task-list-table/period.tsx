@@ -27,10 +27,14 @@ export const Period: React.FC<{
     task: Task;
     rowWidth: string;
     locale: string;
+    onMouseDown: (task: Task) => void;
+    onMouseUp:(task:Task)=>void;
 }> = ({
     task,
     rowWidth,
     locale,
+    onMouseDown,
+    onMouseUp,
 }) => {
         const toLocaleDateString = useMemo(
             () => toLocaleDateStringFactory(locale),
@@ -45,6 +49,8 @@ export const Period: React.FC<{
                         maxWidth: `${rowWidth}px`,
                         textAlign: "center",
                     }}
+                    onMouseDown={() => onMouseDown(task)}
+                    onMouseUp={()=>onMouseUp(task)}
                 >
                     <span>{toLocaleDateString(task.start, dateTimeOptions)}</span>
                     -

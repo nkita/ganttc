@@ -8,6 +8,7 @@ export declare enum ViewMode {
     Week = "Week",
     Month = "Month"
 }
+export declare type MessageType = "info" | "warning" | "success" | "error";
 export declare type TaskType = "task" | "milestone" | "project";
 export interface Task {
     id: string;
@@ -35,6 +36,10 @@ export interface Task {
         destinationTaskId?: string;
         hideChildren?: boolean;
     };
+    notify?: {
+        message: string,
+        messageType: MessageType,
+    }
     updateDate?: Date;
 }
 export interface EventOption {

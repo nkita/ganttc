@@ -54,30 +54,31 @@ export const TaskListColumn: React.FC<{
     setSelectedTask,
     onExpanderClick,
 }) => {
-        const [orgHideChildren, setOrgHideChildren] = useState(true);
+        const [orgHideChildren, setOrgHideChildren] = useState<boolean>();
         const endDrag = (result: DropResult) => {
-            // ドロップ先がないi
-            if (!result.destination) return;
             const task = tasks[result.source.index];
+            // ドロップ先がない場合移動できない
+            if (!result.destination) {
+                task.replace = { hideChildren: orgHideChildren }
+                setSelectedTask(task.id);
+                return;
+            }
             const dTask = tasks[result.destination.index];
-            // 子要素がいた場合表示・非表示の切り替えを行う
-            changeHideChildren(task);
-            console.log(result.source.index);
+            // プロジェクトからプロジェクト内部へは移動できない
+            if (result.destination.index !== tasks.length - 1 && result.source.index !== 0) {
+                if (task.type === "project" && (dTask.type === "project" || dTask.project !== undefined)) {
+                    task.replace = { hideChildren: orgHideChildren }
+                    setSelectedTask(task.id);
+                    return;
+
+                }
+            }
             task.replace = {
                 destinationTaskId: dTask.id,
+                hideChildren: orgHideChildren,
             }
             setSelectedTask(task.id);
-            // changeHideChildren(task);
         };
-
-        const changeHideChildren = (task: Task, flg: null | boolean = null) => {
-            if (task.type === "project") {
-                task.replace = { hideChildren: flg ?? orgHideChildren };
-                // ドラッグ終わりに表示切り替えをもとに戻すために、子要素の表示・非表示フラグを取得する。
-                setOrgHideChildren(task.hideChildren || false);
-                setSelectedTask(task.id);
-            }
-        }
 
         const iconWidth = 30;
         const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
@@ -96,11 +97,20 @@ export const TaskListColumn: React.FC<{
             setSelectedTask(t.id);
         }
 
-        // const mouseDown = (t: Task) => {
-        //     changeHideChildren(t, true);
-        //     console.log("DOWN");
-        // }
+        const mouseDown = (t: Task) => {
+            // プロジェクトタスクがマウスダウンした場合（drag and drop直前）、子要素をまとめる
+            if (t.type === "project") {
+                t.replace = { hideChildren: true };
+                // プロジェクトのすべてのhideChidren要素を一時保管しておく
+                setOrgHideChildren(t.hideChildren);
+                setSelectedTask(t.id);
+            }
+        }
 
+        const onMouseUp = (t: Task) => {
+            t.replace = { hideChildren: orgHideChildren }
+            setSelectedTask(t.id);
+        }
         return (
             <DragDropContext onDragEnd={endDrag}>
                 <Droppable droppableId="droppable">
@@ -128,45 +138,56 @@ export const TaskListColumn: React.FC<{
                                                 provided: DraggableProvided,
                                                 snapshot: DraggableStateSnapshot
                                             ) => (
-                                                <div
-                                                    className={styles.taskListTableRow}
-                                                    key={`${t.id}row`}
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    style={
-                                                        Object.assign(
-                                                            getItemStyle(
-                                                                snapshot.isDragging,
-                                                                provided.draggableProps.style
-                                                            ), { height: rowHeight })
-                                                    }
-                                                >
-                                                    <Expander
-                                                        task={t}
-                                                        rowWidth={iconWidth}
-                                                        onExpanderClick={onExpanderClick}
-                                                    />
-                                                    <Name
-                                                        task={t}
-                                                        rowWidth={rowWidthLong}
-                                                    />
-                                                    <Edit
-                                                        task={t}
-                                                        rowWidth={iconWidth}
-                                                        handleEditTask={taskDelete}
-                                                    />
-                                                    <Period
-                                                        task={t}
-                                                        rowWidth={rowWidth}
-                                                        locale={locale}
-                                                    />
-                                                    <Progress
-                                                        task={t}
-                                                        rowWidth={rowWidth}
-                                                        handleProgressChange={progressChange}
-                                                    />
-                                                </div>
+                                                <>
+                                                    <div
+                                                        className={styles.taskListTableRow}
+                                                        key={`${t.id}row`}
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                        style={
+                                                            Object.assign(
+                                                                getItemStyle(
+                                                                    snapshot.isDragging,
+                                                                    provided.draggableProps.style
+                                                                ), { height: rowHeight })
+                                                        }
+                                                    >
+                                                        <Expander
+                                                            task={t}
+                                                            rowWidth={iconWidth}
+                                                            onExpanderClick={onExpanderClick}
+                                                        />
+                                                        {/* プロジェクトクリック時にタスクが格納されるアクションを追加 */}
+                                                        <Name
+                                                            task={t}
+                                                            rowWidth={rowWidthLong}
+                                                            onMouseDown={mouseDown}
+                                                            onMouseUp={onMouseUp}
+                                                        />
+                                                        <Edit
+                                                            task={t}
+                                                            rowWidth={iconWidth}
+                                                            handleEditTask={taskDelete}
+                                                            onMouseDown={mouseDown}
+                                                            onMouseUp={onMouseUp}
+                                                        />
+                                                        <Period
+                                                            task={t}
+                                                            rowWidth={rowWidth}
+                                                            locale={locale}
+                                                            onMouseDown={mouseDown}
+                                                            onMouseUp={onMouseUp}
+                                                        />
+                                                        <Progress
+                                                            task={t}
+                                                            rowWidth={rowWidth}
+                                                            handleProgressChange={progressChange}
+                                                            onMouseDown={mouseDown}
+                                                            onMouseUp={onMouseUp}
+                                                        />
+                                                    </div>
+                                                </>
                                             )
                                             }
                                         </Draggable>

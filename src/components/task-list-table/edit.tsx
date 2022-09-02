@@ -8,10 +8,14 @@ export const Edit: React.FC<{
     task: Task;
     rowWidth: number;
     handleEditTask: (e: React.MouseEvent<HTMLElement>, task: Task) => void;
+    onMouseDown: (task:Task) => void;
+    onMouseUp:(task:Task) => void;
 }> = ({
     task,
     rowWidth,
     handleEditTask,
+    onMouseDown,
+    onMouseUp,
 }) => {
         return (
             <>
@@ -22,6 +26,8 @@ export const Edit: React.FC<{
                         maxWidth: `${rowWidth}px`,
                         paddingLeft: 10,
                     }}
+                    onMouseDown={() => onMouseDown(task)}
+                    onMouseUp={()=>onMouseUp(task)}
                 >
                     <div onClick={e => handleEditTask(e, task)}>
                         <Trash style={{ fontSize: "1em", color: "red", cursor: "pointer" }} />

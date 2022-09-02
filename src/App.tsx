@@ -137,6 +137,7 @@ const App = () => {
     }
 
     if (task.replace) {
+      // プロジェクトをドラッグアンドドロップしているときは子要素は閉じる
       if (task.replace.hideChildren !== undefined) {
         setTasks(
           tasks.map((t) => {
@@ -151,8 +152,6 @@ const App = () => {
         let indexs: number[] = [];
         // 移動元、移動先のインデックスをIDから取得
         let destinationTask: Task;
-        // let destinationNextTask: Task;
-        // let destinationPrevTask: Task;
         tasks.forEach((t, i) => {
           if (t.id === task.id) indexs[0] = i;
           if (t.id === task.replace!.destinationTaskId) {
@@ -160,9 +159,6 @@ const App = () => {
             destinationTask = t;
           };
         });
-        // 入れ替え先の前後のタスクを取得
-        // destinationNextTask = tasks[indexs[1] + 1];
-        // destinationPrevTask = tasks[indexs[1] - 1];
 
         if (task.type === "task") {
           //移動した先がプロジェクトもしくは上位プロジェクトが存在する場合、上位プロジェクトを設定する
@@ -186,6 +182,7 @@ const App = () => {
         if (task.type === "project") {
           // 子要素を抽出した配列と抽出された後の配列で分ける
           let childTask: Task[] = [];
+          // hideChildrenをもとの値に戻す
           let tmpTasks = reOrderTasks.filter(t => {
             if (t.project === task.id) {
               childTask.push(t);
@@ -203,7 +200,7 @@ const App = () => {
         }
 
         setTasks(reOrderTasks);
-        delete task.replace.destinationTaskId;
+        delete task.replace;
       }
     }
   };
