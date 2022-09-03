@@ -24,7 +24,8 @@ const App = () => {
   const [view, setView] = useState<ViewMode>(ViewMode.Day);
   const [tasks, setTasks] = useState<Task[]>(initTasks());
   const [isChecked, setIsChecked] = useState(true);
-
+  // const [notifyType, setNotifyType] = useState("info");
+  // const [notifyMessage, setNotifyMessage] = useState("");
   const [viewTask, setViewTask] = useState(0);
 
   const windowHeight = useWindowHeight();

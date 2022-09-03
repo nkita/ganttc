@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styles from "./index.module.css";
-import { Task } from "../../common/types/public-types"
+import { Task, MessageType } from "../../common/types/public-types"
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { Message, useToaster } from "rsuite";
 import { Name } from "./name";
 import { Period } from "./period";
 import { Progress } from "./progress";
@@ -34,6 +35,8 @@ const getListStyle = (isDraggingOver: boolean) => ({
     background: isDraggingOver ? "white" : "white",
 });
 
+const message = (message: string, type: MessageType) => <Message showIcon type={type}>{message}</Message>;
+
 export const TaskListColumn: React.FC<{
     rowHeight: number;
     rowWidth: string;
@@ -55,26 +58,38 @@ export const TaskListColumn: React.FC<{
     onExpanderClick,
 }) => {
         const [orgHideChildren, setOrgHideChildren] = useState<boolean>();
+        const toaster = useToaster();
+
         const endDrag = (result: DropResult) => {
             const task = tasks[result.source.index];
             // ドロップ先がない場合移動できない
             if (!result.destination) {
                 task.replace = { hideChildren: orgHideChildren }
                 setSelectedTask(task.id);
+                toaster.push(message("範囲外に移動することはできません。", "warning"));
                 return;
             }
-            const dTask = tasks[result.destination.index];
+            const destinationTask = tasks[result.destination.index];
             // プロジェクトからプロジェクト内部へは移動できない
             if (result.destination.index !== tasks.length - 1 && result.source.index !== 0) {
-                if (task.type === "project" && (dTask.type === "project" || dTask.project !== undefined)) {
-                    task.replace = { hideChildren: orgHideChildren }
-                    setSelectedTask(task.id);
-                    return;
 
+                //　移動先の前後のタスクを検知して移動可能か不可か確認する
+                const nextDestinationTask = tasks[result.destination.index + 1];
+                // TODO プロジェクトとプロジェクト配下のタスクの場合のチェック
+                // 下から上にプロジェクトを移動させたとき、移動先がプロジェクトでも移動OK
+                if ((result.destination.index < result.source.index) && destinationTask.type === "project") {
+                } else if ((result.destination.index > result.source.index) && (nextDestinationTask.project !== destinationTask.project)) {
+                } else {
+                    if (task.type === "project" && (destinationTask.type === "project" || destinationTask.project !== undefined)) {
+                        task.replace = { hideChildren: orgHideChildren }
+                        toaster.push(message("プロジェクトの配下へは移動できません。", "warning"));
+                        setSelectedTask(task.id);
+                        return;
+                    }
                 }
             }
             task.replace = {
-                destinationTaskId: dTask.id,
+                destinationTaskId: destinationTask.id,
                 hideChildren: orgHideChildren,
             }
             setSelectedTask(task.id);
