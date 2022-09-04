@@ -62,7 +62,8 @@ export const TaskListColumn: React.FC<{
 
         const endDrag = (result: DropResult) => {
             // 移動の向き確認
-            const task = tasks[result.source.index];
+            const sIndex = result.source.index;
+            const task = tasks[sIndex];
             // ドロップ先がない場合移動できない
             if (!result.destination) {
                 task.replace = { hideChildren: orgHideChildren }
@@ -70,18 +71,22 @@ export const TaskListColumn: React.FC<{
                 toaster.push(message("範囲外に移動することはできません。", "warning"));
                 return;
             }
-            const moveDown = result.source.index < result.destination.index;
-            const destinationTask = tasks[result.destination.index];
-            // プロジェクトからプロジェクト内部へは移動できない
-            if (task.type === "project") {
-                if (result.destination.index !== tasks.length - 1 && result.source.index !== 0) {
-                    if (moveDown && destinationTask.type === "project") {
+            const dIndex = result.destination.index;
+            const moveDown = sIndex < dIndex;
+            const destinationTask = tasks[dIndex];
+
+            if (dIndex !== tasks.length - 1 && dIndex !== 0) {
+                const destinationUpperTask = moveDown ? destinationTask : tasks[dIndex - 1];
+                const destinationLowerTask = moveDown ? tasks[dIndex + 1] : destinationTask;
+                // プロジェクトからプロジェクト内部へは移動できない
+                if (task.type === "project") {
+                    if (destinationUpperTask.type === "project" && (destinationLowerTask.project === destinationUpperTask.id)) {
                         task.replace = { hideChildren: orgHideChildren }
                         toaster.push(message("プロジェクト配下へは移動できません。", "warning"));
                         setSelectedTask(task.id);
                         return;
                     }
-                    if (destinationTask.type === "task" && destinationTask.project) {
+                    if (destinationUpperTask.project && destinationLowerTask.project) {
                         task.replace = { hideChildren: orgHideChildren }
                         toaster.push(message("プロジェクト配下へは移動できません。", "warning"));
                         setSelectedTask(task.id);
