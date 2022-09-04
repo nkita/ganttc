@@ -160,16 +160,22 @@ const App = () => {
             destinationTask = t;
           };
         });
-
+        // 移動の向き確認
+        const moveDown = indexs[0] < indexs[1];
         if (task.type === "task") {
           //移動した先がプロジェクトもしくは上位プロジェクトが存在する場合、上位プロジェクトを設定する
           if (destinationTask!.type === "project") {
-            tasks[indexs[0]].project = destinationTask!.id;
-          }
-          if (destinationTask!.project) {
-            tasks[indexs[0]].project = destinationTask!.project;
+            if (moveDown) {
+              tasks[indexs[0]].project = destinationTask!.id;
+            }else{
+              delete tasks[indexs[0]].project;
+            }
           } else {
-            delete tasks[indexs[0]].project;
+            if (destinationTask!.project) {
+              tasks[indexs[0]].project = destinationTask!.project;
+            } else {
+              delete tasks[indexs[0]].project;
+            }
           }
         }
 
