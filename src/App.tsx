@@ -14,6 +14,7 @@ import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import commonStyles from "./common/css/index.module.css";
+import { reOrder } from "./helper";
 import 'rsuite/dist/rsuite.min.css';
 import "gantt-task-react/dist/index.css";
 
@@ -23,7 +24,8 @@ const App = () => {
   const [view, setView] = useState<ViewMode>(ViewMode.Day);
   const [tasks, setTasks] = useState<Task[]>(initTasks());
   const [isChecked, setIsChecked] = useState(true);
-
+  // const [notifyType, setNotifyType] = useState("info");
+  // const [notifyMessage, setNotifyMessage] = useState("");
   const [viewTask, setViewTask] = useState(0);
 
   const windowHeight = useWindowHeight();
@@ -52,12 +54,6 @@ const App = () => {
     // const ele = document.getElementsByClassName("_2B2zv")
     // ele[0].scrollLeft = retest.length * columnWidth;
   }, [])
-
-  // layerとdisplayOrderからdisplayOrder再設定
-  useEffect(() => {
-    console.log(tasks);
-
-  }, [tasks])
 
 
   // const escFunction = React.useCallback((event:any) => {
@@ -92,7 +88,17 @@ const App = () => {
 
   const handleTaskAdd = (task: Task) => {
     const newTasks = [...tasks];
-    newTasks.push(task);
+    // 上位プロジェクトが存在する場合
+    if (task.project) {
+      let maxIndex = 0;
+      // プロジェクトの最終indexを取得
+      newTasks.forEach((t, index) => {
+        if (t.project === task.project || t.id === task.project) maxIndex = index;
+      });
+      newTasks.splice(maxIndex + 1, 0, task);
+    } else {
+      newTasks.push(task);
+    }
     setTasks(newTasks);
     setViewTask(viewTask + 1);
     // setNewTaskId(task.id);
@@ -121,25 +127,94 @@ const App = () => {
     alert("On Double Click event Id:" + task.id);
   };
 
+  // タスクの削除、入れ替え処理をこの関数で行う。
   const handleSelect = (task: Task, isSelected: boolean) => {
     // console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
+
+
     if (task.clickOnDeleteButtom) {
-      let newTasks = tasks.filter((t) => t.id !== task.id);
-      task.clickOnDeleteButtom = false;
-      console.log("newTasks=", newTasks);
-      setTasks(newTasks);
+      delete task.clickOnDeleteButtom;
+      handleTaskDelete(task);
+    }
 
-      // handleTaskDelete(task);
-    } else {
-      let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
+    if (task.replace) {
+      // プロジェクトをドラッグアンドドロップしているときは子要素は閉じる
+      if (task.replace.hideChildren !== undefined) {
+        setTasks(
+          tasks.map((t) => {
+            if (t.id === task.id) t.hideChildren = task.replace!.hideChildren;
+            return t
+          })
+        )
+        delete task.replace.hideChildren;
+      }
 
-      setTasks(newTasks);
+      if (task.replace.destinationTaskId !== undefined) {
+        let indexs: number[] = [];
+        // 移動元、移動先のインデックスをIDから取得
+        let destinationTask: Task;
+        tasks.forEach((t, i) => {
+          if (t.id === task.id) indexs[0] = i;
+          if (t.id === task.replace!.destinationTaskId) {
+            indexs[1] = i;
+            destinationTask = t;
+          };
+        });
+        // 移動の向き確認
+        const moveDown = indexs[0] < indexs[1];
+        if (task.type === "task") {
+          //移動した先がプロジェクトもしくは上位プロジェクトが存在する場合、上位プロジェクトを設定する
+          if (destinationTask!.type === "project") {
+            if (moveDown) {
+              tasks[indexs[0]].project = destinationTask!.id;
+            }else{
+              delete tasks[indexs[0]].project;
+            }
+          } else {
+            if (destinationTask!.project) {
+              tasks[indexs[0]].project = destinationTask!.project;
+            } else {
+              delete tasks[indexs[0]].project;
+            }
+          }
+        }
+
+        // 順番入れ替え
+        let reOrderTasks = reOrder(
+          tasks,
+          indexs[0],
+          indexs[1],
+        );
+        // プロジェクトだった場合配下の要素をプロジェクト配下に持ってくる
+        if (task.type === "project") {
+          // 子要素を抽出した配列と抽出された後の配列で分ける
+          let childTask: Task[] = [];
+          // hideChildrenをもとの値に戻す
+          let tmpTasks = reOrderTasks.filter(t => {
+            if (t.project === task.id) {
+              childTask.push(t);
+              return false;
+            } else {
+              return true;
+            }
+          });
+          // 抽出した要素を正しい位置に挿入
+          let index = 0;
+          // 移動したプロジェクトのindex取得　※抽出した箇所によってはインデックスが変わっている可能性があるため再度取得
+          tmpTasks.forEach((t, v) => { if (task.id === t.id) index = v });
+          tmpTasks.splice(index + 1, 0, ...childTask)
+          reOrderTasks = tmpTasks;
+        }
+
+        setTasks(reOrderTasks);
+        delete task.replace;
+      }
     }
   };
 
   const handleExpanderClick = (task: Task) => {
     setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-    console.log("On expander click Id:" + task.id);
+    // console.log("On expander click Id:" + task.id);
   };
 
   return (
@@ -185,7 +260,7 @@ const App = () => {
         </Grid>
         {tasks.length === 0 &&
           <div style={{ height: (windowHeight - headerHeight) + "px" }} className={styles.taskEmptyArea}>
-            <div style={{ top: "50%", left: "50%", position: "absolute" }}>taskを追加してください</div>
+            <div style={{ top: "50%", left: "45%", position: "absolute" }}>taskを追加してください</div>
           </div>
         }
         {tasks.length !== 0 &&
@@ -205,7 +280,7 @@ const App = () => {
               viewDate={currentDate}
               // viewTask={12}
               listCellWidth={isChecked ? "100" : "0"}
-              ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
+              // ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
               columnWidth={columnWidth}
               locale={"ja-JP"}
               rowHeight={rowHeight}
@@ -215,6 +290,7 @@ const App = () => {
           </div>
         }
       </div>
+
       <Footer />
     </>
   );

@@ -1,33 +1,41 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useState } from "react";
 import styles from "./index.module.css";
-import { Task } from "../../common/types/public-types"
-import Trash from '@rsuite/icons/Trash';
-import Tree from '@rsuite/icons/Tree';
-import Page from '@rsuite/icons/Page';
-import commonStyles from "../../common/css/index.module.css";
-import { Whisper, Tooltip } from 'rsuite';
-
+import { Task, MessageType } from "../../common/types/public-types"
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { Message, useToaster } from "rsuite";
+import { Name } from "./name";
+import { Period } from "./period";
+import { Progress } from "./progress";
+import { Edit } from "./edit";
+import { Expander } from "./expander";
+import type {
+    DropResult,
+    DraggingStyle,
+    NotDraggingStyle,
+    DroppableProvided,
+    DroppableStateSnapshot,
+    DraggableProvided,
+    DraggableStateSnapshot
+} from "@hello-pangea/dnd";
 import 'rsuite/dist/rsuite.min.css';
 
-const localeDateStringCache: { [key: string]: string } = {};
-const toLocaleDateStringFactory =
-    (locale: string) =>
-        (date: Date, dateTimeOptions: Intl.DateTimeFormatOptions) => {
-            const key = date.toString();
-            let lds = localeDateStringCache[key];
-            if (!lds) {
-                //　多言語対応
-                // lds = date.toLocaleDateString(locale, dateTimeOptions);
-                // 日本語用
-                lds = date.getMonth() + 1 + "/" + date.getDate();
-                localeDateStringCache[key] = lds;
-            }
-            return lds;
-        };
-const dateTimeOptions: Intl.DateTimeFormatOptions = {
-    month: "long",
-    day: "numeric",
-};
+const getItemStyle = (
+    isDragging: boolean,
+    draggableStyle: DraggingStyle | NotDraggingStyle | undefined
+) => ({
+    background: isDragging ? "#e6f2ff" : "",
+    border: isDragging ? "1px solid #1675e0" : "",
+    borderRadius: isDragging ? "3px" : "",
+    fontWeight: isDragging ? "bold" : "",
+    paddingTop: isDragging ? "5px" : "",
+    ...draggableStyle
+});
+// ドラッグ&ドロップのリストのスタイル
+const getListStyle = (isDraggingOver: boolean) => ({
+    background: isDraggingOver ? "white" : "white",
+});
+
+const message = (message: string, type: MessageType) => <Message showIcon type={type}>{message}</Message>;
 
 export const TaskListColumn: React.FC<{
     rowHeight: number;
@@ -49,153 +57,163 @@ export const TaskListColumn: React.FC<{
     setSelectedTask,
     onExpanderClick,
 }) => {
+        const [orgHideChildren, setOrgHideChildren] = useState<boolean>();
+        const toaster = useToaster();
+
+        const endDrag = (result: DropResult) => {
+            // 移動の向き確認
+            const task = tasks[result.source.index];
+            // ドロップ先がない場合移動できない
+            if (!result.destination) {
+                task.replace = { hideChildren: orgHideChildren }
+                setSelectedTask(task.id);
+                toaster.push(message("範囲外に移動することはできません。", "warning"));
+                return;
+            }
+            const moveDown = result.source.index < result.destination.index;
+            const destinationTask = tasks[result.destination.index];
+            // プロジェクトからプロジェクト内部へは移動できない
+            if (task.type === "project") {
+                if (result.destination.index !== tasks.length - 1 && result.source.index !== 0) {
+                    if (moveDown && destinationTask.type === "project") {
+                        task.replace = { hideChildren: orgHideChildren }
+                        toaster.push(message("プロジェクト配下へは移動できません。", "warning"));
+                        setSelectedTask(task.id);
+                        return;
+                    }
+                    if (destinationTask.type === "task" && destinationTask.project) {
+                        task.replace = { hideChildren: orgHideChildren }
+                        toaster.push(message("プロジェクト配下へは移動できません。", "warning"));
+                        setSelectedTask(task.id);
+                        return;
+                    }
+                }
+            }
+            task.replace = {
+                destinationTaskId: destinationTask.id,
+                hideChildren: orgHideChildren,
+            }
+            setSelectedTask(task.id);
+        };
+
         const iconWidth = 30;
         const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
 
-        const namesRef = React.useRef<HTMLInputElement>(null);
-        useEffect(() => {
-            // namesRef.current?.scrollIntoView();
-        }, [tasks])
-        const handleTaskDelete = (e: React.MouseEvent<HTMLElement>, t: Task) => {
+        const taskDelete = (e: React.MouseEvent<HTMLElement>, t: Task) => {
             t.clickOnDeleteButtom = true;
             setSelectedTask(t.id);
         }
-        const handleTaskNameChange = (e: React.ChangeEvent<HTMLInputElement>, t: Task) => {
-            e.preventDefault();
-            t.name = e.target.value;
-            setSelectedTask(t.id);
-        }
-        const handleProgressChange = (e: React.ChangeEvent<HTMLSelectElement>, t: Task) => {
+        // const taskNameChange = (e: React.ChangeEvent<HTMLInputElement>, t: Task) => {
+        //     e.preventDefault();
+        //     t.name = e.target.value;
+        //     setSelectedTask(t.id);
+        // }
+        const progressChange = (e: React.ChangeEvent<HTMLSelectElement>, t: Task) => {
             t.progress = Number(e.target.value);
             setSelectedTask(t.id);
         }
-        const toLocaleDateString = useMemo(
-            () => toLocaleDateStringFactory(locale),
-            [locale]
-        );
 
+        const mouseDown = (t: Task) => {
+            // プロジェクトタスクがマウスダウンした場合（drag and drop直前）、子要素をまとめる
+            if (t.type === "project") {
+                t.replace = { hideChildren: true };
+                // プロジェクトのすべてのhideChidren要素を一時保管しておく
+                setOrgHideChildren(t.hideChildren);
+                setSelectedTask(t.id);
+            }
+        }
+
+        const onMouseUp = (t: Task) => {
+            t.replace = { hideChildren: orgHideChildren }
+            setSelectedTask(t.id);
+        }
         return (
-            <>
-                <div
-                    className={styles.taskListWrapper}
-                    style={{
-                        fontFamily: fontFamily,
-                        fontSize: fontSize,
-                    }}
-                >
-
-                    {tasks.map(t => {
-                        let expanderSymbol = "";
-                        if (t.hideChildren === false) {
-                            expanderSymbol = "▼";
-                        } else if (t.hideChildren === true) {
-                            expanderSymbol = "▶";
-                        }
-                        return (
+            <DragDropContext onDragEnd={endDrag}>
+                <Droppable droppableId="droppable">
+                    {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                        <div
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}
+                            style={getListStyle(snapshot.isDraggingOver)}
+                        >
                             <div
-                                className={styles.taskListTableRow}
-                                style={{ height: rowHeight }}
-                                key={`${t.id}row`}
+                                className={styles.taskListWrapper}
+                                style={{
+                                    fontFamily: fontFamily,
+                                    fontSize: fontSize,
+                                }}
                             >
-                                <div
-                                    className={styles.taskListCell}
-                                    style={{
-                                        minWidth: `${rowWidthLong}px`,
-                                        maxWidth: `${rowWidthLong}px`,
-                                    }}
-                                    title={t.name}
-                                >
-                                    <div>
-                                        <div className={styles.taskListNameWrapper}>
-                                            <div
-                                                className={
-                                                    expanderSymbol
-                                                        ? styles.taskListExpander
-                                                        : styles.taskListEmptyExpander
-                                                }
-                                                onClick={() => onExpanderClick(t)}
-                                            >
-                                                {expanderSymbol}
-                                            </div>
-                                            {(t.project !== undefined) &&
-                                                <div style={{
-                                                    maxWidth: "35px",
-                                                    minWidth: "35px"
-                                                }}>
-                                                </div>
+                                {tasks.map((t, index) => {
+                                    return (
+                                        <Draggable
+                                            key={t.id}
+                                            draggableId={"DraggableId:" + t.id}
+                                            index={index}
+                                        >
+                                            {(
+                                                provided: DraggableProvided,
+                                                snapshot: DraggableStateSnapshot
+                                            ) => (
+                                                <>
+                                                    <div
+                                                        className={styles.taskListTableRow}
+                                                        key={`${t.id}row`}
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                        style={
+                                                            Object.assign(
+                                                                getItemStyle(
+                                                                    snapshot.isDragging,
+                                                                    provided.draggableProps.style
+                                                                ), { height: rowHeight })
+                                                        }
+                                                    >
+                                                        <Expander
+                                                            task={t}
+                                                            rowWidth={iconWidth}
+                                                            onExpanderClick={onExpanderClick}
+                                                        />
+                                                        {/* プロジェクトクリック時にタスクが格納されるアクションを追加 */}
+                                                        <Name
+                                                            task={t}
+                                                            rowWidth={rowWidthLong}
+                                                            onMouseDown={mouseDown}
+                                                            onMouseUp={onMouseUp}
+                                                        />
+                                                        <Edit
+                                                            task={t}
+                                                            rowWidth={iconWidth}
+                                                            handleEditTask={taskDelete}
+                                                            onMouseDown={mouseDown}
+                                                            onMouseUp={onMouseUp}
+                                                        />
+                                                        <Period
+                                                            task={t}
+                                                            rowWidth={rowWidth}
+                                                            locale={locale}
+                                                            onMouseDown={mouseDown}
+                                                            onMouseUp={onMouseUp}
+                                                        />
+                                                        <Progress
+                                                            task={t}
+                                                            rowWidth={rowWidth}
+                                                            handleProgressChange={progressChange}
+                                                            onMouseDown={mouseDown}
+                                                            onMouseUp={onMouseUp}
+                                                        />
+                                                    </div>
+                                                </>
+                                            )
                                             }
-                                            {(t.project === undefined && t.type === "task") &&
-                                                <div style={{
-                                                    maxWidth: "21px",
-                                                    minWidth: "21px"
-                                                }}>
-                                                </div>
-                                            }
-                                            <Whisper
-                                                placement="bottomStart" controlId="control-id-hover" trigger="hover"
-                                                speaker={
-                                                    <Tooltip>{t.name}</Tooltip>}>
-                                                <div>
-                                                    {(t.type === "task") ? <Page /> : <Tree />}
-                                                    <input className={commonStyles.taskLabel}
-                                                        type="text" name="taskName" title={t.name}
-                                                        onChange={e => handleTaskNameChange(e, t)}
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === 'Enter' || e.key === 'Escape') {
-                                                                // e.currentTarget.blur();
-                                                            }
-                                                        }}
-                                                        ref={namesRef}
-                                                        defaultValue={t.name} />
-                                                </div>
-                                            </Whisper>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    className={styles.taskListCell + " " + styles.taskListIcon}
-                                    style={{
-                                        minWidth: `${iconWidth}px`,
-                                        maxWidth: `${iconWidth}px`,
-                                        paddingLeft: 10,
-                                    }}
-                                >
-                                    <div onClick={e => handleTaskDelete(e, t)}>
-                                        <Trash style={{ fontSize: "1em", color: "red", cursor: "pointer" }} />
-                                    </div>
-                                </div>
-                                <div
-                                    className={styles.taskListCell}
-                                    style={{
-                                        minWidth: `${rowWidth}px`,
-                                        maxWidth: `${rowWidth}px`,
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    <span>{toLocaleDateString(t.start, dateTimeOptions)}</span>
-                                    -
-                                    <span>{toLocaleDateString(t.end, dateTimeOptions)}</span>
-                                </div>
-                                <div
-                                    className={styles.taskListCell}
-                                    style={{
-                                        minWidth: `${rowWidth}px`,
-                                        maxWidth: `${rowWidth}px`,
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    <select name="progress" onChange={(e) => handleProgressChange(e, t)} value={t.progress} >
-                                        <option value={0}>0%</option>
-                                        <option value={25}>25%</option>
-                                        <option value={50}>50%</option>
-                                        <option value={75}>75%</option>
-                                        <option value={100}>100%</option>
-                                    </select>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div >
-            </>
+                                        </Draggable>
+                                    );
+                                })}
+                                {provided.placeholder}
+                            </div >
+                        </div>
+                    )}
+                </Droppable>
+            </DragDropContext >
         );
     };
