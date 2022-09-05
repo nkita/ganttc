@@ -74,7 +74,8 @@ export const TaskListColumn: React.FC<{
             const dIndex = result.destination.index;
             const moveDown = sIndex < dIndex;
             const destinationTask = tasks[dIndex];
-
+            // 移動がない場合はなにもしない
+            if(sIndex === dIndex) return;
             if (dIndex !== tasks.length - 1 && dIndex !== 0) {
                 const destinationUpperTask = moveDown ? destinationTask : tasks[dIndex - 1];
                 const destinationLowerTask = moveDown ? tasks[dIndex + 1] : destinationTask;

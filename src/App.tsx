@@ -14,7 +14,7 @@ import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import commonStyles from "./common/css/index.module.css";
-import { reOrder } from "./helper";
+import { reOrder, reOrderAll } from "./helper";
 import 'rsuite/dist/rsuite.min.css';
 import "gantt-task-react/dist/index.css";
 
@@ -167,7 +167,7 @@ const App = () => {
           if (destinationTask!.type === "project") {
             if (moveDown) {
               tasks[indexs[0]].project = destinationTask!.id;
-            }else{
+            } else {
               delete tasks[indexs[0]].project;
             }
           } else {
@@ -186,25 +186,7 @@ const App = () => {
           indexs[1],
         );
         // プロジェクトだった場合配下の要素をプロジェクト配下に持ってくる
-        if (task.type === "project") {
-          // 子要素を抽出した配列と抽出された後の配列で分ける
-          let childTask: Task[] = [];
-          // hideChildrenをもとの値に戻す
-          let tmpTasks = reOrderTasks.filter(t => {
-            if (t.project === task.id) {
-              childTask.push(t);
-              return false;
-            } else {
-              return true;
-            }
-          });
-          // 抽出した要素を正しい位置に挿入
-          let index = 0;
-          // 移動したプロジェクトのindex取得　※抽出した箇所によってはインデックスが変わっている可能性があるため再度取得
-          tmpTasks.forEach((t, v) => { if (task.id === t.id) index = v });
-          tmpTasks.splice(index + 1, 0, ...childTask)
-          reOrderTasks = tmpTasks;
-        }
+        if (task.type === "project") reOrderTasks = reOrderAll(reOrderTasks);
 
         setTasks(reOrderTasks);
         delete task.replace;
