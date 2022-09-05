@@ -136,7 +136,9 @@ const App = () => {
       delete task.clickOnDeleteButtom;
       handleTaskDelete(task);
     }
-
+    /**
+     * タスクのアクションを定義する
+     */
     if (task.action) {
       // プロジェクトをドラッグアンドドロップしているときは子要素は閉じる
       if (task.action.hideChildren !== undefined) {
@@ -149,40 +151,36 @@ const App = () => {
         delete task.action.hideChildren;
       }
 
+      // ドラッグアンドドロップのアクションを定義
       if (task.action.destinationTaskId) {
-        let indexs: number[] = [];
         // 移動元、移動先のインデックスをIDから取得
-        let destinationTask: Task;
-        tasks.forEach((t, i) => {
-          if (t.id === task.id) indexs[0] = i;
-          if (t.id === task.action!.destinationTaskId) {
-            indexs[1] = i;
-            destinationTask = t;
-          };
-        });
+        let sIndex = tasks.findIndex(t => (t.id === task.id));
+        let dIndex = tasks.findIndex(t => (t.id === task.action!.destinationTaskId));
+        let destinationTask = tasks[dIndex];
+
         // 移動の向き確認
-        const moveDown = indexs[0] < indexs[1];
+        const moveDown = sIndex < dIndex;
         if (task.type === "task") {
           //移動した先がプロジェクトもしくは上位プロジェクトが存在する場合、上位プロジェクトを設定する
           if (destinationTask!.type === "project") {
             if (moveDown) {
-              tasks[indexs[0]].project = destinationTask!.id;
+              tasks[sIndex].project = destinationTask!.id;
             } else {
-              delete tasks[indexs[0]].project;
+              delete tasks[sIndex].project;
             }
           } else {
             if (destinationTask!.project) {
-              tasks[indexs[0]].project = destinationTask!.project;
+              tasks[sIndex].project = destinationTask!.project;
             } else {
-              delete tasks[indexs[0]].project;
+              delete tasks[sIndex].project;
             }
           }
         }
         // 順番入れ替え
         let reOrderTasks = reOrder(
           tasks,
-          indexs[0],
-          indexs[1],
+          sIndex,
+          dIndex,
         );
         // プロジェクトだった場合配下の要素をプロジェクト配下に持ってくる
         if (task.type === "project") reOrderTasks = reOrderAll(reOrderTasks);

@@ -60,15 +60,19 @@ export const TaskListColumn: React.FC<{
         const [orgHideChildren, setOrgHideChildren] = useState<boolean>();
         const toaster = useToaster();
 
+        const endDragWarning = (msg: string, task: Task) => {
+            task.action = { hideChildren: orgHideChildren }
+            setSelectedTask(task.id);
+            if (msg !== "") toaster.push(message(msg, "warning"));
+        }
+
         const endDrag = (result: DropResult) => {
             // 移動の向き確認
             const sIndex = result.source.index;
             const task = tasks[sIndex];
             // ドロップ先がない場合移動できない
             if (!result.destination) {
-                task.action = { hideChildren: orgHideChildren }
-                setSelectedTask(task.id);
-                toaster.push(message("範囲外に移動することはできません。", "warning"));
+                endDragWarning("範囲外に移動することはできません。", task);
                 return;
             }
             const dIndex = result.destination.index;
@@ -76,8 +80,7 @@ export const TaskListColumn: React.FC<{
             const destinationTask = tasks[dIndex];
             // 移動がない場合はなにもしない
             if (sIndex === dIndex) {
-                task.action = { hideChildren: orgHideChildren }
-                setSelectedTask(task.id);
+                endDragWarning("", task);
                 return;
             }
 
@@ -87,22 +90,18 @@ export const TaskListColumn: React.FC<{
                 // プロジェクトからプロジェクト内部へは移動できない
                 if (task.type === "project") {
                     if (destinationUpperTask.type === "project" && (destinationLowerTask.project === destinationUpperTask.id)) {
-                        task.action = { hideChildren: orgHideChildren }
-                        toaster.push(message("プロジェクト配下へは移動できません。", "warning"));
-                        setSelectedTask(task.id);
+                        endDragWarning("プロジェクト配下へは移動できません。", task);
                         return;
                     }
                     if (destinationUpperTask.project && destinationLowerTask.project) {
-                        task.action = { hideChildren: orgHideChildren }
-                        toaster.push(message("プロジェクト配下へは移動できません。", "warning"));
-                        setSelectedTask(task.id);
+                        endDragWarning("プロジェクト配下へは移動できません。", task);
                         return;
                     }
                 }
             }
-            task.action = { 
+            task.action = {
                 destinationTaskId: destinationTask.id,
-                hideChildren:orgHideChildren,
+                hideChildren: orgHideChildren,
             };
             setSelectedTask(task.id);
         };
