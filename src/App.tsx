@@ -137,25 +137,25 @@ const App = () => {
       handleTaskDelete(task);
     }
 
-    if (task.replace) {
+    if (task.action) {
       // プロジェクトをドラッグアンドドロップしているときは子要素は閉じる
-      if (task.replace.hideChildren !== undefined) {
+      if (task.action.hideChildren !== undefined) {
         setTasks(
           tasks.map((t) => {
-            if (t.id === task.id) t.hideChildren = task.replace!.hideChildren;
+            if (t.id === task.id) t.hideChildren = task.action!.hideChildren;
             return t
           })
         )
-        delete task.replace.hideChildren;
+        delete task.action.hideChildren;
       }
 
-      if (task.replace.destinationTaskId !== undefined) {
+      if (task.action.destinationTaskId) {
         let indexs: number[] = [];
         // 移動元、移動先のインデックスをIDから取得
         let destinationTask: Task;
         tasks.forEach((t, i) => {
           if (t.id === task.id) indexs[0] = i;
-          if (t.id === task.replace!.destinationTaskId) {
+          if (t.id === task.action!.destinationTaskId) {
             indexs[1] = i;
             destinationTask = t;
           };
@@ -178,7 +178,6 @@ const App = () => {
             }
           }
         }
-
         // 順番入れ替え
         let reOrderTasks = reOrder(
           tasks,
@@ -189,7 +188,7 @@ const App = () => {
         if (task.type === "project") reOrderTasks = reOrderAll(reOrderTasks);
 
         setTasks(reOrderTasks);
-        delete task.replace;
+        delete task.action;
       }
     }
   };

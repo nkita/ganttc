@@ -66,7 +66,7 @@ export const TaskListColumn: React.FC<{
             const task = tasks[sIndex];
             // ドロップ先がない場合移動できない
             if (!result.destination) {
-                task.replace = { hideChildren: orgHideChildren }
+                task.action = { hideChildren: orgHideChildren }
                 setSelectedTask(task.id);
                 toaster.push(message("範囲外に移動することはできません。", "warning"));
                 return;
@@ -75,30 +75,35 @@ export const TaskListColumn: React.FC<{
             const moveDown = sIndex < dIndex;
             const destinationTask = tasks[dIndex];
             // 移動がない場合はなにもしない
-            if(sIndex === dIndex) return;
+            if (sIndex === dIndex) {
+                task.action = { hideChildren: orgHideChildren }
+                setSelectedTask(task.id);
+                return;
+            }
+
             if (dIndex !== tasks.length - 1 && dIndex !== 0) {
                 const destinationUpperTask = moveDown ? destinationTask : tasks[dIndex - 1];
                 const destinationLowerTask = moveDown ? tasks[dIndex + 1] : destinationTask;
                 // プロジェクトからプロジェクト内部へは移動できない
                 if (task.type === "project") {
                     if (destinationUpperTask.type === "project" && (destinationLowerTask.project === destinationUpperTask.id)) {
-                        task.replace = { hideChildren: orgHideChildren }
+                        task.action = { hideChildren: orgHideChildren }
                         toaster.push(message("プロジェクト配下へは移動できません。", "warning"));
                         setSelectedTask(task.id);
                         return;
                     }
                     if (destinationUpperTask.project && destinationLowerTask.project) {
-                        task.replace = { hideChildren: orgHideChildren }
+                        task.action = { hideChildren: orgHideChildren }
                         toaster.push(message("プロジェクト配下へは移動できません。", "warning"));
                         setSelectedTask(task.id);
                         return;
                     }
                 }
             }
-            task.replace = {
+            task.action = { 
                 destinationTaskId: destinationTask.id,
-                hideChildren: orgHideChildren,
-            }
+                hideChildren:orgHideChildren,
+            };
             setSelectedTask(task.id);
         };
 
@@ -122,7 +127,7 @@ export const TaskListColumn: React.FC<{
         const mouseDown = (t: Task) => {
             // プロジェクトタスクがマウスダウンした場合（drag and drop直前）、子要素をまとめる
             if (t.type === "project") {
-                t.replace = { hideChildren: true };
+                t.action = { hideChildren: true };
                 // プロジェクトのすべてのhideChidren要素を一時保管しておく
                 setOrgHideChildren(t.hideChildren);
                 setSelectedTask(t.id);
@@ -130,7 +135,7 @@ export const TaskListColumn: React.FC<{
         }
 
         const onMouseUp = (t: Task) => {
-            t.replace = { hideChildren: orgHideChildren }
+            t.action = { hideChildren: orgHideChildren }
             setSelectedTask(t.id);
         }
         return (

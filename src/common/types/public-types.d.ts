@@ -32,10 +32,10 @@ export interface Task {
     hideChildren?: boolean;
     displayOrder?: number;
     clickOnDeleteButtom?: boolean;
-    replace?: {
+    action?: {
         destinationTaskId?: string;
         hideChildren?: boolean;
-    };
+    }
     notify?: {
         message: string,
         messageType: MessageType,
