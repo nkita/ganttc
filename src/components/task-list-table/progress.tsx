@@ -7,14 +7,10 @@ export const Progress: React.FC<{
     task: Task;
     rowWidth: string;
     handleProgressChange: (e: React.ChangeEvent<HTMLSelectElement>, task: Task) => void;
-    onMouseDown: (task:Task) => void;
-    onMouseUp:(task:Task) => void;
 }> = ({
     task,
     rowWidth,
     handleProgressChange,
-    onMouseDown,
-    onMouseUp,
 }) => {
         return (
             <>
@@ -25,8 +21,6 @@ export const Progress: React.FC<{
                         maxWidth: `${rowWidth}px`,
                         textAlign: "center",
                     }}
-                    onMouseDown={() => onMouseDown(task)}
-                    onMouseUp={()=>onMouseUp(task)}
                 >
                     <select name="progress" className={styles.select}
                         onChange={

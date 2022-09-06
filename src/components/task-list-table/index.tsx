@@ -209,13 +209,10 @@ export const TaskListColumn: React.FC<{
                                                             task={t}
                                                             rowWidth={rowWidth}
                                                             handleProgressChange={progressChange}
-                                                            onMouseDown={mouseDown}
-                                                            onMouseUp={onMouseUp}
                                                         />
                                                     </div>
                                                 </>
-                                            )
-                                            }
+                                            )}
                                         </Draggable>
                                     );
                                 })}
