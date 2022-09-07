@@ -109,7 +109,10 @@ export const TaskListColumn: React.FC<{
         const iconWidth = 30;
         const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
 
-        const taskDelete = (e: React.MouseEvent<HTMLElement>, t: Task) => {
+        const taskEdit = (t: Task) => {
+            setSelectedTask(t.id);
+        }
+        const taskDelete = (t: Task) => {
             t.clickOnDeleteButtom = true;
             setSelectedTask(t.id);
         }
@@ -193,8 +196,10 @@ export const TaskListColumn: React.FC<{
                                                         />
                                                         <Edit
                                                             task={t}
+                                                            tasks={tasks}
                                                             rowWidth={iconWidth}
-                                                            handleEditTask={taskDelete}
+                                                            handleDeleteTask={taskDelete}
+                                                            handleEditTask={taskEdit}
                                                             onMouseDown={mouseDown}
                                                             onMouseUp={onMouseUp}
                                                         />

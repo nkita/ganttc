@@ -29,19 +29,18 @@ const App = () => {
   const [viewTask, setViewTask] = useState(0);
 
   const windowHeight = useWindowHeight();
-  const rowHeight = 35;
+  const rowHeight = 33;
   const headerHeight = 210;
   const date = new Date();
   const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDay());
 
   // const [scrollX, setScrollX] = useState(-1);
-  let columnWidth = 25;
+  let columnWidth = 23;
   if (view === ViewMode.Month) {
     columnWidth = 200;
   } else if (view === ViewMode.Week) {
     columnWidth = 150;
   }
-  const childLimit = 100;
 
   //  First process. *one-time-only
   useEffect(() => {
@@ -106,7 +105,7 @@ const App = () => {
 
   const speaker = (
     <Popover title={`チャートを追加`} style={{ width: "400px" }}>
-      <AddTaskForm onAddTodoHandler={handleTaskAdd} tasks={tasks} childLimit={childLimit} />
+      <AddTaskForm onAddTodoHandler={handleTaskAdd} tasks={tasks}/>
     </Popover>
   );
 
@@ -244,28 +243,29 @@ const App = () => {
         }
         {tasks.length !== 0 &&
           <div className={styles.ganttArea} >
-            <Gantt
-              tasks={tasks}
-              viewMode={view}
-              TaskListHeader={TaskListHeader}
-              TaskListTable={TaskListColumn}
-              onDateChange={handleTaskChange}
-              onDelete={handleTaskDelete}
-              onDoubleClick={handleDblClick}
-              onSelect={handleSelect}
-              onExpanderClick={handleExpanderClick}
-              preStepsCount={2}
-              handleWidth={5}
-              viewDate={currentDate}
-              // viewTask={12}
-              listCellWidth={isChecked ? "100" : "0"}
-              // ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
-              columnWidth={columnWidth}
-              locale={"ja-JP"}
-              rowHeight={rowHeight}
-              timeStep={86400000}
-              fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
-            />
+              <Gantt
+                tasks={tasks}
+                viewMode={view}
+                TaskListHeader={TaskListHeader}
+                TaskListTable={TaskListColumn}
+                onDateChange={handleTaskChange}
+                onDelete={handleTaskDelete}
+                onDoubleClick={handleDblClick}
+                onSelect={handleSelect}
+                onExpanderClick={handleExpanderClick}
+                preStepsCount={2}
+                handleWidth={5}
+                viewDate={currentDate}
+                // viewTask={12}
+                listCellWidth={isChecked ? "100" : "0"}
+                // ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
+                ganttHeight={0}
+                columnWidth={columnWidth}
+                locale={"ja-JP"}
+                rowHeight={rowHeight}
+                timeStep={86400000}
+                fontFamily={"proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif,'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif"}
+              />
           </div>
         }
       </div>

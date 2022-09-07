@@ -11,7 +11,6 @@ import Page from '@rsuite/icons/Page';
 type addTaskProps = {
   onAddTodoHandler: (task: Task) => void;
   tasks?: Task[];
-  childLimit?: Number;
 };
 export const AddTaskForm: React.FC<addTaskProps> = (props) => {
   const [taskName, setTaskName] = React.useState("");
