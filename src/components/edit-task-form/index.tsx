@@ -1,6 +1,6 @@
 import React from "react";
 import { Task } from "../../common/types/public-types";
-import { Button, Form, Radio, Schema, RadioGroup, Dropdown, DateRangePicker, Row, Col, Stack } from 'rsuite';
+import { Button, Form, Radio, Schema, RadioGroup, InputPicker, DateRangePicker, Row, Col, Stack } from 'rsuite';
 import Tree from '@rsuite/icons/Tree';
 import Page from '@rsuite/icons/Page';
 import styles from "./index.module.css";
@@ -15,8 +15,16 @@ export const EditTaskForm: React.FC<{
     tasks,
     handleEditTask,
 }) => {
-        const [taskKind, setTaskKind] = React.useState("task");
-        const [upperProject, setUpperProject] = React.useState<Task>();
+        const initFormValue: {
+            type?: string,
+            taskName?: string,
+            dateRangePicker?: Date[],
+        } = {
+            type: task.type,
+            taskName: task.name,
+            dateRangePicker: [task.start, task.end]
+        };
+        const [formValue, setFormValue] = React.useState(initFormValue);
         const model = Schema.Model({
             taskName: Schema.Types.StringType().isRequired('必須入力です。')
         })
@@ -35,12 +43,11 @@ export const EditTaskForm: React.FC<{
                 name: taskName,
                 id: Math.random().toString(),
                 progress: 0,
-                type: (taskKind === "task") ? "task" : "project",
+                type: (formValue.type === "task") ? "task" : "project",
                 updateDate: currentDate,
             };
 
-            if (taskKind === "project") task.hideChildren = false;
-            if (upperProject !== undefined) task.project = upperProject.id;
+            if (formValue.type === "project") task.hideChildren = false;
 
             // 追加フォームのリセット
             setTaskName("");
@@ -49,46 +56,32 @@ export const EditTaskForm: React.FC<{
                 ele.value = "";
             }
         };
-
         return (
             <>
-                <Form onChange={
-                    value => {
-                        setTaskName(value.taskName);
-                        setTaskKind(value.kind);
-                    }}
-                    formDefaultValue={
-                        { kind: "task", taskName: "" }
-                    }
+                <Form onChange={value => { setFormValue(value) }}
+                    formValue={formValue}
                     model={model}
                 >
-                    <Form.Group controlId="kind">
-                        <Form.ControlLabel>種類</Form.ControlLabel>
-                        <Form.Control name="kind" inline accepter={RadioGroup} onChange={
-                            (e: any) => {
-                                setUpperProject(undefined);
-                            }
-                        } >
-                            <Radio value="project"><Tree /><span className={styles.space} />Project</Radio>
-                            <Radio value="task"><Page /><span className={styles.space} />Task</Radio>
+                    <Form.Group controlId="type">
+                        <div className={styles.formLabel}>種類</div>
+                        <Form.Control name="type" inline accepter={RadioGroup}>
+                            <Radio value="project"><Tree />Project</Radio>
+                            <Radio value="task"><Page />Task</Radio>
                         </Form.Control>
                     </Form.Group>
                     <Form.Group controlId="project">
-                        <Form.ControlLabel>プロジェクト</Form.ControlLabel>
-
-                        <Dropdown title={(upperProject === undefined) ? "プロジェクトを選択" : upperProject.name} disabled={(taskKind === "project") ? true : false}>
-                            {tasks?.map(t => {
-                                return (t.type === "project") ? <Dropdown.Item key={t.id} eventKey={t} onSelect={(key) => { setUpperProject(key) }}>{t.name}</Dropdown.Item> : false;
-                            })}
-                        </Dropdown>
+                        <div className={styles.formLabel}>プロジェクト</div>
+                        <Form.Control name="project" accepter={InputPicker} placeholder={"プロジェクトを選択"} disabled={formValue.type === "project"} data={
+                            tasks.filter(t => t.type === "project").map(t => { return { label: t.name, value: t.id } })
+                        } />
                         <Form.HelpText tooltip>Taskの場合のみ選択可能</Form.HelpText>
                     </Form.Group>
                     <Form.Group controlId="taskName">
-                        <Form.ControlLabel>名前</Form.ControlLabel>
-                        <Form.Control name="taskName" className={styles.name} ref={nameRef} />
+                        <div className={styles.formLabel}>名前</div>
+                        <Form.Control name="taskName" className={styles.name} />
                     </Form.Group>
-                    <Form.Group controlId="dateRangePicker">
-                        <Form.ControlLabel>期間</Form.ControlLabel>
+                    <Form.Group controlId="dateRangePicker" >
+                        <div className={styles.formLabel}>期間</div>
                         <Form.Control name="dateRangePicker" accepter={DateRangePicker} />
                     </Form.Group>
                     <Form.Group >
