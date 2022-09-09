@@ -122,10 +122,6 @@ export const TaskListColumn: React.FC<{
         //     t.name = e.target.value;
         //     setSelectedTask(t.id);
         // }
-        const progressChange = (e: React.ChangeEvent<HTMLSelectElement>, t: Task) => {
-            t.progress = Number(e.target.value);
-            setSelectedTask(t.id);
-        }
 
         const mouseDown = (t: Task) => {
             // プロジェクトタスクがマウスダウンした場合（drag and drop直前）、子要素をまとめる
@@ -214,7 +210,7 @@ export const TaskListColumn: React.FC<{
                                                         <Progress
                                                             task={t}
                                                             rowWidth={rowWidth}
-                                                            handleProgressChange={progressChange}
+                                                            handleProgressChange={taskEdit}
                                                         />
                                                     </div>
                                                 </>

@@ -21,10 +21,14 @@ export const EditTaskForm: React.FC<{
             type?: string,
             taskName?: string,
             dateRangePicker?: Date[],
+            project?: string,
+            progress?: number
         } = {
             type: task.type,
             taskName: task.name,
-            dateRangePicker: [task.start, task.end]
+            dateRangePicker: [task.start, task.end],
+            project: task.project,
+            progress: task.progress
         };
         const [formValue, setFormValue] = React.useState(initFormValue);
         const model = Schema.Model({
@@ -32,13 +36,21 @@ export const EditTaskForm: React.FC<{
         })
         const currentDate = new Date();
         const onAddTodoHandler = () => {
-            if (formValue.taskName && formValue.taskName !== null) {
-                task.name = formValue.taskName;
-            }
+            // 名前更新
+            if (formValue.taskName && formValue.taskName !== null) task.name = formValue.taskName;
+            // 期間更新
             if (formValue.dateRangePicker && formValue.dateRangePicker !== null) {
                 task.start = formValue.dateRangePicker[0];
                 task.end = formValue.dateRangePicker[1]
             }
+            // プロジェクト
+            if (formValue.project && formValue.progress !== null) {
+                task.project = formValue.project;
+            } else {
+                delete task.project;
+            }
+            // 進捗更新
+            if (formValue.progress && formValue.progress !== null) task.progress = formValue.progress;
             task.updateDate = currentDate;
 
             handleEditTask(task);
@@ -54,7 +66,7 @@ export const EditTaskForm: React.FC<{
                 >
                     <Form.Group controlId="type">
                         <div className={styles.formLabel}>種類</div>
-                        <Form.Control name="type" inline accepter={RadioGroup}>
+                        <Form.Control name="type" inline accepter={RadioGroup} disabled={formValue.type === "project"}>
                             <Radio value="project"><Tree />Project</Radio>
                             <Radio value="task"><Page />Task</Radio>
                         </Form.Control>
@@ -73,6 +85,12 @@ export const EditTaskForm: React.FC<{
                     <Form.Group controlId="dateRangePicker" >
                         <div className={styles.formLabel}>期間</div>
                         <Form.Control name="dateRangePicker" accepter={DateRangePicker} />
+                    </Form.Group>
+                    <Form.Group controlId="progress" >
+                        <div className={styles.formLabel}>進捗</div>
+                        <Form.Control name="progress" accepter={InputPicker} data={
+                            [0, 25, 50, 75, 100].map(p => { return { label: `${p}%`, value: p } })
+                        } />
                     </Form.Group>
                     <Form.Group >
                         <Row style={{ margin: "0px" }}>

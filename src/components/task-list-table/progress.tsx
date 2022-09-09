@@ -6,7 +6,7 @@ import 'rsuite/dist/rsuite.min.css';
 export const Progress: React.FC<{
     task: Task;
     rowWidth: string;
-    handleProgressChange: (e: React.ChangeEvent<HTMLSelectElement>, task: Task) => void;
+    handleProgressChange: (task: Task) => void;
 }> = ({
     task,
     rowWidth,
@@ -23,9 +23,10 @@ export const Progress: React.FC<{
                     }}
                 >
                     <select name="progress" className={styles.select}
-                        onChange={
-                            (e) => handleProgressChange(e, task)
-                        }
+                        onChange={e => {
+                            task.progress = Number(e.target.value);
+                            handleProgressChange(task)
+                        }}
                         value={task.progress}
                     >
                         <option value={0}>0%</option>
