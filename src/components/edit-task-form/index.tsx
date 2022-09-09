@@ -10,10 +10,12 @@ export const EditTaskForm: React.FC<{
     task: Task;
     tasks: Task[];
     handleEditTask: (task: Task) => void;
+    handleModalClose: () => void;
 }> = ({
     task,
     tasks,
     handleEditTask,
+    handleModalClose,
 }) => {
         const initFormValue: {
             type?: string,
@@ -28,37 +30,25 @@ export const EditTaskForm: React.FC<{
         const model = Schema.Model({
             taskName: Schema.Types.StringType().isRequired('必須入力です。')
         })
-        const [taskName, setTaskName] = React.useState("");
-
         const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const currentMonth = currentDate.getMonth();
-        const currentDay = currentDate.getDate();
-        const nameRef = React.useRef<HTMLDivElement>(null);
         const onAddTodoHandler = () => {
-            if (taskName === "") return;
-            const task: Task = {
-                start: new Date(currentYear, currentMonth, currentDay, 0, 0),
-                end: new Date(currentYear, currentMonth, currentDay, 23, 59),
-                name: taskName,
-                id: Math.random().toString(),
-                progress: 0,
-                type: (formValue.type === "task") ? "task" : "project",
-                updateDate: currentDate,
-            };
-
-            if (formValue.type === "project") task.hideChildren = false;
-
-            // 追加フォームのリセット
-            setTaskName("");
-            if (nameRef.current) {
-                const ele = nameRef.current!.childNodes[0] as HTMLInputElement;
-                ele.value = "";
+            if (formValue.taskName && formValue.taskName !== null) {
+                task.name = formValue.taskName;
             }
+            if (formValue.dateRangePicker && formValue.dateRangePicker !== null) {
+                task.start = formValue.dateRangePicker[0];
+                task.end = formValue.dateRangePicker[1]
+            }
+            task.updateDate = currentDate;
+
+            handleEditTask(task);
+            handleModalClose();
         };
         return (
             <>
-                <Form onChange={value => { setFormValue(value) }}
+                <Form onChange={value => {
+                    setFormValue(value);
+                }}
                     formValue={formValue}
                     model={model}
                 >
@@ -89,7 +79,7 @@ export const EditTaskForm: React.FC<{
                             <Col xs={12} xsPush={12}>
                                 <Stack spacing={12}>
                                     <Button type="submit" onClick={onAddTodoHandler} appearance="primary" className={styles.register}>更新</Button>
-                                    <Button onClick={onAddTodoHandler} appearance="default" className={styles.register}>キャンセル</Button>
+                                    <Button onClick={() => handleModalClose()} appearance="default" className={styles.register}>キャンセル</Button>
                                 </Stack>
                             </Col>
                             <Col xs={6} xsPull={12}>

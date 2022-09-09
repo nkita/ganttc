@@ -35,7 +35,7 @@ export const Edit: React.FC<{
                         <Modal.Title>タスクの更新</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <EditTaskForm task={task} tasks={tasks} handleEditTask={handleDeleteTask} />
+                        <EditTaskForm task={task} tasks={tasks} handleEditTask={handleEditTask} handleModalClose={handleClose}/>
                     </Modal.Body>
                 </Modal>
                 <div

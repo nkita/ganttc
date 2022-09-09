@@ -110,6 +110,7 @@ export const TaskListColumn: React.FC<{
         const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
 
         const taskEdit = (t: Task) => {
+            t.action = { modify: true };
             setSelectedTask(t.id);
         }
         const taskDelete = (t: Task) => {

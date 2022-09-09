@@ -35,6 +35,7 @@ export interface Task {
     action?: {
         destinationTaskId?: string;
         hideChildren?: boolean;
+        modify?:boolean;
     }
     notify?: {
         message: string,
