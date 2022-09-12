@@ -82,7 +82,8 @@ const App = () => {
         );
       }
     }
-    setTasks(newTasks);
+
+    setTasks(reOrderAll(newTasks));
   };
 
   const handleTaskAdd = (task: Task) => {
@@ -110,11 +111,17 @@ const App = () => {
   );
 
   const handleTaskDelete = (task: Task) => {
-    const conf = window.confirm("Are you sure about " + task.name + " ?");
-    // Todo プロジェクトを消したときに配下のタスクも消すか確認
-    if (conf) setTasks(tasks.filter((t) => t.id !== task.id));
-
-    return conf;
+    setTasks(tasks.filter((t) => {
+      // 自分自身を削除
+      if (t.id === task.id) {
+        return false;
+        // 削除元がプロジェクトかつ、配下のタスクは削除対象
+      } else if (t.project !== task.id && task.type === "project") {
+        return false;
+      } else {
+        return true;
+      }
+    }))
   };
 
   // const handleProgressChange = async (task: Task) => {
@@ -274,7 +281,6 @@ const App = () => {
           </div>
         }
       </div>
-
       <Footer />
     </>
   );

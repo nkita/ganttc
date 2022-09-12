@@ -10,11 +10,13 @@ export const EditTaskForm: React.FC<{
     task: Task;
     tasks: Task[];
     handleEditTask: (task: Task) => void;
+    handleDeleteTask: (task: Task) => void;
     handleModalClose: () => void;
 }> = ({
     task,
     tasks,
     handleEditTask,
+    handleDeleteTask,
     handleModalClose,
 }) => {
         const initFormValue: {
@@ -31,6 +33,7 @@ export const EditTaskForm: React.FC<{
             progress: task.progress
         };
         const [formValue, setFormValue] = React.useState(initFormValue);
+        const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
         const model = Schema.Model({
             taskName: Schema.Types.StringType().isRequired('必須入力です。')
         })
@@ -56,6 +59,12 @@ export const EditTaskForm: React.FC<{
             handleEditTask(task);
             handleModalClose();
         };
+        
+        const onDeleteTask = () => {
+            handleDeleteTask(task);
+            handleModalClose();
+        }
+
         return (
             <>
                 <Form onChange={value => {
@@ -84,7 +93,7 @@ export const EditTaskForm: React.FC<{
                     </Form.Group>
                     <Form.Group controlId="dateRangePicker" >
                         <div className={styles.formLabel}>期間</div>
-                        <Form.Control name="dateRangePicker" accepter={DateRangePicker} />
+                        <Form.Control name="dateRangePicker" accepter={DateRangePicker} placement={"rightEnd"} />
                     </Form.Group>
                     <Form.Group controlId="progress" >
                         <div className={styles.formLabel}>進捗</div>
@@ -101,9 +110,21 @@ export const EditTaskForm: React.FC<{
                                 </Stack>
                             </Col>
                             <Col xs={6} xsPull={12}>
-                                <Button color="red" onClick={onAddTodoHandler} appearance="primary" className={styles.register}>削除</Button>
+                                <Button color="red" onClick={() => setShowDeleteConfirm(true)} appearance="primary" className={styles.register}>削除</Button>
                             </Col>
                         </Row>
+                        {showDeleteConfirm &&
+                            <>
+                                < Row style={{ margin: "0px", paddingLeft: "5px", paddingTop: "10px" }}>
+                                    本当に削除しますか?　<Button appearance={"link"} onClick={onDeleteTask}>はい</Button><Button appearance={"link"} onClick={() => setShowDeleteConfirm(false)}>やめる</Button>
+                                </Row>
+                                {task.type === "project" &&
+                                    <Row style={{ margin: "0px" }}>
+                                        ※配下タスクもまとめて削除されます。
+                                    </Row>
+                                }
+                            </>
+                        }
                     </Form.Group>
                 </Form>
             </>
