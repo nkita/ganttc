@@ -4,9 +4,13 @@
 }
 
 .projectTitle input {
+  font-size: 1.2em;
+  width: 80%;
+}
+
+.projectTitle input:focus{
   font-size: 1.3em;
   font-weight: bold;
-  width: 80%;
 }
 
 .projectInput:focus {

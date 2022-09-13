@@ -35,7 +35,7 @@ export interface Task {
     action?: {
         destinationTaskId?: string;
         hideChildren?: boolean;
-        modify?:boolean;
+        modify?: boolean;
     }
     notify?: {
         message: string,
@@ -144,6 +144,12 @@ export interface StylingOption {
     }>;
 }
 export interface GanttProps extends EventOption, DisplayOption, StylingOption {
+    tasks: Task[];
+}
+
+
+export interface Configuration {
+    title: string,
     tasks: Task[];
 }
 

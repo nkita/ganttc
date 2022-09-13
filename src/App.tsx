@@ -116,7 +116,7 @@ const App = () => {
       if (t.id === task.id) {
         return false;
         // 削除元がプロジェクトかつ、配下のタスクは削除対象
-      } else if (t.project !== task.id && task.type === "project") {
+      } else if (t.project === task.id && task.type === "project") {
         return false;
       } else {
         return true;

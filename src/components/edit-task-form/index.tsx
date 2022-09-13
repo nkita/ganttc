@@ -47,7 +47,7 @@ export const EditTaskForm: React.FC<{
                 task.end = formValue.dateRangePicker[1]
             }
             // プロジェクト
-            if (formValue.project && formValue.progress !== null) {
+            if (formValue.project && formValue.project !== null) {
                 task.project = formValue.project;
             } else {
                 delete task.project;
@@ -59,7 +59,7 @@ export const EditTaskForm: React.FC<{
             handleEditTask(task);
             handleModalClose();
         };
-        
+
         const onDeleteTask = () => {
             handleDeleteTask(task);
             handleModalClose();
@@ -74,8 +74,8 @@ export const EditTaskForm: React.FC<{
                     model={model}
                 >
                     <Form.Group controlId="type">
-                        <div className={styles.formLabel}>種類</div>
-                        <Form.Control name="type" inline accepter={RadioGroup} disabled={formValue.type === "project"}>
+                        <div className={styles.formLabel} >種類</div>
+                        <Form.Control name="type" inline accepter={RadioGroup} disabled>
                             <Radio value="project"><Tree />Project</Radio>
                             <Radio value="task"><Page />Task</Radio>
                         </Form.Control>
@@ -93,7 +93,7 @@ export const EditTaskForm: React.FC<{
                     </Form.Group>
                     <Form.Group controlId="dateRangePicker" >
                         <div className={styles.formLabel}>期間</div>
-                        <Form.Control name="dateRangePicker" accepter={DateRangePicker} placement={"rightEnd"} />
+                        <Form.Control name="dateRangePicker" accepter={DateRangePicker} disabled={formValue.type === "project"} placement={"rightEnd"} />
                     </Form.Group>
                     <Form.Group controlId="progress" >
                         <div className={styles.formLabel}>進捗</div>
