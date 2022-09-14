@@ -19,8 +19,8 @@
 }
 
 .buttonArea {
-  height: 70px;
-  padding-top: 25px;
+  height: 30px;
+  padding-top: 20px;
   padding-right: 10px;
   /* border: 1px #000 solid; */
   text-align: right;
@@ -39,4 +39,14 @@
 
 .ganttArea {
   width: 99%;
+}
+
+.displayOptionArea{
+  height:20px;
+}
+
+.displayOptionArea2{
+  height:25px;
+  padding-right:10px;
+  text-align:right;
 }

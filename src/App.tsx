@@ -9,11 +9,12 @@ import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper"
 import { TaskListHeader } from "./components/task-list-header";
 import { TaskListColumn } from "./components/task-list-table";
 // import { seedDates, ganttDateRange } from "./helpers/date-helper";
-import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge } from 'rsuite';
+import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge, ButtonGroup, Button, Toggle } from 'rsuite';
 import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import commonStyles from "./common/css/index.module.css";
+import CollaspedOutlineIcon from '@rsuite/icons/CollaspedOutline';
 import { reOrder, reOrderAll } from "./helper";
 import 'rsuite/dist/rsuite.min.css';
 import "gantt-task-react/dist/index.css";
@@ -245,6 +246,19 @@ const App = () => {
               </Whisper>
               <span className={commonStyles.icon} />
               <IconButton size="md" color="green" appearance="ghost" icon={<ExportIcon />}>保存</IconButton>
+            </Col>
+          </Row>
+          <Row className="show-grid">
+            <Col xs={12} className={styles.displayOptionArea}>
+              <CollaspedOutlineIcon onClick={() => console.log("todo")} style={{ fontSize: "1em", marginRight: 10,cursor:"pointer" }} />
+              <Toggle size="sm" arial-label="name" />名前 <Toggle size="sm" />期間<Toggle size="sm" />%
+            </Col>
+            <Col xs={12} className={styles.displayOptionArea2}>
+              <ButtonGroup size="xs">
+                <Button >月</Button>
+                <Button >週</Button>
+                <Button >日</Button>
+              </ButtonGroup>
             </Col>
           </Row>
         </Grid>
