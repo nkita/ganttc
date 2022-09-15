@@ -1,7 +1,6 @@
 import React from 'react';
-import { Dropdown } from 'rsuite';
+import { Button, ButtonGroup } from 'rsuite';
 import { ViewMode } from "gantt-task-react";
-import { FaRegCalendarAlt } from "react-icons/fa";
 import styles from "./index.module.css";
 
 type PeriodSwitcherProps = {
@@ -13,11 +12,23 @@ export const PeriodSwitch: React.FC<PeriodSwitcherProps> = ({
   onViewModeChange,
   isViewMode,
 }) => {
+  const CustomButton: React.FC<{ mode: ViewMode, label: string }> = ({ mode, label }) => {
+    return (
+      <Button
+        appearance={
+          (isViewMode === mode) ? "primary" : "ghost"}
+        onClick={() => { onViewModeChange(mode) }}
+      >
+        {label}
+      </Button>
+    )
+  };
+
   return (
-    <Dropdown size="sm" title="期間" icon={<FaRegCalendarAlt/>}>
-      <Dropdown.Item className={styles.dropItem} onClick={() => { onViewModeChange(ViewMode.Day) }}>日<span className={styles.space}/>D</Dropdown.Item>
-      <Dropdown.Item className={styles.dropItem} onClick={() => { onViewModeChange(ViewMode.Week) }}>週<span className={styles.space}/>W</Dropdown.Item>
-      <Dropdown.Item className={styles.dropItem} onClick={() => { onViewModeChange(ViewMode.Month) }}>月<span className={styles.space}/>M</Dropdown.Item>
-    </Dropdown>
+    <ButtonGroup size="xs" className={styles.buttonGroup}>
+      <CustomButton mode={ViewMode.Day} label={"日"} />
+      <CustomButton mode={ViewMode.Week} label={"週"} />
+      <CustomButton mode={ViewMode.Month} label={"月"} />
+    </ButtonGroup >
   );
 };

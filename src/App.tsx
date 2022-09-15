@@ -9,7 +9,7 @@ import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper"
 import { TaskListHeader } from "./components/task-list-header";
 import { TaskListColumn } from "./components/task-list-table";
 // import { seedDates, ganttDateRange } from "./helpers/date-helper";
-import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge, ButtonGroup, Button, Toggle } from 'rsuite';
+import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge,  Toggle } from 'rsuite';
 import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
@@ -213,12 +213,6 @@ const App = () => {
       <Navbar>
         <Navbar.Brand ><span className={styles.logo}>Gant chart</span></Navbar.Brand>
         <Nav pullRight>
-          <PeriodSwitch
-            onViewModeChange={(viewMode) => setView(viewMode)}
-            isViewMode={view}
-          />
-        </Nav>
-        <Nav pullRight>
           <Nav.Item><Badge>お知らせ</Badge></Nav.Item>
           <Nav.Menu title="その他">
             <Nav.Item>このサイトについて</Nav.Item>
@@ -250,15 +244,14 @@ const App = () => {
           </Row>
           <Row className="show-grid">
             <Col xs={12} className={styles.displayOptionArea}>
-              <CollaspedOutlineIcon onClick={() => console.log("todo")} style={{ fontSize: "1em", marginRight: 10,cursor:"pointer" }} />
+              <CollaspedOutlineIcon onClick={() => console.log("todo")} style={{ fontSize: "1em", marginRight: 10, cursor: "pointer" }} />
               <Toggle size="sm" arial-label="name" />名前 <Toggle size="sm" />期間<Toggle size="sm" />%
             </Col>
             <Col xs={12} className={styles.displayOptionArea2}>
-              <ButtonGroup size="xs">
-                <Button >月</Button>
-                <Button >週</Button>
-                <Button >日</Button>
-              </ButtonGroup>
+              <PeriodSwitch
+                onViewModeChange={(viewMode) => setView(viewMode)}
+                isViewMode={view}
+              />
             </Col>
           </Row>
         </Grid>
