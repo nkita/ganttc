@@ -9,7 +9,7 @@ import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper"
 import { TaskListHeader } from "./components/task-list-header";
 import { TaskListColumn } from "./components/task-list-table";
 // import { seedDates, ganttDateRange } from "./helpers/date-helper";
-import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge,  Toggle } from 'rsuite';
+import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge, Toggle } from 'rsuite';
 import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
@@ -208,6 +208,15 @@ const App = () => {
     // console.log("On expander click Id:" + task.id);
   };
 
+  const closeProject = () => {
+    setTasks(tasks.map((t) => {
+      if (t.type === "project") {
+        t.hideChildren = true;
+      }
+      return t;
+    }));
+  };
+
   return (
     <>
       <Navbar>
@@ -244,7 +253,7 @@ const App = () => {
           </Row>
           <Row className="show-grid">
             <Col xs={12} className={styles.displayOptionArea}>
-              <CollaspedOutlineIcon onClick={() => console.log("todo")} style={{ fontSize: "1em", marginRight: 10, cursor: "pointer" }} />
+              <CollaspedOutlineIcon onClick={() => closeProject()} style={{ fontSize: "1em", marginRight: 10, cursor: "pointer" }} />
               <Toggle size="sm" arial-label="name" />名前 <Toggle size="sm" />期間<Toggle size="sm" />%
             </Col>
             <Col xs={12} className={styles.displayOptionArea2}>
