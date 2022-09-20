@@ -5,7 +5,7 @@ import 'rsuite/dist/rsuite.min.css';
 
 export const Progress: React.FC<{
     task: Task;
-    rowWidth: string;
+    rowWidth: number;
     handleProgressChange: (task: Task) => void;
 }> = ({
     task,

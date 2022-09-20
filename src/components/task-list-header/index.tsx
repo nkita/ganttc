@@ -1,4 +1,6 @@
 import React from "react";
+import { convertFlg2Width } from "../../helper";
+
 import styles from "./index.module.css";
 interface ITaskListHeader {
     headerHeight: number;
@@ -13,8 +15,7 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
     fontSize,
     rowWidth
 }) => {
-    const iconWidth = 30;
-    const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 + iconWidth : 200 + iconWidth;
+    const width = convertFlg2Width(rowWidth);
     return (
         <div
             className={styles.ganttTable}
@@ -33,16 +34,20 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                 <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
-                        minWidth: `${iconWidth}px`,
+                        maxWidth: `${width.icon}px`,
+                        minWidth: `${width.icon}px`,
                         textAlign: "center",
+                        overflow: "hidden"
                     }}
                 >
                 </div>
                 <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
-                        minWidth: `${rowWidthLong}px`,
+                        maxWidth: `${width.title + width.icon}px`,
+                        minWidth: `${width.title + width.icon}px`,
                         textAlign: "left",
+                        overflow: "hidden"
                     }}
                 >
                     名前
@@ -50,9 +55,10 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                 <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
-                        minWidth: `${rowWidth}px`,
-                        maxWidth: `${rowWidth}px`,
+                        minWidth: `${width.period}px`,
+                        maxWidth: `${width.period}px`,
                         textAlign: "center",
+                        overflow: "hidden"
                     }}
                 >
                     期間
@@ -61,9 +67,10 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
                 <div
                     className={styles.ganttTable_HeaderItem}
                     style={{
-                        minWidth: `${rowWidth}px`,
-                        maxWidth: `${rowWidth}px`,
+                        minWidth: `${width.progress}px`,
+                        maxWidth: `${width.progress}px`,
                         textAlign: "center",
+                        overflow: "hidden"
                     }}
                 >
                     %

@@ -285,7 +285,7 @@ const App = () => {
               handleWidth={5}
               viewDate={currentDate}
               // viewTask={12}
-              listCellWidth={isChecked ? "100" : "0"}
+              listCellWidth={isChecked ? "1111" : "1101"}
               // ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
               ganttHeight={0}
               columnWidth={columnWidth}

@@ -18,6 +18,8 @@ import type {
     DraggableStateSnapshot
 } from "@hello-pangea/dnd";
 import 'rsuite/dist/rsuite.min.css';
+import { convertFlg2Width } from "../../helper";
+
 
 const getItemStyle = (
     isDragging: boolean,
@@ -106,8 +108,7 @@ export const TaskListColumn: React.FC<{
             setSelectedTask(task.id);
         };
 
-        const iconWidth = 30;
-        const rowWidthLong = (rowWidth !== "0") ? Number(rowWidth) * 2 : 200;
+        const width = convertFlg2Width(rowWidth);
 
         const taskEdit = (t: Task) => {
             t.action = { modify: true };
@@ -181,20 +182,20 @@ export const TaskListColumn: React.FC<{
                                                     >
                                                         <Expander
                                                             task={t}
-                                                            rowWidth={iconWidth}
+                                                            rowWidth={width.icon}
                                                             onExpanderClick={onExpanderClick}
                                                         />
                                                         {/* プロジェクトクリック時にタスクが格納されるアクションを追加 */}
                                                         <Name
                                                             task={t}
-                                                            rowWidth={rowWidthLong}
+                                                            rowWidth={width.title}
                                                             onMouseDown={mouseDown}
                                                             onMouseUp={onMouseUp}
                                                         />
                                                         <Edit
                                                             task={t}
                                                             tasks={tasks}
-                                                            rowWidth={iconWidth}
+                                                            rowWidth={width.icon}
                                                             handleDeleteTask={taskDelete}
                                                             handleEditTask={taskEdit}
                                                             onMouseDown={mouseDown}
@@ -202,14 +203,14 @@ export const TaskListColumn: React.FC<{
                                                         />
                                                         <Period
                                                             task={t}
-                                                            rowWidth={rowWidth}
+                                                            rowWidth={width.period}
                                                             locale={locale}
                                                             onMouseDown={mouseDown}
                                                             onMouseUp={onMouseUp}
                                                         />
                                                         <Progress
                                                             task={t}
-                                                            rowWidth={rowWidth}
+                                                            rowWidth={width.progress}
                                                             handleProgressChange={taskEdit}
                                                         />
                                                     </div>

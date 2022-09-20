@@ -25,7 +25,7 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 
 export const Period: React.FC<{
     task: Task;
-    rowWidth: string;
+    rowWidth: number;
     locale: string;
     onMouseDown: (task: Task) => void;
     onMouseUp:(task:Task)=>void;
