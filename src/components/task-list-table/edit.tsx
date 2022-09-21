@@ -43,7 +43,6 @@ export const Edit: React.FC<{
                     style={{
                         minWidth: `${rowWidth}px`,
                         maxWidth: `${rowWidth}px`,
-                        paddingLeft: 10,
                     }}
                     onMouseDown={() => onMouseDown(task)}
                     onMouseUp={() => onMouseUp(task)}
