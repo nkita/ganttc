@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Task } from "./common/types/public-types";
 import { Gantt, ViewMode } from "gantt-task-react";
-import { LabelHideSwitch } from "./components/label-hide-switch";
 import { PeriodSwitch } from "./components/period-switch";
 import { AddTaskForm } from "./components/add-task-form";
 import { Footer } from "./components/footer";
@@ -15,7 +14,7 @@ import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import commonStyles from "./common/css/index.module.css";
 import CollaspedOutlineIcon from '@rsuite/icons/CollaspedOutline';
-import { reOrder, reOrderAll } from "./helper";
+import { reOrder, reOrderAll,convertToggle2Flag } from "./helper";
 import 'rsuite/dist/rsuite.min.css';
 import "gantt-task-react/dist/index.css";
 
@@ -24,10 +23,12 @@ import "gantt-task-react/dist/index.css";
 const App = () => {
   const [view, setView] = useState<ViewMode>(ViewMode.Day);
   const [tasks, setTasks] = useState<Task[]>(initTasks());
-  const [isChecked, setIsChecked] = useState(true);
   // const [notifyType, setNotifyType] = useState("info");
   // const [notifyMessage, setNotifyMessage] = useState("");
   const [viewTask, setViewTask] = useState(0);
+  const [viewTitle, setViewTitle] = useState(true);
+  const [viewPeriod, setViewPeriod] = useState(true);
+  const [viewProgress, setViewProgress] = useState(true);
 
   const windowHeight = useWindowHeight();
   const rowHeight = 33;
@@ -235,10 +236,6 @@ const App = () => {
           <Row className="show-grid">
             <Col xs={14} className={styles.projectTitle}>
               <div>
-                <LabelHideSwitch
-                  onViewListChange={setIsChecked}
-                  isChecked={isChecked}
-                />
                 <input type="text" className={commonStyles.taskLabel} defaultValue={""} placeholder="タイトルを入力" />
               </div>
             </Col>
@@ -254,7 +251,10 @@ const App = () => {
           <Row className="show-grid">
             <Col xs={12} className={styles.displayOptionArea}>
               <CollaspedOutlineIcon onClick={() => closeProject()} style={{ fontSize: "1em", marginRight: 10, cursor: "pointer" }} />
-              <Toggle size="sm" arial-label="name" />名前 <Toggle size="sm" />期間<Toggle size="sm" />%
+              <Toggle size="sm" onChange={e => { setViewTitle(e) }} checked={viewTitle} />名前
+              <Toggle size="sm" onChange={e => { setViewPeriod(e) }} checked={viewPeriod} />期間
+              <Toggle size="sm" onChange={e => { setViewProgress(e) }} checked={viewProgress} />%
+              {/* <Toggle size="sm" />期間<Toggle size="sm" />% */}
             </Col>
             <Col xs={12} className={styles.displayOptionArea2}>
               <PeriodSwitch
@@ -285,7 +285,12 @@ const App = () => {
               handleWidth={5}
               viewDate={currentDate}
               // viewTask={12}
-              listCellWidth={isChecked ? "1111" : "1101"}
+              listCellWidth={convertToggle2Flag({
+                title:viewTitle,
+                icon:viewTitle,
+                period:viewPeriod,
+                progress:viewProgress
+              })}
               // ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
               ganttHeight={0}
               columnWidth={columnWidth}

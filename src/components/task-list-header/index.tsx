@@ -22,6 +22,7 @@ export const TaskListHeader: React.FC<ITaskListHeader> = ({
             style={{
                 fontFamily: fontFamily,
                 fontSize: fontSize,
+                display: (rowWidth==="0000") ? "none" : "table"
             }}
         >
             <div

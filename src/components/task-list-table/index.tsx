@@ -152,6 +152,7 @@ export const TaskListColumn: React.FC<{
                                 style={{
                                     fontFamily: fontFamily,
                                     fontSize: fontSize,
+                                    display: (rowWidth === "0000") ? "none" : "table"
                                 }}
                             >
                                 {tasks.map((t, index) => {

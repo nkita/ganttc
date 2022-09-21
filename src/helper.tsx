@@ -98,9 +98,26 @@ export const convertFlg2Width = (
   flags: string[4]
 ) => {
   return {
-    title:(flags[0]==="0")?0:200,
-    icon:(flags[1]==="0")?0:30,
-    period:(flags[2]==="0")?0:100,
-    progress:(flags[3]==="0")?0:100,
+    title: (flags[0] === "0") ? 0 : 200,
+    icon: (flags[1] === "0") ? 0 : 30,
+    period: (flags[2] === "0") ? 0 : 100,
+    progress: (flags[3] === "0") ? 0 : 100,
   }
+};
+
+/**
+ * convertToggle2Flag　トグルのチェックフラグから長さを取得
+ * 1101 => {title:100,icon:30,period:0,progress:100}
+ * 1111 => {title:100,icon:30,period:100,progress:100}
+ * 
+ */
+export const convertToggle2Flag = (
+  toggles: {
+    title: boolean,
+    icon: boolean,
+    period: boolean,
+    progress: boolean
+  }
+) => {
+  return `${(toggles.title) ? 1 : 0}${(toggles.icon) ? 1 : 0}${(toggles.period) ? 1 : 0}${(toggles.progress) ? 1 : 0}`
 };
