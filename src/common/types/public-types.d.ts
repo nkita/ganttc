@@ -158,5 +158,6 @@ export interface Configuration {
         progress: boolean,
     }
     mode: string,
+    modifyDate: string
 }
 

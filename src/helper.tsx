@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { Task } from "./common/types/public-types";
+import { Configuration, Task } from "./common/types/public-types";
 
 export function initTasks() {
   const tasks: Task[] = [];
@@ -56,6 +56,55 @@ export const reOrder = (
 
   return result;
 };
+
+/**
+ * 保存データ取得
+ * @returns 保存後の配列
+ */
+export const getLatestData = () => {
+  // 上限数
+  const data = localStorage.getItem('ganttc');
+  if (data) {
+    const configArray = JSON.parse(data) as Configuration[];
+    return configArray[0] ? configArray[0] : null;
+  }
+  return null
+}
+/**
+ * 保存データリスト取得
+ * @returns 保存後の配列
+ */
+export const getData = () => {
+  // 上限数
+  const data = localStorage.getItem('ganttc');
+  if (data) {
+    const configArray = JSON.parse(data) as Configuration[];
+    return configArray;
+  }
+  return null
+}
+
+/**
+ * 配列格納数の上限を定義
+ * @param config 追加するconfig
+ * @returns 保存後の配列
+ */
+export const pushNewData = (
+  config: Configuration,
+) => {
+  // 上限数
+  const limit = 10;
+  const data = localStorage.getItem('ganttc');
+  let saveData: Configuration[] = [];
+
+  if (data) {
+    const configArray = JSON.parse(data) as Configuration[];
+    if (configArray.length >= limit) configArray.pop();
+    saveData = configArray;
+  }
+  saveData.unshift(config);
+  localStorage.setItem("ganttc", JSON.stringify(saveData, undefined, 1));
+}
 
 /**
  * 子タスク再配置

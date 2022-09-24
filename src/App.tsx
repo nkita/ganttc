@@ -14,7 +14,7 @@ import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import commonStyles from "./common/css/index.module.css";
 import CollaspedOutlineIcon from '@rsuite/icons/CollaspedOutline';
-import { reOrder, reOrderAll, convertToggle2Flag } from "./helper";
+import { reOrder, reOrderAll, convertToggle2Flag, getData, pushNewData } from "./helper";
 import 'rsuite/dist/rsuite.min.css';
 import "gantt-task-react/dist/index.css";
 
@@ -30,6 +30,8 @@ const App = () => {
   const [viewTitle, setViewTitle] = useState(true);
   const [viewPeriod, setViewPeriod] = useState(true);
   const [viewProgress, setViewProgress] = useState(true);
+  const [saveButtonFlg, setSaveButtonDisable] = useState(true);
+  const [saveHistory, setSaveHistory] = useState<Configuration[]>([]);
 
   const windowHeight = useWindowHeight();
   const rowHeight = 33;
@@ -41,7 +43,7 @@ const App = () => {
   const message = (message: string, type: MessageType) => <Message showIcon type={type}>{message}</Message>;
   const info = (msg: string) => {
     if (msg !== "") toaster.push(message(msg, "success"));
-}
+  }
 
   // const [scrollX, setScrollX] = useState(-1);
   let columnWidth = 23;
@@ -54,19 +56,22 @@ const App = () => {
   //  First process. 
   useEffect(() => {
     // ローカルストレージからデータ取得
-    const config = localStorage.getItem('ganttc');
-    if (config) {
-      const jsonConfig = JSON.parse(config) as Configuration;
-      setTasks(jsonConfig.tasks.map((t) => {
-        t.start = new Date(t.start)
-        t.end = new Date(t.end)
-        return t
-      }));
-      setTitle(jsonConfig.title);
-      // setView(jsonConfig.mode);
-      setViewTitle(jsonConfig.viewWidth.title);
-      setViewPeriod(jsonConfig.viewWidth.period);
-      setViewProgress(jsonConfig.viewWidth.progress);
+    const configs = getData() as Configuration[];
+    if (configs) {
+      setSaveHistory(configs);
+      const config = configs[0];
+      if (configs) {
+        setTasks(config.tasks.map((t) => {
+          t.start = new Date(t.start)
+          t.end = new Date(t.end)
+          return t
+        }));
+        setTitle(config.title);
+        // setView(jsonConfig.mode);
+        setViewTitle(config.viewWidth.title);
+        setViewPeriod(config.viewWidth.period);
+        setViewProgress(config.viewWidth.progress);
+      }
     }
     // setTasks(confi);
     // 当日にスクロールする　Todo
@@ -89,10 +94,13 @@ const App = () => {
         period: viewPeriod,
         progress: viewProgress,
       },
-      mode: view
+      mode: view,
+      modifyDate: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`,
     }
-    localStorage.setItem("ganttc", JSON.stringify(config, undefined, 1));
+    pushNewData(config);
     info("保存しました");
+    setSaveHistory(getData() as Configuration[]);
+    setSaveButtonDisable(true);
   }
   // const escFunction = React.useCallback((event:any) => {
   //   if (event.keyCode === 27) {
@@ -123,6 +131,7 @@ const App = () => {
     }
 
     setTasks(reOrderAll(newTasks));
+    setSaveButtonDisable(false);
   };
 
   const handleTaskAdd = (task: Task) => {
@@ -140,14 +149,23 @@ const App = () => {
     }
     setTasks(newTasks);
     setViewTask(viewTask + 1);
-    // setNewTaskId(task.id);
-    console.log("input", tasks);
-
+    setSaveButtonDisable(false);
   };
 
   const speaker = (
     <Popover title={`チャートを追加`} style={{ width: "400px" }}>
       <AddTaskForm onAddTodoHandler={handleTaskAdd} tasks={tasks} />
+    </Popover>
+  );
+  const speaker2 = (
+    <Popover title={`保存履歴`} style={{ width: "300px" }}>
+      {saveHistory.length === 0 &&
+        <span>保存データはありません。</span>
+      }
+      {saveHistory.length >= 1 &&
+        saveHistory.map((data) => {
+          return <li>{data.modifyDate}に保存しました。</li>
+        })}
     </Popover>
   );
 
@@ -163,6 +181,7 @@ const App = () => {
         return true;
       }
     }))
+    setSaveButtonDisable(false);
   };
 
   // const handleProgressChange = async (task: Task) => {
@@ -241,6 +260,7 @@ const App = () => {
         delete task.action;
       }
     }
+    setSaveButtonDisable(false);
   };
 
   const handleExpanderClick = (task: Task) => {
@@ -282,7 +302,9 @@ const App = () => {
                 <IconButton size="md" appearance="ghost" icon={<AddOutlineIcon />}>追加</IconButton>
               </Whisper>
               <span className={commonStyles.icon} />
-              <IconButton size="md" color="green" appearance="ghost" onClick={() => handleSave()} icon={<ExportIcon />}>保存</IconButton>
+              <Whisper placement="bottomEnd" trigger="hover" controlId="control-id-click" speaker={speaker2}>
+                <IconButton size="md" color="green" appearance="ghost" onClick={() => handleSave()} icon={<ExportIcon />} disabled={saveButtonFlg}>保存</IconButton>
+              </Whisper>
             </Col>
           </Row>
           <Row className="show-grid">
