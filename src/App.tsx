@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Task } from "./common/types/public-types";
+import { Task, Configuration } from "./common/types/public-types";
 import { Gantt, ViewMode } from "gantt-task-react";
 import { PeriodSwitch } from "./components/period-switch";
 import { AddTaskForm } from "./components/add-task-form";
@@ -14,7 +14,7 @@ import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import commonStyles from "./common/css/index.module.css";
 import CollaspedOutlineIcon from '@rsuite/icons/CollaspedOutline';
-import { reOrder, reOrderAll,convertToggle2Flag } from "./helper";
+import { reOrder, reOrderAll, convertToggle2Flag } from "./helper";
 import 'rsuite/dist/rsuite.min.css';
 import "gantt-task-react/dist/index.css";
 
@@ -44,9 +44,24 @@ const App = () => {
     columnWidth = 150;
   }
 
-  //  First process. *one-time-only
+  //  First process. 
   useEffect(() => {
-    console.log('useEffectが1回だけ実行されました');
+    // ローカルストレージからデータ取得
+    const config = localStorage.getItem('ganttc');
+    if (config) {
+      const jsonConfig = JSON.parse(config) as Configuration;
+      console.log("localstorage", jsonConfig);
+      setTasks(jsonConfig.tasks.map((t) => {
+        t.start = new Date(t.start)
+        t.end = new Date(t.end)
+        return t
+      }));
+      // // setView(jsonConfig.mode);
+      // setViewTitle(jsonConfig.viewWidth.title);
+      // setViewPeriod(jsonConfig.viewWidth.period);
+      // setViewProgress(jsonConfig.viewWidth.progress);
+    }
+    // setTasks(confi);
     // 当日にスクロールする　Todo
     // const currentDate = new Date();
     // const [startDate, endDate] = ganttDateRange(tasks, view);
@@ -57,6 +72,21 @@ const App = () => {
   }, [])
 
 
+  const handleSave = () => {
+    const config: Configuration = {
+      id: "aaa",
+      title: "aaaa",
+      tasks: tasks,
+      viewWidth: {
+        title: viewTitle,
+        icon: viewTitle,
+        period: viewPeriod,
+        progress: viewProgress,
+      },
+      mode: view
+    }
+    localStorage.setItem("ganttc", JSON.stringify(config, undefined, 1));
+  }
   // const escFunction = React.useCallback((event:any) => {
   //   if (event.keyCode === 27) {
   //     // キーコードを判定して何かする。
@@ -104,6 +134,8 @@ const App = () => {
     setTasks(newTasks);
     setViewTask(viewTask + 1);
     // setNewTaskId(task.id);
+    console.log("input", tasks);
+
   };
 
   const speaker = (
@@ -224,11 +256,9 @@ const App = () => {
         <Navbar.Brand ><span className={styles.logo}>Gant chart</span></Navbar.Brand>
         <Nav pullRight>
           <Nav.Item><Badge>お知らせ</Badge></Nav.Item>
-          <Nav.Menu title="その他">
-            <Nav.Item>このサイトについて</Nav.Item>
-            <Nav.Item>規約</Nav.Item>
-            <Nav.Item>ライセンス</Nav.Item>
-          </Nav.Menu>
+          <Nav.Item>このサイトについて</Nav.Item>
+          <Nav.Item>規約</Nav.Item>
+          <Nav.Item>ライセンス</Nav.Item>
         </Nav>
       </Navbar>
       <div className={commonStyles.contents} >
@@ -245,7 +275,7 @@ const App = () => {
                 <IconButton size="md" appearance="ghost" icon={<AddOutlineIcon />}>追加</IconButton>
               </Whisper>
               <span className={commonStyles.icon} />
-              <IconButton size="md" color="green" appearance="ghost" icon={<ExportIcon />}>保存</IconButton>
+              <IconButton size="md" color="green" appearance="ghost" onClick={() => handleSave()} icon={<ExportIcon />}>保存</IconButton>
             </Col>
           </Row>
           <Row className="show-grid">
@@ -286,10 +316,10 @@ const App = () => {
               viewDate={currentDate}
               // viewTask={12}
               listCellWidth={convertToggle2Flag({
-                title:viewTitle,
-                icon:viewTitle,
-                period:viewPeriod,
-                progress:viewProgress
+                title: viewTitle,
+                icon: viewTitle,
+                period: viewPeriod,
+                progress: viewProgress
               })}
               // ganttHeight={((rowHeight * tasks.length + headerHeight) > windowHeight) ? (windowHeight - headerHeight) : 0}
               ganttHeight={0}

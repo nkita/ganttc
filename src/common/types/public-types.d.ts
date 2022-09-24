@@ -149,7 +149,15 @@ export interface GanttProps extends EventOption, DisplayOption, StylingOption {
 
 
 export interface Configuration {
-    title: string,
-    tasks: Task[];
+    id: string,
+    title?: string,
+    tasks: Task[],
+    viewWidth: {
+        title: boolean,
+        icon: boolean,
+        period: boolean,
+        progress: boolean,
+    }
+    mode: string,
 }
 
