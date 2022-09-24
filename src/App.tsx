@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Task, Configuration } from "./common/types/public-types";
+import { Task, Configuration, MessageType } from "./common/types/public-types";
 import { Gantt, ViewMode } from "gantt-task-react";
 import { PeriodSwitch } from "./components/period-switch";
 import { AddTaskForm } from "./components/add-task-form";
@@ -8,7 +8,7 @@ import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper"
 import { TaskListHeader } from "./components/task-list-header";
 import { TaskListColumn } from "./components/task-list-table";
 // import { seedDates, ganttDateRange } from "./helpers/date-helper";
-import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge, Toggle } from 'rsuite';
+import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge, Toggle, useToaster, Message } from 'rsuite';
 import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
@@ -25,6 +25,7 @@ const App = () => {
   const [tasks, setTasks] = useState<Task[]>(initTasks());
   // const [notifyType, setNotifyType] = useState("info");
   // const [notifyMessage, setNotifyMessage] = useState("");
+  const [title, setTitle] = useState("");
   const [viewTask, setViewTask] = useState(0);
   const [viewTitle, setViewTitle] = useState(true);
   const [viewPeriod, setViewPeriod] = useState(true);
@@ -35,6 +36,12 @@ const App = () => {
   const headerHeight = 210;
   const date = new Date();
   const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDay());
+
+  const toaster = useToaster();
+  const message = (message: string, type: MessageType) => <Message showIcon type={type}>{message}</Message>;
+  const info = (msg: string) => {
+    if (msg !== "") toaster.push(message(msg, "success"));
+}
 
   // const [scrollX, setScrollX] = useState(-1);
   let columnWidth = 23;
@@ -50,16 +57,16 @@ const App = () => {
     const config = localStorage.getItem('ganttc');
     if (config) {
       const jsonConfig = JSON.parse(config) as Configuration;
-      console.log("localstorage", jsonConfig);
       setTasks(jsonConfig.tasks.map((t) => {
         t.start = new Date(t.start)
         t.end = new Date(t.end)
         return t
       }));
-      // // setView(jsonConfig.mode);
-      // setViewTitle(jsonConfig.viewWidth.title);
-      // setViewPeriod(jsonConfig.viewWidth.period);
-      // setViewProgress(jsonConfig.viewWidth.progress);
+      setTitle(jsonConfig.title);
+      // setView(jsonConfig.mode);
+      setViewTitle(jsonConfig.viewWidth.title);
+      setViewPeriod(jsonConfig.viewWidth.period);
+      setViewProgress(jsonConfig.viewWidth.progress);
     }
     // setTasks(confi);
     // 当日にスクロールする　Todo
@@ -74,8 +81,7 @@ const App = () => {
 
   const handleSave = () => {
     const config: Configuration = {
-      id: "aaa",
-      title: "aaaa",
+      title: title,
       tasks: tasks,
       viewWidth: {
         title: viewTitle,
@@ -86,6 +92,7 @@ const App = () => {
       mode: view
     }
     localStorage.setItem("ganttc", JSON.stringify(config, undefined, 1));
+    info("保存しました");
   }
   // const escFunction = React.useCallback((event:any) => {
   //   if (event.keyCode === 27) {
@@ -266,7 +273,7 @@ const App = () => {
           <Row className="show-grid">
             <Col xs={14} className={styles.projectTitle}>
               <div>
-                <input type="text" className={commonStyles.taskLabel} defaultValue={""} placeholder="タイトルを入力" />
+                <input type="text" className={commonStyles.taskLabel} onChange={e => setTitle(e.target.value)} defaultValue={title} placeholder="タイトルを入力" />
               </div>
             </Col>
 

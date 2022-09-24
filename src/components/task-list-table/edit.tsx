@@ -30,7 +30,7 @@ export const Edit: React.FC<{
 
         return (
             <>
-                <Modal overflow={true} open={open} onClose={handleClose} size="xs">
+                <Modal backdrop={"static"} overflow={true} open={open} onClose={handleClose} size="xs">
                     <Modal.Header >
                         <Modal.Title>タスクの更新</Modal.Title>
                     </Modal.Header>
