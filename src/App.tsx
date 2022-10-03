@@ -95,7 +95,8 @@ const App = () => {
         progress: viewProgress,
       },
       mode: view,
-      modifyDate: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`,
+      modifyDate: `
+      ${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} (${["日", "月", "火", "水", "木", "金", "土"][date.getDay()]})`,
     }
     pushNewData(config);
     info("保存しました");
@@ -164,7 +165,7 @@ const App = () => {
       }
       {saveHistory.length >= 1 &&
         saveHistory.map((data) => {
-          return <li>{data.modifyDate}に保存しました。</li>
+          return <li>{data.modifyDate} に保存しました。</li>
         })}
     </Popover>
   );
@@ -293,7 +294,9 @@ const App = () => {
           <Row className="show-grid">
             <Col xs={14} className={styles.projectTitle}>
               <div>
-                <input type="text" className={commonStyles.taskLabel} onChange={e => setTitle(e.target.value)} defaultValue={title} placeholder="タイトルを入力" />
+                <input type="text" className={commonStyles.taskLabel} onChange={e => {
+                  setSaveButtonDisable(false);
+                  setTitle(e.target.value)}} defaultValue={title} placeholder="タイトルを入力" />
               </div>
             </Col>
 
