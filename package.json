@@ -7,7 +7,11 @@
     "start": "node node_modules/react-scripts/bin/react-scripts.js start",
     "build": "node node_modules/react-scripts/bin/react-scripts.js build",
     "test": "node node_modules/react-scripts/bin/react-scripts.js test",
-    "eject": "node node_modules/react-scripts/bin/react-scripts.js eject"
+    "eject": "node node_modules/react-scripts/bin/react-scripts.js eject",
+    "rm": "rm -rf docs",
+    "mv": "mv build docs",
+    "git": "git add . && git commit && git push origin master",
+    "deploy": "npm run rm && npm run build && npm run mv && npm run git"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^15.0.0",
