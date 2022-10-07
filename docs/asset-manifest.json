@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ganttc/static/css/main.6bfb57c5.css",
+    "main.js": "/ganttc/static/js/main.d4e4b497.js",
+    "index.html": "/ganttc/index.html",
+    "main.6bfb57c5.css.map": "/ganttc/static/css/main.6bfb57c5.css.map",
+    "main.d4e4b497.js.map": "/ganttc/static/js/main.d4e4b497.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6bfb57c5.css",
+    "static/js/main.d4e4b497.js"
+  ]
+}
