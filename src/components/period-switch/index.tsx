@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ButtonGroup } from 'rsuite';
-import { ViewMode } from "gantt-task-react";
+import { ViewMode } from "@nkita/gantt-task-react";
 import styles from "./index.module.css";
 
 type PeriodSwitcherProps = {

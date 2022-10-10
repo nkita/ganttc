@@ -1,5 +1,5 @@
 {
-  "name": "gantt-task-react-example",
+  "name": "easy_gantt_chart",
   "homepage": "https://nkita.github.io/ganttc/",
   "version": "0.0.0",
   "private": true,
@@ -15,12 +15,12 @@
   },
   "dependencies": {
     "@hello-pangea/dnd": "^15.0.0",
+    "@nkita/gantt-task-react": "^0.3.9",
     "@types/jest": "^27.5.1",
     "@types/node": "^15.0.1",
     "@types/react": "^18.0.5",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^18.0.5",
-    "gantt-task-react": "file:gantt-task-react",
     "postcss-preset-env": "^7.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

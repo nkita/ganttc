@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Task, Configuration, MessageType } from "./common/types/public-types";
-import { Gantt, ViewMode } from "gantt-task-react";
+import { Gantt, ViewMode } from "@nkita/gantt-task-react";
 import { PeriodSwitch } from "./components/period-switch";
 import { AddTaskForm } from "./components/add-task-form";
 import { Footer } from "./components/footer";
@@ -16,7 +16,7 @@ import commonStyles from "./common/css/index.module.css";
 import CollaspedOutlineIcon from '@rsuite/icons/CollaspedOutline';
 import { reOrder, reOrderAll, convertToggle2Flag, getData, pushNewData } from "./helper";
 import 'rsuite/dist/rsuite.min.css';
-import "gantt-task-react/dist/index.css";
+import "@nkita/gantt-task-react/dist/index.css";
 
 
 // Init

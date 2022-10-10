@@ -1,5 +1,5 @@
 
-import { ViewMode,Task } from "gantt-task-react";
+import { ViewMode,Task } from "@nkita/gantt-task-react";
 
 type DateHelperScales =
     | "year"
