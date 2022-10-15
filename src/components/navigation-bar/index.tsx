@@ -19,7 +19,7 @@ export const NavigationBar: React.FC = () => {
         open={open}
         handleClose={handleClose} />
       <Navbar>
-        <Navbar.Brand >EasyGantChart</Navbar.Brand>
+        <Navbar.Brand >EasyGanttChart</Navbar.Brand>
         <Nav pullRight>
           <Nav.Item onClick={() => handleOpen("info")} ><Badge>お知らせ</Badge></Nav.Item>
           <Nav.Item onClick={() => handleOpen("terms")}>利用する前に</Nav.Item>
