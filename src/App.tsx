@@ -7,8 +7,9 @@ import { Footer } from "./components/footer";
 import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper";
 import { TaskListHeader } from "./components/task-list-header";
 import { TaskListColumn } from "./components/task-list-table";
+import { NavigationBar } from "./components/navigation-bar";
 // import { seedDates, ganttDateRange } from "./helpers/date-helper";
-import { Navbar, Nav, IconButton, Popover, Whisper, Grid, Col, Row, Badge, Toggle, useToaster, Message } from 'rsuite';
+import { IconButton, Popover, Whisper, Grid, Col, Row,  Toggle, useToaster, Message } from 'rsuite';
 import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
@@ -280,15 +281,7 @@ const App = () => {
 
   return (
     <>
-      <Navbar>
-        <Navbar.Brand ><span className={styles.logo}>Gant chart</span></Navbar.Brand>
-        <Nav pullRight>
-          <Nav.Item><Badge>お知らせ</Badge></Nav.Item>
-          <Nav.Item>このサイトについて</Nav.Item>
-          <Nav.Item>規約</Nav.Item>
-          <Nav.Item>ライセンス</Nav.Item>
-        </Nav>
-      </Navbar>
+     <NavigationBar />
       <div className={commonStyles.contents} >
         <Grid fluid>
           <Row className="show-grid">
