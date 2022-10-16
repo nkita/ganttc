@@ -61,7 +61,7 @@ const App = () => {
     if (configs) {
       setSaveHistory(configs);
       const config = configs[0];
-      if (configs) {
+      if (config) {
         setTasks(config.tasks.map((t) => {
           t.start = new Date(t.start)
           t.end = new Date(t.end)
