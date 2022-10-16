@@ -2,6 +2,7 @@ import React from "react";
 import { Task } from "../../common/types/public-types";
 // import { Form, Button, RadioGroup, Radio, Dropdown, ButtonToolbar, DateRangePicker } from 'rsuite';
 import { Form, Button, RadioGroup, Radio, Dropdown, ButtonToolbar, Schema } from 'rsuite';
+import { v4 as uuidv4 } from 'uuid';
 
 import styles from "./index.module.css";
 import Tree from '@rsuite/icons/Tree';
@@ -33,7 +34,7 @@ export const AddTaskForm: React.FC<addTaskProps> = (props) => {
       start: new Date(currentYear, currentMonth, currentDay, 0, 0),
       end: new Date(currentYear, currentMonth, currentDay, 23, 59),
       name: taskName,
-      id: Math.random().toString(),
+      id: uuidv4(),
       progress: 0,
       type: (taskKind === "task") ? "task" : "project",
       updateDate: currentDate,

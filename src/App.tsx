@@ -59,9 +59,9 @@ const App = () => {
     // ローカルストレージからデータ取得
     const configs = getData() as Configuration[];
     if (configs) {
-      setSaveHistory(configs);
+      // setSaveHistory(configs);
       const config = configs[0];
-      if (config) {
+      if (configs) {
         setTasks(config.tasks.map((t) => {
           t.start = new Date(t.start)
           t.end = new Date(t.end)
