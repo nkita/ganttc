@@ -1,6 +1,5 @@
 import { useLayoutEffect, useState } from "react";
 import { Configuration, Task } from "./common/types/public-types";
-import { v4 as uuidv4 } from 'uuid';
 
 export function initTasks() {
   const tasks: Task[] = [];
@@ -93,11 +92,6 @@ export const getData = () => {
 export const pushNewData = (
   config: Configuration,
 ) => {
-  // tasks配列のidが過去のデータと重複しないように置き換える
-  config.tasks.map(t => {
-    t.id = uuidv4();
-    return t;
-  })
   // 上限数
   const limit = 10;
   const data = localStorage.getItem('ganttc');

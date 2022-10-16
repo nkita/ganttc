@@ -9,13 +9,14 @@ import { TaskListHeader } from "./components/task-list-header";
 import { TaskListColumn } from "./components/task-list-table";
 import { NavigationBar } from "./components/navigation-bar";
 // import { seedDates, ganttDateRange } from "./helpers/date-helper";
-import { IconButton, Popover, Whisper, Grid, Col, Row,  Toggle, useToaster, Message } from 'rsuite';
+import { IconButton, Popover, Whisper, Grid, Col, Row, Toggle, useToaster, Message } from 'rsuite';
 import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import commonStyles from "./common/css/index.module.css";
 import CollaspedOutlineIcon from '@rsuite/icons/CollaspedOutline';
 import { reOrder, reOrderAll, convertToggle2Flag, getData, pushNewData } from "./helper";
+import { v4 as uuidv4 } from 'uuid';
 import 'rsuite/dist/rsuite.min.css';
 import "@nkita/gantt-task-react/dist/index.css";
 
@@ -59,7 +60,7 @@ const App = () => {
     // ローカルストレージからデータ取得
     const configs = getData() as Configuration[];
     if (configs) {
-      // setSaveHistory(configs);
+      setSaveHistory(configs);
       const config = configs[0];
       if (configs) {
         setTasks(config.tasks.map((t) => {
@@ -166,7 +167,7 @@ const App = () => {
       }
       {saveHistory.length >= 1 &&
         saveHistory.map((data) => {
-          return <li>{data.modifyDate} に保存しました。</li>
+          return <li key={uuidv4()}>{data.modifyDate} に保存しました。</li>
         })}
     </Popover>
   );
@@ -281,7 +282,7 @@ const App = () => {
 
   return (
     <>
-     <NavigationBar />
+      <NavigationBar />
       <div className={commonStyles.contents} >
         <Grid fluid>
           <Row className="show-grid">
@@ -289,7 +290,8 @@ const App = () => {
               <div>
                 <input type="text" className={commonStyles.taskLabel} onChange={e => {
                   setSaveButtonDisable(false);
-                  setTitle(e.target.value)}} defaultValue={title} placeholder="タイトルを入力" />
+                  setTitle(e.target.value)
+                }} defaultValue={title} placeholder="タイトルを入力" />
               </div>
             </Col>
 
