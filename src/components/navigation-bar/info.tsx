@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { List, FlexboxGrid } from 'rsuite';
+import styles from "./index.module.css"
 import 'rsuite/dist/rsuite.min.css';
 
 
@@ -6,6 +8,7 @@ export const Info: React.FC = () => {
     type infoType = {
         no: Number,
         date: String,
+        type: "normal" | "emergency",
         contents: String
     }
     const [data, setData] = useState<infoType[]>([]);
@@ -14,10 +17,23 @@ export const Info: React.FC = () => {
             .then(res => res.json())
             .then(resData => setData(resData));
     }, []);
+
     return (
-        <>{data.map(d => {
-            return <div key={d.no.toString() + d.date + d.contents}>{d.date}</div>
-        })}
-        </>
+        <List>
+            {data.map(d => {
+                return (
+                    <List.Item key={d.no.toString() + d.date + d.contents}>
+                        <FlexboxGrid>
+                            <FlexboxGrid.Item colspan={5} className={styles.infoListDate}>
+                                {d.date}
+                            </FlexboxGrid.Item>
+                            <FlexboxGrid.Item colspan={19} className={styles.infoListContents}>
+                                {d.contents}
+                            </FlexboxGrid.Item>
+                        </FlexboxGrid>
+                    </List.Item>
+                )
+            })}
+        </List>
     );
 };

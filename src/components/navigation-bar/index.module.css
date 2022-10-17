@@ -1,0 +1,20 @@
+.NavbarBrand {
+  text-align: center;
+  color: #3498ff;
+  font-size: 1.2em;
+  line-height: 0.8;
+}
+
+.NavbarBrand span {
+  color: #575757;
+  font-size: 0.5em;
+}
+
+.infoListDate {
+  padding-left:10px;
+  text-align: left;
+}
+
+.infoListContents {
+
+}

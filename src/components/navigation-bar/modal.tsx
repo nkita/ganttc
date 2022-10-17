@@ -21,8 +21,8 @@ export const NavModal: React.FC<{
                 <Modal backdrop={true} overflow={true} open={open} onClose={handleClose} size="md">
                     <Modal.Header >
                         {type === "info" && <Modal.Title>お知らせ</Modal.Title>}
-                        {type === "terms" && <Modal.Title>利用する前に</Modal.Title>}
-                        {type === "license" && <Modal.Title>ライセンス表記</Modal.Title>}
+                        {type === "terms" && <Modal.Title>利用規約</Modal.Title>}
+                        {type === "license" && <Modal.Title>ライセンス</Modal.Title>}
                         {type === "me" && <Modal.Title>作者</Modal.Title>}
                     </Modal.Header>
                     <Modal.Body>

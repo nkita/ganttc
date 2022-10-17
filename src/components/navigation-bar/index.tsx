@@ -1,6 +1,7 @@
 import React from 'react';
 import { Nav, Navbar, Badge, Modal } from 'rsuite';
 import { NavModal } from './modal';
+import styles from "./index.module.css"
 
 
 export const NavigationBar: React.FC = () => {
@@ -19,7 +20,12 @@ export const NavigationBar: React.FC = () => {
         open={open}
         handleClose={handleClose} />
       <Navbar>
-        <Navbar.Brand >EasyGanttChart</Navbar.Brand>
+        <Navbar.Brand >
+          <div className={styles.NavbarBrand}>
+            EasyGanttChart<br />
+            <span>Copyright © 2022 nkita</span>
+          </div>
+        </Navbar.Brand>
         <Nav pullRight>
           <Nav.Item onClick={() => handleOpen("info")} ><Badge>お知らせ</Badge></Nav.Item>
           <Nav.Item onClick={() => handleOpen("terms")}>利用する前に</Nav.Item>
