@@ -72,29 +72,30 @@ export const getLatestData = () => {
 }
 /**
  * 保存データリスト取得
- * @returns 保存後の配列
+ * @param キー名
+ * @returns 保存データ
  */
-export const getData = () => {
-  // 上限数
-  const data = localStorage.getItem('ganttc');
+export const getData = (key: string) => {
+  const data = localStorage.getItem(key);
   if (data) {
-    const configArray = JSON.parse(data) as Configuration[];
-    return configArray;
+    const result = JSON.parse(data) as Configuration[];
+    return result;
   }
   return null
 }
 
 /**
- * 配列格納数の上限を定義
+ * ローカルストレージにガントチャートのデータ保存
  * @param config 追加するconfig
  * @returns 保存後の配列
  */
 export const pushNewData = (
+  key: string,
   config: Configuration,
 ) => {
   // 上限数
   const limit = 10;
-  const data = localStorage.getItem('ganttc');
+  const data = localStorage.getItem(key);
   let saveData: Configuration[] = [];
   if (data) {
     const configArray = JSON.parse(data) as Configuration[];
@@ -102,7 +103,20 @@ export const pushNewData = (
     saveData = configArray;
   }
   saveData.unshift(config);
-  localStorage.setItem("ganttc", JSON.stringify(saveData, undefined, 1));
+  localStorage.setItem(key, JSON.stringify(saveData, undefined, 1));
+}
+
+/**
+ * ローカルストレージに登録
+ * @param key キー名
+ * @param データ
+ * @returns 保存後の配列
+ */
+export const pushData = (
+  key: string,
+  data: string,
+) => {
+  localStorage.setItem(key, JSON.stringify(data, undefined, 1));
 }
 
 /**

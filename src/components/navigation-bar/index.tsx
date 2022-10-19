@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Nav, Navbar, Badge, Modal } from 'rsuite';
 import { NavModal } from './modal';
+import { getData } from '../../helper';
 import styles from "./index.module.css"
 
 
@@ -13,6 +14,18 @@ export const NavigationBar: React.FC = () => {
   };
   const handleClose = () => setOpen(false);
 
+  const [onBadge, setOnBadge] = React.useState(false);
+  const localStorageInformationKey = 'information';
+  const informationLocal = getData(localStorageInformationKey)
+
+  useEffect(() => {
+    console.log(onBadge);
+    fetch("./information.json", { method: "GET" })
+      .then(res => res.json())
+      .then(resData => {
+        setOnBadge(JSON.stringify(resData) !== JSON.stringify(informationLocal));
+      });
+  }, [informationLocal])
   return (
     <>
       <NavModal
@@ -27,7 +40,7 @@ export const NavigationBar: React.FC = () => {
           </div>
         </Navbar.Brand>
         <Nav pullRight>
-          <Nav.Item onClick={() => handleOpen("info")} ><Badge>お知らせ</Badge></Nav.Item>
+          <Nav.Item onClick={() => handleOpen("info")} ><Badge content={onBadge}><span>お知らせ</span></Badge></Nav.Item>
           <Nav.Item onClick={() => handleOpen("terms")}>利用する前に</Nav.Item>
           <Nav.Item onClick={() => handleOpen("license")}>ライセンス</Nav.Item>
           <Nav.Item onClick={() => handleOpen("me")}>作者</Nav.Item>

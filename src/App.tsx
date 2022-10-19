@@ -41,6 +41,10 @@ const App = () => {
   const date = new Date();
   const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDay());
 
+  // キー名
+  const localStorageGanttChartKey = 'ganttc';
+  const localStorageInformationKey = 'information';
+
   const toaster = useToaster();
   const message = (message: string, type: MessageType) => <Message showIcon type={type}>{message}</Message>;
   const info = (msg: string) => {
@@ -58,7 +62,7 @@ const App = () => {
   //  First process. 
   useEffect(() => {
     // ローカルストレージからデータ取得
-    const configs = getData() as Configuration[];
+    const configs = getData(localStorageGanttChartKey) as Configuration[];
     if (configs) {
       setSaveHistory(configs);
       const config = configs[0];
@@ -75,6 +79,14 @@ const App = () => {
         setViewProgress(config.viewWidth.progress);
       }
     }
+
+    fetch("./information.json", { method: "GET" })
+      .then(res => res.json())
+      .then(resData => {
+        const date = getData(localStorageInformationKey)
+        console.log(JSON.stringify(resData)===JSON.stringify(date));
+      });
+
     // setTasks(confi);
     // 当日にスクロールする　Todo
     // const currentDate = new Date();
@@ -100,9 +112,9 @@ const App = () => {
       modifyDate: `
       ${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} (${["日", "月", "火", "水", "木", "金", "土"][date.getDay()]})`,
     }
-    pushNewData(config);
+    pushNewData(localStorageGanttChartKey, config);
     info("保存しました");
-    setSaveHistory(getData() as Configuration[]);
+    setSaveHistory(getData(localStorageGanttChartKey) as Configuration[]);
     setSaveButtonDisable(true);
   }
   // const escFunction = React.useCallback((event:any) => {
