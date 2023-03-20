@@ -19,7 +19,6 @@ export const NavigationBar: React.FC = () => {
   const informationLocal = getData(localStorageInformationKey)
 
   useEffect(() => {
-    console.log(onBadge);
     fetch("./information.json", { method: "GET" })
       .then(res => res.json())
       .then(resData => {

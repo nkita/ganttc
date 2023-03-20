@@ -84,7 +84,7 @@ const App = () => {
       .then(res => res.json())
       .then(resData => {
         const date = getData(localStorageInformationKey)
-        console.log(JSON.stringify(resData)===JSON.stringify(date));
+        // console.log(JSON.stringify(resData)===JSON.stringify(date));
       });
 
     // setTasks(confi);
