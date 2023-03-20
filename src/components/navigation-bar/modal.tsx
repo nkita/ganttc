@@ -18,7 +18,7 @@ export const NavModal: React.FC<{
 }) => {
         return (
             <>
-                <Modal backdrop={true} overflow={true} open={open} onClose={handleClose} size="md">
+                <Modal backdrop={true} overflow={true} open={open} onClose={handleClose} size={type === "me" ? "xs" : "md"}>
                     <Modal.Header >
                         {type === "info" && <Modal.Title>お知らせ</Modal.Title>}
                         {type === "terms" && <Modal.Title>利用規約</Modal.Title>}

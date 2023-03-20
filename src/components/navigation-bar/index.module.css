@@ -11,6 +11,11 @@
 }
 
 .infoListDate {
-  padding-left:10px;
+  padding-left: 10px;
   text-align: left;
+}
+
+.name {
+  font-weight: bold;
+  font-size: 1.2em;
 }
