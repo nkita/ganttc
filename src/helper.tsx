@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { Configuration, Task } from "./common/types/public-types";
+import { Configuration, Task, GanttList } from "./common/types/public-types";
 
 export function initTasks() {
   const tasks: Task[] = [];
@@ -65,7 +65,7 @@ export const getLatestData = () => {
   // 上限数
   const data = localStorage.getItem('ganttc');
   if (data) {
-    const configArray = JSON.parse(data) as Configuration[];
+    const configArray = JSON.parse(data) as Configuration[] | GanttList[];
     return configArray[0] ? configArray[0] : null;
   }
   return null
@@ -78,7 +78,7 @@ export const getLatestData = () => {
 export const getData = (key: string) => {
   const data = localStorage.getItem(key);
   if (data) {
-    const result = JSON.parse(data) as Configuration[];
+    const result = JSON.parse(data) as Configuration[] | GanttList[];
     return result;
   }
   return null
@@ -114,9 +114,21 @@ export const pushNewData = (
  */
 export const pushData = (
   key: string,
-  data: string,
+  data: string | GanttList[],
 ) => {
   localStorage.setItem(key, JSON.stringify(data, undefined, 1));
+}
+
+/**
+ * ローカルストレージから削除
+ * @param key キー名
+ * @param データ
+ * @returns void
+ */
+export const removeLocalStorageData = (
+  key: string,
+) => {
+  localStorage.removeItem(key);
 }
 
 /**

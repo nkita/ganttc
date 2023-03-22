@@ -147,7 +147,6 @@ export interface GanttProps extends EventOption, DisplayOption, StylingOption {
     tasks: Task[];
 }
 
-
 export interface Configuration {
     title: string,
     tasks: Task[],
@@ -161,3 +160,8 @@ export interface Configuration {
     modifyDate: string
 }
 
+export interface GanttList {
+    id: string,
+    title: string,
+    isDisplay: boolean
+}

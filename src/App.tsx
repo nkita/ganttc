@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Task, Configuration, MessageType } from "./common/types/public-types";
+import { Task, Configuration, MessageType, GanttList } from "./common/types/public-types";
 import { Gantt, ViewMode } from "@nkita/gantt-task-react";
 import { PeriodSwitch } from "./components/period-switch";
 import { AddTaskForm } from "./components/add-task-form";
 import { Footer } from "./components/footer";
-import { getStartEndDateForProject, initTasks, useWindowHeight } from "./helper";
+import { getStartEndDateForProject, initTasks, removeLocalStorageData, useWindowHeight } from "./helper";
 import { TaskListHeader } from "./components/task-list-header";
 import { TaskListColumn } from "./components/task-list-table";
+import { TaskSaveHistory } from "./components/task-save-history";
 import { NavigationBar } from "./components/navigation-bar";
+import { Title } from "./components/title";
 // import { seedDates, ganttDateRange } from "./helpers/date-helper";
-import { IconButton, Popover, Whisper, Grid, Col, Row, Toggle, useToaster, Message } from 'rsuite';
+import { Divider, IconButton, Button, Popover, Whisper, Grid, Col, Row, Toggle, useToaster, Message } from 'rsuite';
 import ExportIcon from '@rsuite/icons/Export';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import styles from "./index.module.css";
 import commonStyles from "./common/css/index.module.css";
 import CollaspedOutlineIcon from '@rsuite/icons/CollaspedOutline';
-import { reOrder, reOrderAll, convertToggle2Flag, getData, pushNewData } from "./helper";
+import GearIcon from '@rsuite/icons/Gear';
+import PlusIcon from '@rsuite/icons/Plus';
+import TrashIcon from '@rsuite/icons/Trash';
+import { reOrder, reOrderAll, convertToggle2Flag, getData, pushData, pushNewData } from "./helper";
 import { v4 as uuidv4 } from 'uuid';
+
 import 'rsuite/dist/rsuite.min.css';
 import "@nkita/gantt-task-react/dist/index.css";
 
@@ -35,6 +41,10 @@ const App = () => {
   const [saveButtonFlg, setSaveButtonDisable] = useState(true);
   const [saveHistory, setSaveHistory] = useState<Configuration[]>([]);
 
+  // ガントチャート切り替え対応
+  const [glist, setGList] = useState<GanttList[]>([]);
+  const [currentG, setCurrentG] = useState<GanttList | null>(null);
+
   const windowHeight = useWindowHeight();
   const rowHeight = 33;
   const headerHeight = 210;
@@ -42,7 +52,7 @@ const App = () => {
   const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDay());
 
   // キー名
-  const localStorageGanttChartKey = 'ganttc';
+  const localStorageGanttListKey = 'ganttc_list';
   const localStorageInformationKey = 'information';
 
   const toaster = useToaster();
@@ -62,6 +72,16 @@ const App = () => {
   //  First process. 
   useEffect(() => {
     // ローカルストレージからデータ取得
+    //　現在のガントチャートを取得
+    let localStorageGanttChartKey = '';
+    const glist = getData(localStorageGanttListKey) as GanttList[];
+    if (glist) {
+      setGList(glist)
+      const _currentG = glist.filter(g => g.isDisplay)[0] ?? glist[0];
+      setCurrentG(_currentG)
+      localStorageGanttChartKey = _currentG.id
+    }
+
     const configs = getData(localStorageGanttChartKey) as Configuration[];
     if (configs) {
       setSaveHistory(configs);
@@ -98,7 +118,7 @@ const App = () => {
   }, [])
 
 
-  const handleSave = () => {
+  const handleSave = (createNewGC: boolean = false) => {
     const config: Configuration = {
       title: title,
       tasks: tasks,
@@ -112,10 +132,66 @@ const App = () => {
       modifyDate: `
       ${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} (${["日", "月", "火", "水", "木", "金", "土"][date.getDay()]})`,
     }
-    pushNewData(localStorageGanttChartKey, config);
-    info("保存しました");
-    setSaveHistory(getData(localStorageGanttChartKey) as Configuration[]);
+    // 現在ガントチャート更新
+    let _currentG = {
+      id: currentG ? currentG.id : uuidv4(),
+      title: title,
+      isDisplay: true
+    }
+    pushNewData(_currentG.id, config);
+
+    // ガントチャートリスト更新
+    let isGlist = glist.map(g => g.id === currentG!.id).length !== 0
+    if (isGlist) {
+      glist.map(g => {
+        if (g.id === _currentG.id) {
+          g.title = title
+          g.isDisplay = true
+        } else {
+          g.isDisplay = false
+        }
+        return true
+      })
+    } else {
+      glist.push(_currentG)
+    }
+    pushData(localStorageGanttListKey, glist)
+
+
+    if (createNewGC) {
+      _currentG = {
+        id: uuidv4(),
+        title: "",
+        isDisplay: true
+      }
+      setTasks([])
+      setTitle(_currentG.title)
+      setCurrentG(_currentG)
+      glist.push(_currentG)
+      setSaveHistory([]);
+      pushNewData(_currentG.id, {
+        title: _currentG.title,
+        tasks: [],
+        viewWidth: {
+          title: viewTitle,
+          icon: viewTitle,
+          period: viewPeriod,
+          progress: viewProgress,
+        },
+        mode: view,
+        modifyDate: `
+        ${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} (${["日", "月", "火", "水", "木", "金", "土"][date.getDay()]})`,
+      });
+      info("ガントチャートを新しくしました");
+    } else {
+      info("保存しました");
+      setCurrentG(_currentG)
+      setSaveHistory(getData(_currentG.id) as Configuration[]);
+    }
+
+    setGList(glist)
     setSaveButtonDisable(true);
+    pushData(localStorageGanttListKey, glist)
   }
   // const escFunction = React.useCallback((event:any) => {
   //   if (event.keyCode === 27) {
@@ -167,6 +243,72 @@ const App = () => {
     setSaveButtonDisable(false);
   };
 
+  const handleGCAdd = () => {
+    if (glist.length !== 0) handleSave(true)
+  };
+
+  const handleGCDelete = () => {
+    if (currentG) {
+      removeLocalStorageData(currentG.id)
+      const _glist = glist.filter(g => {
+        return g.id !== currentG.id
+      })
+      setGList(_glist)
+      pushData(localStorageGanttListKey, _glist)
+      if (_glist.length === 0) {
+        setTitle("")
+        setTasks([])
+        setSaveHistory([])
+        removeLocalStorageData(localStorageGanttListKey)
+      } else {
+        setCurrentG(_glist[0])
+        handleChangeGC(_glist[0].id)
+      }
+    }
+  };
+
+  const handleChangeGC = (localStorageGanttChartKey: string) => {
+    const glist = getData(localStorageGanttListKey) as GanttList[];
+    let _currentG = null
+    if (glist) {
+      const _glist = glist.map(g => {
+        if (g.id === localStorageGanttChartKey) {
+          g.isDisplay = true
+          _currentG = {
+            id: g.id,
+            title: g.title,
+            isDisplay: true
+          }
+        } else {
+          g.isDisplay = false
+        }
+        return g
+      });
+      pushData(localStorageGanttListKey, _glist)
+      setGList(_glist)
+    }
+    setCurrentG(_currentG)
+
+    const configs = getData(localStorageGanttChartKey) as Configuration[];
+    if (configs) {
+      setSaveHistory(configs);
+      const config = configs[0];
+      if (configs) {
+        setTasks(config.tasks.map((t) => {
+          t.start = new Date(t.start)
+          t.end = new Date(t.end)
+          return t
+        }));
+        setTitle(config.title);
+        // setView(jsonConfig.mode);
+        setViewTitle(config.viewWidth.title);
+        setViewPeriod(config.viewWidth.period);
+        setViewProgress(config.viewWidth.progress);
+      }
+    }
+
+  };
+
   const speaker = (
     <Popover title={`チャートを追加`} style={{ width: "400px" }}>
       <AddTaskForm onAddTodoHandler={handleTaskAdd} tasks={tasks} />
@@ -174,13 +316,21 @@ const App = () => {
   );
   const speaker2 = (
     <Popover title={`保存履歴`} style={{ width: "300px" }}>
-      {saveHistory.length === 0 &&
-        <span>保存データはありません。</span>
-      }
-      {saveHistory.length >= 1 &&
-        saveHistory.map((data) => {
-          return <li key={uuidv4()}>{data.modifyDate} に保存しました。</li>
-        })}
+      <TaskSaveHistory configs={saveHistory} />
+    </Popover>
+  );
+
+  const speaker3 = (
+    <Popover>
+      <Button appearance="link" color="blue" size="sm" onClick={e => handleGCAdd()}>
+        <PlusIcon style={{ marginRight: 10, fontSize: '1em' }} />
+        新しいガントチャートを作成
+      </Button>
+      <br />
+      <Button appearance="link" color="red" size="sm" onClick={e => handleGCDelete()}>
+        <TrashIcon style={{ marginRight: 10, fontSize: '1em' }} />
+        このチャートを削除
+      </Button>
     </Popover>
   );
 
@@ -205,7 +355,7 @@ const App = () => {
   // };
 
   const handleDblClick = (task: Task) => {
-    alert("On Double Click event Id:" + task.id);
+    // alert("On Double Click event Id:" + task.id);
   };
 
   // タスクの削除、入れ替え処理をこの関数で行う。
@@ -299,21 +449,26 @@ const App = () => {
         <Grid fluid>
           <Row className="show-grid">
             <Col xs={14} className={styles.projectTitle}>
-              <div>
-                <input type="text" className={commonStyles.taskLabel} onChange={e => {
-                  setSaveButtonDisable(false);
-                  setTitle(e.target.value)
-                }} defaultValue={title} placeholder="タイトルを入力" />
-              </div>
+              <Title
+                glist={glist}
+                title={title}
+                onChange={setSaveButtonDisable}
+                onChangeGC={handleChangeGC}
+                setTitle={setTitle}
+              />
             </Col>
 
             <Col xs={8} xsPush={2} className={styles.buttonArea}>
               <Whisper placement="leftStart" trigger="click" controlId="control-id-click" speaker={speaker}>
-                <IconButton size="md" appearance="ghost" icon={<AddOutlineIcon />}>追加</IconButton>
+                <IconButton size="md" appearance="ghost" color="blue" icon={<AddOutlineIcon />}>追加</IconButton>
               </Whisper>
               <span className={commonStyles.icon} />
-              <Whisper placement="bottomEnd" trigger="hover" controlId="control-id-click" speaker={speaker2}>
-                <IconButton size="md" color="green" appearance="ghost" onClick={() => handleSave()} icon={<ExportIcon />} disabled={saveButtonFlg}>保存</IconButton>
+              {/* <Whisper placement="bottomEnd" trigger="hover" controlId="control-id-click" speaker={speaker2}> */}
+              <IconButton size="md" color="green" appearance="ghost" onClick={() => handleSave()} icon={<ExportIcon />} disabled={saveButtonFlg}>保存</IconButton>
+              {/* </Whisper> */}
+              <span className={commonStyles.icon} />
+              <Whisper placement="bottomEnd" trigger="click" controlId="control-id-click" speaker={speaker3}>
+                <IconButton size="md" color="violet" appearance="ghost" icon={<GearIcon />} ></IconButton>
               </Whisper>
             </Col>
           </Row>
